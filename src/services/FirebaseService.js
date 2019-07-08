@@ -24,5 +24,8 @@ import 'firebase/auth'
                 return data
             })
         })
+      },
+      addData(title, body){
+        return firestore.collection('test').add({title,body})
       }
   }
