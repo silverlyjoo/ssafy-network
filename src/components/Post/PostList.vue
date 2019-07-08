@@ -1,9 +1,5 @@
 <template>
   <v-container>
-    <v-spacer></v-spacer>
-    <template >
-      <v-btn color="primary" dark class="mb-2" v-on="on">New Item</v-btn>
-    </template>
     <v-data-table :headers="headers" :items="datas" class="elevation-1">
       <template v-slot:items="props">
         <td>{{ props.item.number }}</td>
