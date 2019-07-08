@@ -1,13 +1,19 @@
 <template>
   <div class="test">
     <h1>Test</h1>
-      <h1>{{ data[0].title }}</h1>
-      <h5>{{ data[0].body }}</h5>
+      
     
-    <v-text-field v-model="title" label="제목" ></v-text-field>
+    <!-- <v-text-field v-model="title" label="제목" ></v-text-field>
     <v-text-field v-model="body" label="내용"></v-text-field>
-    <v-btn @click="submit">작성</v-btn>
+    <v-btn @click="submit">작성</v-btn> -->
+    
+    <!-- <v-btn @click='searchPhoto("아이린")'>아이린</v-btn>
+    <v-img :src='img'></v-img> -->
+    
+      <input type="file" @change="onFileSelected">
+      <button @click="onUpload"></button>
 
+    
   </div>
 </template>
 
@@ -21,7 +27,9 @@ export default {
     return {
       data:[],
       title:'',
-      body:''
+      body:'',
+      img:'',
+      selectedFile:null
     };
   },mounted(){
     this.getData();
@@ -31,6 +39,20 @@ export default {
     },
     submit(){
       FirebaseService.addData(this.title,this.body);
+    },
+    searchPhoto(t){
+      for (let index = 0; index < this.data.length; index++) {
+        if(this.data[index].title == t){
+          this.img = this.data[index].body;
+        }
+        
+      }
+    },
+    onFileSelected(event){
+      this.selectedFile = event.target.files[0]
+    },
+    onUpload(){
+
     }
   }
 }
