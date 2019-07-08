@@ -6,6 +6,7 @@
     <v-content>
     <router-view/>
     </v-content>
+    <div style="height:100px"></div>
     <Footer></Footer>
   </div>
 </template>
