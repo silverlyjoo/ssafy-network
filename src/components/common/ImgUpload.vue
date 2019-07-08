@@ -12,6 +12,7 @@
     </div>
     <v-text-field v-model="image" label="이미지" ></v-text-field>
     <v-btn @click="submit">업로드</v-btn>
+
   </div>
 </template>
 
@@ -23,12 +24,23 @@ export default {
   data() {
     return {
       title: '',
-      image: ""
+      image: ''
     };
   },
   methods: {
     submit(){
-      FirebaseService.addData(this.title,this.image);
+      if(this.title == ""){
+        alert("제목을 입력하세요");
+      }
+      else if(this.image == ""){
+        alert("이미지를 선택하세요");
+      }
+      else{
+        FirebaseService.addData(this.title,this.image);
+        alert("업로드 되었습니다");
+        this.title = "";
+        this.image = "";
+      }
     },
     removeImage(){
       this.image = "";
