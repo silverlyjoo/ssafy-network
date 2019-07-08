@@ -17,7 +17,8 @@ import Footer from "@/components/common/Footer";
 export default {
   name: 'App',
   components: {
-    HelloWorld
+    Header,
+    Footer
   },
   data () {
     return {
