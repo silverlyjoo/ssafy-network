@@ -1,27 +1,29 @@
 <template>
   <div class="test">
-    <h1>Test</h1>
-      <h1>{{ data[0].title }}</h1>
-      <h5>{{ data[0].body }}</h5>
+    <div style="margin-top : 20px;"></div>
     
     <v-text-field v-model="title" label="제목" ></v-text-field>
-    <v-text-field v-model="body" label="내용"></v-text-field>
+    <v-text-field v-model="body" label="내용" ></v-text-field>
     <v-btn @click="submit">작성</v-btn>
-
+    <ImgUpload></ImgUpload>
   </div>
 </template>
 
 
 <script>
 import FirebaseService from "@/services/FirebaseService";
-
+import ImgUpload from "@/components/common/ImgUpload"
 export default {
   name: 'TestComponent',
+  components: {
+    ImgUpload
+  },
   data(){
     return {
       data:[],
       title:'',
       body:''
+      
     };
   },mounted(){
     this.getData();
@@ -31,6 +33,13 @@ export default {
     },
     submit(){
       FirebaseService.addData(this.title,this.body);
+    },
+    searchPhoto(t){
+      for (let index = 0; index < this.data.length; index++) {
+        if(this.data[index].title == t){
+          this.img = this.data[index].body;
+        }
+      }
     }
   }
 }

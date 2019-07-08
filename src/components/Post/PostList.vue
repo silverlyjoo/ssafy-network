@@ -22,7 +22,6 @@
                 <v-text-field v-model="editedItem.date" label="Date"></v-text-field>
               </v-flex>
               <v-flex xs12 sm6 md4>
-
                 <v-textarea v-model="editedItem.contents" label="contents"></v-textarea>
               </v-flex>
             </v-layout>
