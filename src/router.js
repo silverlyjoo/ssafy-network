@@ -1,10 +1,10 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import Home from './views/Home.vue'
-import AboutUs from '@/views/AboutUs.vue'
-import Post from '@/views/Post.vue'
-import Portfolio from '@/views/Portfolio.vue'
-import Project from '@/views/Project.vue'
+import Home from './views/HomePage.vue'
+import AboutUs from '@/components/common/AboutUs.vue'
+import Post from '@/views/PostPage.vue'
+import Portfolio from '@/views/PortfolioPage.vue'
+import Project from '@/views/ProjectPage.vue'
 
 Vue.use(Router)
 
