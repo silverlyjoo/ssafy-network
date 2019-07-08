@@ -12,20 +12,38 @@
                 <span class="subheading">{{writers}}</span>
                 <span class="body-2 grey--text">{{date}}</span>
               </v-flex>
-              <v-flex xs2>
-                <v-menu bottom left>
-                  <template v-slot:activator="{ on }">
-                    <v-btn icon v-on="on">
-                      <v-icon>more_vert</v-icon>
-                    </v-btn>
-                  </template>
-                  <v-list>
-                    <!-- <v-list-tile  @click=""> -->
-                    <v-list-tile>Edit</v-list-tile>
-                    <v-list-tile>Delete</v-list-tile>
-                  </v-list>
-                </v-menu>
-              </v-flex>
+              <v-dialog v-model="dialog" width="500">
+                <template v-slot:activator="{ on }">
+                  <v-icon v-on="on">edit</v-icon>
+                  <pre></pre>
+                  <v-icon>delete</v-icon>
+                </template>
+                <v-card>
+                  <v-card-text>
+                    <v-container grid-list-md>
+                      <v-layout wrap>
+                        <v-flex xs12 sm6 md4>
+                          <v-text-field v-model=" titles" label="Titles"></v-text-field>
+                        </v-flex>
+                        <v-flex xs12 sm6 md4>
+                          <v-text-field v-model=" writers" label="Writers"></v-text-field>
+                        </v-flex>
+                        <v-flex xs12 sm6 md4>
+                          <v-text-field v-model="date" label="Date"></v-text-field>
+                        </v-flex>
+                        <v-flex xs12 sm6 md4>
+                          <v-textarea v-model="contents" label="contents"></v-textarea>
+                        </v-flex>
+                      </v-layout>
+                    </v-container>
+                  </v-card-text>
+                  <v-divider></v-divider>
+                  <v-card-actions>
+                    <v-btn color="blue darken-1" flat @click="dialog = false">Cancel</v-btn>
+                    <v-btn color="blue darken-1" flat @click="save">Save</v-btn>
+                  </v-card-actions>
+                </v-card>
+              </v-dialog>
             </v-layout>
 
             <v-divider class="my-3"></v-divider>
@@ -53,12 +71,15 @@ export default {
     contents: { type: String }
   },
   data() {
-    return {};
+    return {
+      dialog: false
+    };
   },
   methods: {
     back() {
       this.$router.push("/post");
-    }
+    },
+    save() {}
   }
 };
 </script>
