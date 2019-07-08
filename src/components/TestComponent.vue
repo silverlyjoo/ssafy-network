@@ -1,8 +1,7 @@
 <template>
   <div class="test">
+    <div style="margin-top : 20px;"></div>
     <h1>Test</h1>
-      <h1>{{ data[0].title }}</h1>
-      <h5>{{ data[0].body }}</h5>
     
     <v-text-field v-model="title" label="제목" ></v-text-field>
     <v-text-field v-model="body" label="내용"></v-text-field>
@@ -14,6 +13,7 @@
 
 <script>
 import FirebaseService from "@/services/FirebaseService";
+import $ from "jquery";
 
 export default {
   name: 'TestComponent',
@@ -21,7 +21,8 @@ export default {
     return {
       data:[],
       title:'',
-      body:''
+      body:'',
+      image :''
     };
   },mounted(){
     this.getData();
