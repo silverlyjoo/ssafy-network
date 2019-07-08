@@ -1,13 +1,11 @@
 <template>
   <div>
-    <v-container>
-        <div>
-            <h2 align-center>Portfolio</h2>
-            <v-btn color="info" to='/portfoliowriter'>새 글 쓰기</v-btn>
-        </div>
+    <v-container grid-list-md text-xs-center>
       <!-- Portfolio -->
-      <v-layout>
+      <v-layout row wrap>
         <v-flex xs12>
+          <div class="display-3 font-weight-bold" >Portfolio</div>
+          <v-btn color="dark" to='/portfoliowriter' class="px-0">새 글 쓰기</v-btn>
           <PortfolioList :limits="6" :load-more="true"></PortfolioList>
         </v-flex>
       </v-layout>
