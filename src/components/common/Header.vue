@@ -71,6 +71,7 @@ export default {
       drawer: null,
       items: [
         { title: "Post", icon: "dashboard", link: "/post" },
+        { title: "Projects", icon: "dashboard", link: "/project" },
         { title: "Portfolio", icon: "person", link: "/portfolio" },
         { title: "Login", icon: "exit_to_app", link: "/login" }
       ],
