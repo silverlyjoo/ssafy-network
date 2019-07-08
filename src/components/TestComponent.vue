@@ -1,10 +1,9 @@
 <template>
   <div class="test">
     <div style="margin-top : 20px;"></div>
-    <h1>Test</h1>
     
     <v-text-field v-model="title" label="제목" ></v-text-field>
-    <v-text-field v-model="body" label="내용"></v-text-field>
+    <v-text-field v-model="body" label="내용" ></v-text-field>
     <v-btn @click="submit">작성</v-btn>
     <ImgUpload></ImgUpload>
   </div>
@@ -23,8 +22,8 @@ export default {
     return {
       data:[],
       title:'',
-      body:'',
-      image :''
+      body:''
+      
     };
   },mounted(){
     this.getData();
@@ -34,6 +33,13 @@ export default {
     },
     submit(){
       FirebaseService.addData(this.title,this.body);
+    },
+    searchPhoto(t){
+      for (let index = 0; index < this.data.length; index++) {
+        if(this.data[index].title == t){
+          this.img = this.data[index].body;
+        }
+      }
     }
   }
 }
