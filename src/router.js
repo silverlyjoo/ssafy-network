@@ -36,15 +36,6 @@ export default new Router({
       path: '/project',
       name: 'project',
       component: Project
-<<<<<<< HEAD
-    },
-    {
-      path: '/portfoliowriter',
-      name: 'portfoliowriter',
-      component: PortfolioWriter
-    }
-=======
     } 
->>>>>>> ce6768405164c06883926be102d76b5b257e4101
   ]
 })
