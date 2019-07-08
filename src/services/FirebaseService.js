@@ -16,6 +16,7 @@ import 'firebase/auth'
   // Initialize Firebase
   firebase.initializeApp(firebaseConfig);
   const firestore = firebase.firestore();
+  
   export default{
       getData(){
           return firestore.collection("test").get().then((docSnapshots) => {
@@ -27,5 +28,8 @@ import 'firebase/auth'
       },
       addData(title, body){
         return firestore.collection('test').add({title,body})
+      },
+      delData(){
+
       }
   }
