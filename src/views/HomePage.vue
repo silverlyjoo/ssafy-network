@@ -1,19 +1,19 @@
 <template>
 <div>
   <ImgBanner></ImgBanner>
-
-  <TestComponent></TestComponent>
+  <ImgUpload></ImgUpload>
+  
 </div>
 </template>
 
 <script>
-import TestComponent from "@/components/TestComponent.vue";
 import ImgBanner from "@/components/common/ImgBanner.vue";
+import ImgUpload from "@/components/common/ImgUpload.vue";
 
 export default {
   components: {
-    TestComponent,
-    ImgBanner
+    ImgBanner,
+    ImgUpload
   }
 }
 </script>

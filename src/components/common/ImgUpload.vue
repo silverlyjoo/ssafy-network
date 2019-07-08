@@ -1,28 +1,38 @@
 <template>
   <div>
+    <v-text-field v-model="title" label="제목" ></v-text-field>
+    
+
     <div v-if="!image">
-      <h2>Select an image</h2>
       <input type="file" @change="onFileChange" />
     </div>
     <div v-else>
-      <img :src="image" />
-      <button @click="removeImage">Remove image</button>
+      <img :src="image" /><br>
+      <v-btn @click="removeImage">Remove image</v-btn>
     </div>
-    <br />
-    <p>URL: {{ image }}</p>
-    <br />
+    <v-text-field v-model="image" label="이미지" ></v-text-field>
+    <v-btn @click="submit">업로드</v-btn>
   </div>
 </template>
 
 <script>
+import FirebaseService from "@/services/FirebaseService";
+
 export default {
   name: "ImgUpload",
   data() {
     return {
+      title: '',
       image: ""
     };
   },
   methods: {
+    submit(){
+      FirebaseService.addData(this.title,this.image);
+    },
+    removeImage(){
+      this.image = "";
+    },
     onFileChange(e) {
       // file 세팅
       let files = e.target.files || e.dataTransfer.files;
