@@ -21,6 +21,9 @@
               <v-flex xs12 sm6 md4>
                 <v-text-field v-model="editedItem.date" label="Date"></v-text-field>
               </v-flex>
+              <v-flex xs12 sm6 md4>
+                <v-textarea v-model="editedItem.contents" label="contents"></v-textarea>
+              </v-flex>
             </v-layout>
           </v-container>
         </v-card-text>
@@ -35,7 +38,13 @@
       <v-data-table :headers="headers" :items="datas" class="elevation-1">
         <template v-slot:items="props">
           <td>{{ props.item.number }}</td>
-          <td class="text-xs-right">{{ props.item.titles }}</td>
+          <router-link
+            style="text-decoration:none!important"
+            :to="{name:'Postdetail', params:{titles : props.item.titles , writers : props.item.writers ,date : props.item.date , contents : props.item.contents}}"
+          >
+            <td class="text-xs-right">{{ props.item.titles }}</td>
+          </router-link>
+
           <td class="text-xs-right">{{ props.item.writers }}</td>
           <td class="text-xs-right">{{ props.item.date }}</td>
           <td class="justify-center layout px-0">
@@ -67,12 +76,14 @@ export default {
     editedItem: {
       titles: "",
       writers: "",
-      date: ""
+      date: "",
+      contents: ""
     },
     defaultItem: {
       titles: "",
       writers: "",
-      date: ""
+      date: "",
+      contents: ""
     }
   }),
 
@@ -99,13 +110,17 @@ export default {
           number: 1,
           titles: 'printf("Hello World!")',
           writers: "hyein",
-          date: "2019-07-08"
+          date: "2019-07-08",
+          contents:
+            "가나다라마바사아자차카타파하하하하하하가나다라마바사아자차카타파하"
         },
         {
           number: 2,
           titles: "  World! ",
           writers: "teae",
-          date: "2019-05-08"
+          date: "2019-05-08",
+          contents:
+            "아에이오우아에ㅇ이오우아에이오우아에이오우아에이오우아에이오우아에이오우어ㅏ에이오우"
         }
       ];
     },
