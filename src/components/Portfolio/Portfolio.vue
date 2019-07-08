@@ -4,8 +4,8 @@
             <v-card
                 slot-scope="{ hover }"
                 :class="`elevation-${hover ? 12 : 2}`"
-                class="mx-auto"
-                width="344"
+                
+                
             >
             <!-- 파이어베이스에 아직 이미지는 없어서 랜덤 이미지로 대체 -->
                 <v-img
@@ -14,10 +14,10 @@
                 ></v-img>
                 <v-card-title>
                     <div>
-                        <span class="headline">{{title}}</span>
-                        <div class="d-flex">
+                        <div class="headline">{{title}}</div>
+                        <div class="d-flex" >
                             <div class="ml-2 grey--text text--darken-2">
-                                <span>{{body}}</span>
+                                <span >{{body}}</span>
                             </div>
                         </div>
                     </div>
@@ -42,3 +42,16 @@
     }
   }
 </script>
+
+<style>
+  .cardBody {
+    white-space: nowrap;
+    overflow: hidden!important;
+    text-overflow: ellipsis!important;
+    display: -webkit-box;
+    line-height: 17px;     /* fallback */
+    -webkit-line-clamp: 1; /* number of lines to show */
+    -webkit-box-orient: vertical;
+  }
+
+</style>
