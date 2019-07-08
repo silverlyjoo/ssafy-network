@@ -3,7 +3,7 @@ import Router from 'vue-router'
 import Home from './views/Home.vue'
 import AboutUs from '@/views/AboutUs.vue'
 import Post from '@/views/Post.vue'
-import Portfolio from '@/views/Portfolio.vue'
+import Portfolio from '@/views/PortfolioDetail.vue'
 import Project from '@/views/Project.vue'
 
 Vue.use(Router)
