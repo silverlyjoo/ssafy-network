@@ -5,7 +5,7 @@ import AboutUs from '@/views/AboutUs.vue'
 import Post from '@/views/Post.vue'
 import Portfolio from '@/views/Portfolio.vue'
 import Project from '@/views/Project.vue'
-
+import PostWriting from '@/components/Post/PostWriting.vue'
 Vue.use(Router)
 
 export default new Router({
@@ -36,6 +36,11 @@ export default new Router({
       path: '/project',
       name: 'project',
       component: Project
+    },
+    {
+      path : '/PostWriting',
+      name :'PostWriting',
+      component : PostWriting
     }
   ]
 })

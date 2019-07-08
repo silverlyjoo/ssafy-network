@@ -1,9 +1,21 @@
 <template>
-<div id="Post"></div>
+  <div id="Post">
+    <v-container>
+      <v-layout>
+        <v-flex xs12>
+          <PostList :limits="6" :load-more="true"></PostList>
+        </v-flex>
+      </v-layout>
+    </v-container>
+  </div>
 </template>
 
 <script>
+import PostList from '../components/Post/PostList'
 export default {
-    name: 'Post'
+    name: 'Post',
+    components: {
+        PostList
+    }
 }
 </script>
