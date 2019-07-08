@@ -1,19 +1,13 @@
 <template>
-  <div>
-    <TestComponent></TestComponent>
-    <PortfolioList></PortfolioList>
-  </div>
+  <HelloWorld />
 </template>
 
 <script>
-import TestComponent from "@/components/TestComponent.vue";
-import PortfolioList from "@/components/Portfolio/PortfolioList.vue";
+  import HelloWorld from '../components/HelloWorld'
 
-export default {
-  name: "Home",
-  components: {
-    TestComponent,
-    PortfolioList,
+  export default {
+    components: {
+      HelloWorld
+    }
   }
-};
 </script>

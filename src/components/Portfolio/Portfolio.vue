@@ -7,6 +7,7 @@
                 class="mx-auto"
                 width="344"
             >
+            <!-- 파이어베이스에 아직 이미지는 없어서 랜덤 이미지로 대체 -->
                 <v-img
                 :aspect-ratio="16/9"
                 src="https://source.unsplash.com/random"
@@ -15,22 +16,12 @@
                     <div>
                         <span class="headline">{{title}}</span>
                         <div class="d-flex">
-                            <v-rating
-                            color="amber"
-                            dense
-                            half-increments
-                            readonly
-                            size="14"
-                            ></v-rating>
                             <div class="ml-2 grey--text text--darken-2">
                                 <span>{{body}}</span>
                             </div>
                         </div>
                     </div>
                 <v-spacer></v-spacer>
-                <v-btn icon class="mr-0">
-                    <v-icon>mdi-chevron-right</v-icon>
-                </v-btn>
                 </v-card-title>
             </v-card>
         </v-hover>
@@ -43,7 +34,6 @@
     props: {
         title: {type: String},
 		body: {type: String},
-		imgSrc: {type: String}
     },
     data() {
         return {

@@ -5,6 +5,7 @@ import AboutUs from '@/views/AboutUs.vue'
 import Post from '@/views/Post.vue'
 import Portfolio from '@/views/PortfolioDetail.vue'
 import Project from '@/views/Project.vue'
+import PortfolioWriter from '@/views/PortfolioWriter.vue'
 
 Vue.use(Router)
 
@@ -36,6 +37,11 @@ export default new Router({
       path: '/project',
       name: 'project',
       component: Project
+    },
+    {
+      path: '/portfoliowriter',
+      name: 'portfoliowriter',
+      component: PortfolioWriter
     }
   ]
 })
