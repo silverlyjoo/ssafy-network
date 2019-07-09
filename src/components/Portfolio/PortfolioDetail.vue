@@ -38,6 +38,7 @@
 export default {
   name: "PortfolioDetail",
   props: {
+    id : {type:String},
     title: { type: String },
     content: { type: String },
     imgSrc: { type: String }

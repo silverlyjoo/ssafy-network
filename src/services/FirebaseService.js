@@ -22,7 +22,8 @@ import 'firebase/auth'
         return firestore.collection("portfolio").get().then((docSnapshots) => {
           return docSnapshots.docs.map((doc) => {
               let data = doc.data()
-              return data
+              let id = doc.id
+              return {id , data}
           })
         })
       },
