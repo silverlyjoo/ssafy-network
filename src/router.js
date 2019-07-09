@@ -6,8 +6,8 @@ import Post from '@/views/PostPage.vue'
 import Portfolio from '@/views/PortfolioPage.vue'
 import Project from '@/views/ProjectPage.vue'
 import Postdetail from './components/Post/Postdetail.vue'
-import PortfolioWriter from '@/views/PortfolioWriter'
-import JoinForm from './components/common/JoinForm.vue'
+import PortfolioWriter from '@/components/Portfolio/PortfolioWriter'
+import JoinForm from '@/components/common/JoinForm'
 
 Vue.use(Router)
 

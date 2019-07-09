@@ -1,7 +1,6 @@
 <template>
-  <div>
+  <v-container>
     <v-text-field v-model="title" label="제목" ></v-text-field>
-    
 
     <div v-if="!image">
       <input type="file" @change="onFileChange" />
@@ -10,9 +9,11 @@
       <img :src="image" /><br>
       <v-btn @click="removeImage">Remove image</v-btn>
     </div>
-    <v-text-field v-model="image" label="이미지" ></v-text-field>
+    <v-text-field v-model="content" label="내용" ></v-text-field>
     <v-btn @click="submit">업로드</v-btn>
-  </div>
+
+    
+  </v-container>
 </template>
 
 <script>
@@ -23,12 +24,28 @@ export default {
   data() {
     return {
       title: '',
-      image: ""
+      content:'',
+      image: ''
     };
   },
   methods: {
     submit(){
-      FirebaseService.addData(this.title,this.image);
+      if(this.title == ""){
+        alert("제목을 입력하세요");
+      }
+      else if(this.image == ""){
+        alert("이미지를 선택하세요");
+      }
+      else if(this.content == ""){
+        alert("내용을 입력하세요");
+      }
+      else{
+        FirebaseService.addData(this.title,this.image,this.content);
+        alert("업로드 되었습니다");
+        this.title = "";
+        this.image = "";
+        this.content = "";
+      }
     },
     removeImage(){
       this.image = "";
@@ -61,7 +78,7 @@ export default {
         .then(success => {
           this.image = success.data.link;
         })
-        .catch(error => console.log(error));
+        .catch();
     }
   }
 };
