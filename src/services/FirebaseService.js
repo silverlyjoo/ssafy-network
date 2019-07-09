@@ -65,10 +65,10 @@ import 'firebase/auth'
           alert("가입 성공!");
         });
       },loginUser(email, password){
-        if(firebase.auth().currentUser){
-          firebase.auth().signOut();
-        }else{
-          firebase.auth().signInWithEmailAndPassword(email, password).catch(function(error) {
+         return  firebase.auth().signInWithEmailAndPassword(email, password).then(function(user){
+            console.log("로그인 성공");
+            return true;
+          }).catch(function(error) {
             var errorCode = error.code;
             var errorMessage = error.message;
             if (errorCode === 'auth/wrong-password') {
@@ -76,11 +76,14 @@ import 'firebase/auth'
             } else {
               alert(errorMessage);
             }
-            console.log(firebase.auth().currentUser);
-            this.$store.state.user = email;
-            console.log(error);
-            alert("로그인 성공!");
+            return false;
           });
+      },loginSuccess(){
+        console.log(firebase.auth().currentUser);
+        if(firebase.auth().currentUser == null){
+          return null;
+        }else{
+          return firebase.auth().currentUser.email;
         }
       },
       delData(){
@@ -93,5 +96,8 @@ import 'firebase/auth'
           let user = result.user;
           return result;
         }).catch();
+      },
+      logout(){
+        firebase.auth().signOut();
       }
   }
