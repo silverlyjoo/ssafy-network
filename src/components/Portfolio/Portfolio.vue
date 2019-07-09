@@ -10,14 +10,14 @@
             <!-- 파이어베이스에 아직 이미지는 없어서 랜덤 이미지로 대체 -->
                 <v-img
                 :aspect-ratio="16/9"
-                src="https://source.unsplash.com/random"
+                :src="imgSrc"
                 ></v-img>
                 <v-card-title>
                     <div>
                         <div class="headline">{{title}}</div>
                         <div class="d-flex" >
                             <div class="ml-2 grey--text text--darken-2">
-                                <span >{{body}}</span>
+                                <span >{{content}}</span>
                             </div>
                         </div>
                     </div>
@@ -33,7 +33,8 @@
     name: "Portfolio",
     props: {
         title: {type: String},
-		body: {type: String},
+        content: {type: String},
+        imgSrc: { type: String },
     },
     data() {
         return {
