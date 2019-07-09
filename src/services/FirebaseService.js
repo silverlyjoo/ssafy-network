@@ -18,18 +18,20 @@ import 'firebase/auth'
   const firestore = firebase.firestore();
   
   export default{
-      getData(){
-          return firestore.collection("test").get().then((docSnapshots) => {
-            return docSnapshots.docs.map((doc) => {
-                let data = doc.data()
-                return data
-            })
+      async getData(){
+        return firestore.collection("portfolio").get().then((docSnapshots) => {
+          return docSnapshots.docs.map((doc) => {
+              let data = doc.data()
+              return data
+          })
         })
       },
-      addData(title, body){
-        return firestore.collection('test').add({title,body})
-      },
-      delData(){
-
+      addData(title, image,content){
+        return firestore.collection('portfolio').add({
+          title,
+          image,
+          content,
+          date: firebase.firestore.FieldValue.serverTimestamp()
+        });
       }
   }
