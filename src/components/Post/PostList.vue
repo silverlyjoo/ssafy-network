@@ -53,7 +53,7 @@
           <td class="text-xs-center">{{ props.item.data.date }}</td>
           <td class="justify-center layout px-0">
             <v-icon small class="mr-2" @click="editItem(props.item.data)">edit</v-icon>
-            <v-icon small @click="deleteItem(props.item.id)">delete</v-icon>
+            <v-icon small @click="deleteItem(props.item.data)">delete</v-icon>
           </td>
         </template>
         <template v-slot:no-data>
@@ -158,7 +158,7 @@ export default {
         this.editedItem.writers
       );
       this.close();
-      this.getPosts();
+      
     }
   }
 };
