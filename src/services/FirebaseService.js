@@ -64,7 +64,8 @@ import 'firebase/auth'
           console.log(error);
           alert("가입 성공!");
         });
-      },loginUser(email, password){
+      },
+      loginUser(email, password){
         if(firebase.auth().currentUser){
           firebase.auth().signOut();
         }else{

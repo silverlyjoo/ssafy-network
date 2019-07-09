@@ -19,6 +19,9 @@
                 <v-text-field v-model="editedItem.writers" label="Writers"></v-text-field>
               </v-flex>
               <v-flex xs12 sm6 md4>
+                <v-text-field v-model="date" label="Date"></v-text-field>
+              </v-flex>
+              <v-flex xs12 sm6 md4>
                 <v-textarea v-model="editedItem.contents" label="contents"></v-textarea>
               </v-flex>
             </v-layout>
@@ -49,8 +52,8 @@
           <td class="text-xs-center">{{ props.item.data.writer }}</td>
           <td class="text-xs-center">{{ props.item.data.date }}</td>
           <td class="justify-center layout px-0">
-            <v-icon small class="mr-2" @click="editItem(props.item)">edit</v-icon>
-            <v-icon small @click="deleteItem(props.item)">delete</v-icon>
+            <v-icon small class="mr-2" @click="editItem(props.item.data)">edit</v-icon>
+            <v-icon small @click="deleteItem(props.item.id)">delete</v-icon>
           </td>
         </template>
         <template v-slot:no-data>
