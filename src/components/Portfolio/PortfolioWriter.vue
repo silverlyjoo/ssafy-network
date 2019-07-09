@@ -15,7 +15,7 @@
     </form>
 
     <v-flex>
-      <h3>Image</h3>
+      <h3 style="opacity:0.35;">Image</h3>
       <v-divider class="my-3"></v-divider>
       <v-btn @click="myImage">My image</v-btn>
       <v-btn @click="randomImage">Random image</v-btn>
