@@ -1,14 +1,14 @@
 <template>
   <v-layout mt-5 wrap>
     <v-flex v-for="i in portfolios.length > limits ? limits : portfolios.length"  xs12 sm6 md4>
-      <router-link :to='{ name: "portfoliodetail", params: { title:portfolios[i - 1].title,
-          content:portfolios[i - 1].content,
-          imgSrc:portfolios[i - 1].image }}' style="text-decoration:none!important">
+      <router-link :to='{ name: "portfoliodetail", params: { id : portfolios[i-1].id ,title:portfolios[i - 1].data.title,
+          content:portfolios[i - 1].data.content,
+          imgSrc:portfolios[i - 1].data.image }}' style="text-decoration:none!important">
 
         <Portfolio class="ma-3"
-              :title="portfolios[i - 1].title"
-              :content="portfolios[i - 1].content"
-			  :imgSrc="portfolios[i - 1].image"
+              :title="portfolios[i - 1].data.title"
+              :content="portfolios[i - 1].data.content"
+			  :imgSrc="portfolios[i - 1].data.image"
         ></Portfolio>
       </router-link>
     </v-flex>
