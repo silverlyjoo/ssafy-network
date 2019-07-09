@@ -78,7 +78,7 @@ export default {
         alert("내용을 입력하세요");
       }
       else{
-        FirebaseService.addData(this.title,this.image,this.content);
+        FirebaseService.addPortfolio(this.title,this.image,this.content);
         alert("업로드 되었습니다");
         this.title = "";
         this.image = "";

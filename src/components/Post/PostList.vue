@@ -19,9 +19,6 @@
                 <v-text-field v-model="editedItem.writers" label="Writers"></v-text-field>
               </v-flex>
               <v-flex xs12 sm6 md4>
-                <v-text-field v-model="editedItem.date" label="Date"></v-text-field>
-              </v-flex>
-              <v-flex xs12 sm6 md4>
                 <v-textarea v-model="editedItem.contents" label="contents"></v-textarea>
               </v-flex>
             </v-layout>
@@ -37,16 +34,15 @@
     <div>
       <v-data-table :headers="headers" :items="datas" class="elevation-1">
         <template v-slot:items="props">
-          <td>{{ props.item.number }}</td>
           <router-link
             style="text-decoration:none!important"
-            :to="{name:'Postdetail', params:{titles : props.item.titles , writers : props.item.writers ,date : props.item.date , contents : props.item.contents}}"
+            :to="{name:'Postdetail', params:{titles : props.item.data.title, writers : props.item.data.writer ,date : props.item.data.date , contents : props.item.data.content}}"
           >
-            <td class="text-xs-right">{{ props.item.titles }}</td>
+            <td class="text-xs-right">{{ props.item.data.title }}</td>
           </router-link>
 
-          <td class="text-xs-right">{{ props.item.writers }}</td>
-          <td class="text-xs-right">{{ props.item.date }}</td>
+          <td class="text-xs-right">{{ props.item.data.writer }}</td>
+          <td class="text-xs-right">{{ props.item.data.date }}</td>
           <td class="justify-center layout px-0">
             <v-icon small class="mr-2" @click="editItem(props.item)">edit</v-icon>
             <v-icon small @click="deleteItem(props.item)">delete</v-icon>
@@ -61,14 +57,14 @@
 </template>
 
 <script>
+import FirebaseService from "@/services/FirebaseService";
+
 export default {
   data: () => ({
     dialog: false,
     headers: [
-      { text: "Number", align: "center", value: "number" },
       { text: "Titles", align: "center", value: "titles" },
       { text: "Writers", align: "center", value: "writers" },
-      { text: "Date", align: "center", value: "date" },
       { text: "Actions", value: "name", sortable: false }
     ],
     datas: [],
@@ -76,13 +72,11 @@ export default {
     editedItem: {
       titles: "",
       writers: "",
-      date: "",
       contents: ""
     },
     defaultItem: {
       titles: "",
       writers: "",
-      date: "",
       contents: ""
     }
   }),
@@ -105,26 +99,27 @@ export default {
 
   methods: {
     initialize() {
-      this.datas = [
-        {
-          number: 1,
-          titles: 'printf("Hello World!")',
-          writers: "hyein",
-          date: "2019-07-08",
-          contents:
-            "가나다라마바사아자차카타파하하하하하하가나다라마바사아자차카타파하"
-        },
-        {
-          number: 2,
-          titles: "  World! ",
-          writers: "teae",
-          date: "2019-05-08",
-          contents:
-            "아에이오우아에ㅇ이오우아에이오우아에이오우아에이오우아에이오우아에이오우어ㅏ에이오우"
-        }
-      ];
+      // this.datas = [
+      //   {
+      //     titles: 'printf("Hello World!")',
+      //     writers: "hyein",
+      //     date: "2019-07-08",
+      //     contents:
+      //       "가나다라마바사아자차카타파하하하하하하가나다라마바사아자차카타파하"
+      //   },
+      //   {
+      //     titles: "  World! ",
+      //     writers: "teae",
+      //     date: "2019-05-08",
+      //     contents:
+      //       "아에이오우아에ㅇ이오우아에이오우아에이오우아에이오우아에이오우아에이오우어ㅏ에이오우"
+      //   }
+      // ];
+      this.getPosts();
     },
-
+    async getPosts(){
+      this.datas = await FirebaseService.getPost();
+    },
     editItem(item) {
       this.editedIndex = this.datas.indexOf(item);
       this.editedItem = Object.assign({}, item);
@@ -146,11 +141,7 @@ export default {
     },
 
     save() {
-      if (this.editedIndex > -1) {
-        Object.assign(this.datas[this.editedIndex], this.editedItem);
-      } else {
-        this.datas.push(this.editedItem);
-      }
+      FirebaseService.addPost(this.editedItem.titles,this.editedItem.contents,this.editedItem.writers);
       this.close();
     }
   }
