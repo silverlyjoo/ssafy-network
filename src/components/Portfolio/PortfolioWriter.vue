@@ -103,7 +103,8 @@ export default {
       }
 
       const apiUrl = "https://api.imgur.com/3/image";
-      const apiKey = "dd4e293e0b55616";
+      //const apiKey = "dd4e293e0b55616";
+      const apiKey = "cbf88cd772389df";
 
       let data = new FormData();
       let content = {
