@@ -16,7 +16,7 @@
                 <template v-slot:activator="{ on }">
                   <v-icon v-on="on">edit</v-icon>
                   <pre></pre>
-                  <v-icon>delete</v-icon>
+                  <v-icon @click="remove()">delete</v-icon>
                 </template>
                 <v-card>
                   <v-card-text>
@@ -78,6 +78,9 @@ export default {
   methods: {
     back() {
       this.$router.push("/post");
+    },
+    remove() {
+      confirm("Are you sure you want to delete this item?")  ;
     },
     save() {}
   }
