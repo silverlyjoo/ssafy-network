@@ -32,6 +32,14 @@ import 'firebase/auth'
           return docSnapshots.docs.map((doc) => {
               let data = doc.data()
               let id = doc.id
+              let nowDate = new Date(data.date.toDate());
+              data.date = 
+              nowDate.getFullYear() + "-" +
+              nowDate.getMonth() + "-" +
+              nowDate.getDay() + " " +
+              nowDate.getHours() + ":" +
+              nowDate.getMinutes() + ":" +
+              nowDate.getSeconds();
               return {id , data}
           })
         })
