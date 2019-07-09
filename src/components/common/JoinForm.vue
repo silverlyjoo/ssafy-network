@@ -53,7 +53,7 @@
         <v-card-actions>
           <v-btn flat to="/">Cancel</v-btn>
           <v-spacer></v-spacer>
-          <v-btn icon class="my-0" @click="resetForm" v-on="on">
+          <v-btn icon class="my-0" @click="resetForm">
             <v-icon>refresh</v-icon>
           </v-btn>
           <v-btn color="primary" flat @click="submit">Submit</v-btn>
