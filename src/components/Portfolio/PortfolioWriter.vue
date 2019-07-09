@@ -15,12 +15,17 @@
     </form>
 
     <v-flex>
+      <h3 style="opacity:0.35;">Image</h3>
+      <v-divider class="my-3"></v-divider>
       <v-btn @click="myImage">My image</v-btn>
       <v-btn @click="randomImage">Random image</v-btn>
       <div v-if="ImgShow">
-        <input type="file" @change="onFileChange" />
+        <input type="file" @change="onFileChange">
       </div>
     </v-flex>
+
+    <br>
+    <br>
 
     <v-textarea v-model="content" box label="Content" auto-grow value></v-textarea>
     <v-btn @click="submit">글 쓰기</v-btn>
@@ -73,7 +78,7 @@ export default {
         alert("내용을 입력하세요");
       }
       else{
-        FirebaseService.addData(this.title,this.image,this.content);
+        FirebaseService.addPortfolio(this.title,this.image,this.content);
         alert("업로드 되었습니다");
         this.title = "";
         this.image = "";
@@ -98,7 +103,8 @@ export default {
       }
 
       const apiUrl = "https://api.imgur.com/3/image";
-      const apiKey = "dd4e293e0b55616";
+      //const apiKey = "dd4e293e0b55616";
+      const apiKey = "cbf88cd772389df";
 
       let data = new FormData();
       let content = {

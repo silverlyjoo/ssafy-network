@@ -1,6 +1,6 @@
 <template>
   <div>
-    <v-dialog v-model="dialog_login" max-width="500">
+    <v-dialog v-model="dialog_login" max-width="500" v-if="loginCondition">
       <v-card>
         <v-card-title>
           <span class="headline">User Profile</span>
@@ -9,10 +9,10 @@
           <v-container grid-list-md>
             <v-layout wrap>
               <v-flex xs12>
-                <v-text-field label="Email*" required></v-text-field>
+                <v-text-field label="Email*" v-model="email" required></v-text-field>
               </v-flex>
               <v-flex xs12>
-                <v-text-field label="Password*" type="password" required></v-text-field>
+                <v-text-field label="Password*" type="password" v-model="password" required></v-text-field>
               </v-flex>
               <v-flex xs12>
                 <v-btn round color="blue" dark v-on:click="loginWithFacebook" style="width:100%;">
@@ -28,7 +28,7 @@
           <v-btn color="red" flat to="/joinform" @click="dialog_login = false">회원가입</v-btn>
           <v-spacer></v-spacer>
           <v-btn color="blue darken-1" flat @click="dialog_login = false">Close</v-btn>
-          <v-btn color="blue darken-1" flat @click="dialog_login = false">Save</v-btn>
+          <v-btn color="blue darken-1" flat @click="loginUser">Login</v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>
@@ -39,8 +39,11 @@
       </v-toolbar-title>
       <v-spacer></v-spacer>
 
-      <v-toolbar-items>
-        <v-btn flat @click.stop="dialog_login = true">Login</v-btn>
+      <v-toolbar-items v-if="loginCondition">
+        <v-btn flat @click="dialog_login = true">Login</v-btn>
+      </v-toolbar-items>
+      <v-toolbar-items v-if="!loginCondition">
+        <v-btn flat @click="logout()">{{this.$store.state.user}} : LogOut</v-btn>
       </v-toolbar-items>
 
       <v-toolbar-items class="hidden-xs-only" v-for="item in items" :key="item.title">
@@ -95,6 +98,8 @@
         
 
 <script>
+import FirebaseService from "@/services/FirebaseService";
+
 export default {
   name: "Header",
   data() {
@@ -109,12 +114,40 @@ export default {
       mini: false,
       right: null,
       clipped: false,
-      dialog_login: false
+      dialog_login: false,
+      email:'',
+      password:'',
+      loginCondition: true
     };
   },
   methods: {
     goPage(pageLink) {
       this.$router.push(pageLink);
+    },
+    async loginUser(){
+      const user = await FirebaseService.loginUser(this.email,this.password);
+      if(user == true){
+        this.$store.state.user = FirebaseService.loginSuccess();
+        this.loginCondition = false;
+      }else{
+
+      }
+      this.email = '';
+      this.password = '';
+      this.dialog_login = false;
+
+   },
+    async loginWithFacebook() {
+			const result = await FirebaseService.loginWithFacebook()
+			this.$store.state.accessToken = result.credential.accessToken
+      this.$store.state.user = result.user
+            // console.log(this.$store.state.user.displayName)
+    },
+    logout(){
+      FirebaseService.logout();
+      this.email = '';
+      this.password = '';
+      this.loginCondition = true;
     }
   }
 };

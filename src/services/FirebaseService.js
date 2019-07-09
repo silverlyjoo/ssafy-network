@@ -18,21 +18,73 @@ import 'firebase/auth'
   const firestore = firebase.firestore();
   
   export default{
-      async getData(){
+      async getPortfolio(){
         return firestore.collection("portfolio").get().then((docSnapshots) => {
           return docSnapshots.docs.map((doc) => {
               let data = doc.data()
-              return data
+              let id = doc.id
+              return {id , data}
           })
         })
       },
-      addData(title, image,content){
+      async getPost(){
+        return firestore.collection("post").get().then((docSnapshots) => {
+          return docSnapshots.docs.map((doc) => {
+              let data = doc.data()
+              let id = doc.id
+              let nowDate = new Date(data.date.toDate());
+              data.date = 
+              nowDate.getFullYear() + "-" +
+              nowDate.getMonth() + "-" +
+              nowDate.getDay() + " " +
+              nowDate.getHours() + ":" +
+              nowDate.getMinutes() + ":" +
+              nowDate.getSeconds();
+              return {id , data}
+          })
+        })
+      },
+      addPortfolio(title, image,content){
         return firestore.collection('portfolio').add({
           title,
           image,
           content,
           date: firebase.firestore.FieldValue.serverTimestamp()
         });
+      },
+      addUser(email, password){
+        firebase.auth().createUserWithEmailAndPassword(email, password).catch(function(error) {
+          var errorCode = error.code;
+          var errorMessage = error.message;
+          if (errorCode == 'auth/weak-password') {
+            alert('The password is too weak.');
+          } else {
+            alert(errorMessage);
+          }
+          console.log(error);
+          alert("가입 성공!");
+        });
+      },loginUser(email, password){
+         return  firebase.auth().signInWithEmailAndPassword(email, password).then(function(user){
+            console.log("로그인 성공");
+            return true;
+          }).catch(function(error) {
+            var errorCode = error.code;
+            var errorMessage = error.message;
+            if (errorCode === 'auth/wrong-password') {
+              alert('Wrong password.');
+            } else {
+              alert(errorMessage);
+            }
+            return false;
+          });
+      },loginSuccess(){
+        console.log(firebase.auth().currentUser);
+        if(firebase.auth().currentUser == null){
+          return null;
+        }else{
+          return firebase.auth().currentUser.email;
+        }
       },
       delData(){
         
@@ -44,5 +96,8 @@ import 'firebase/auth'
           let user = result.user;
           return result;
         }).catch();
+      },
+      logout(){
+        firebase.auth().signOut();
       }
   }

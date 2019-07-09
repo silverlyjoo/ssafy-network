@@ -35,7 +35,7 @@
             required
           ></v-text-field>
           <v-text-field
-            ref="password"
+            ref="passwordCheck"
             v-model="passwordCheck"
             :append-icon="show1 ? 'visibility' : 'visibility_off'"
             :rules="[rules.required, rules.min]"
@@ -67,6 +67,8 @@
 
 
 <script>
+import FirebaseService from "@/services/FirebaseService";
+
 export default {
   data: () => ({
     errorMessages: "",
@@ -93,7 +95,8 @@ export default {
       return {
         name: this.name,
         address: this.address,
-        password: this.password
+        password: this.password,
+        passwordCheck:this.passwordCheck
       };
     }
   },
@@ -122,9 +125,12 @@ export default {
 
           this.$refs[f].validate(true);
         });
+        
+        FirebaseService.addUser(this.address, this.password);
       } else {
           alert("Please match your PASSWORD");
       }
+      
     }
   }
 };
