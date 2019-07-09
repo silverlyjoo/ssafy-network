@@ -14,6 +14,14 @@
       <br>
     </form>
 
+    <v-flex>
+      <v-btn @click="myImage">My image</v-btn>
+      <v-btn @click="randomImage">Random image</v-btn>
+      <div v-if="ImgShow">
+        <input type="file" @change="onFileChange" />
+      </div>
+    </v-flex>
+
     <v-textarea v-model="content" box label="Content" auto-grow value></v-textarea>
     <v-btn @click="submit">글 쓰기</v-btn>
     <v-btn @click="goback">취소</v-btn>
@@ -32,7 +40,7 @@ export default {
   $_veeValidate: {
     validator: "new"
   },
-
+  
   data: () => ({
     name: "",
     dictionary: {
@@ -45,7 +53,8 @@ export default {
     },
     title: '',
     content:'',
-    image: ''
+    image: '',
+    ImgShow: false
   }),
 
   mounted() {
@@ -71,12 +80,45 @@ export default {
         this.content = "";
       }
     },
-    clear() {
-      this.name = "";
-      this.$validator.reset();
+    myImage(){
+      this.ImgShow = true;
+    },
+    randomImage(){
+      this.ImgShow = false;
+      this.image = "https://source.unsplash.com/random";
     },
     goback() {
         // 
+    },
+    onFileChange(e) {
+      // file 세팅
+      let files = e.target.files || e.dataTransfer.files;
+      if (!files.length) {
+        return;
+      }
+
+      const apiUrl = "https://api.imgur.com/3/image";
+      const apiKey = "dd4e293e0b55616";
+
+      let data = new FormData();
+      let content = {
+        method: "POST",
+        headers: {
+          Authorization: "Client-ID " + apiKey,
+          Accept: "application/json"
+        },
+        body: data,
+        mimeType: "multipart/form-data"
+      };
+
+      data.append("image", files[0]);
+
+      fetch(apiUrl, content)
+        .then(response => response.json())
+        .then(success => {
+          this.image = success.data.link;
+        })
+        .catch();
     }
   }
 };
