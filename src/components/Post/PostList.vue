@@ -38,11 +38,11 @@
             style="text-decoration:none!important"
             :to="{name:'Postdetail', params:{titles : props.item.data.title, writers : props.item.data.writer ,date : props.item.data.date , contents : props.item.data.content}}"
           >
-            <td class="text-xs-right">{{ props.item.data.title }}</td>
+            <td class="text-xs-left">{{ props.item.data.title }}</td>
           </router-link>
 
-          <td class="text-xs-right">{{ props.item.data.writer }}</td>
-          <td class="text-xs-right">{{ props.item.data.date }}</td>
+          <td class="text-xs-left">{{ props.item.data.writer }}</td>
+          <td class="text-xs-left">{{ props.item.data.date }}</td>
           <td class="justify-center layout px-0">
             <v-icon small class="mr-2" @click="editItem(props.item)">edit</v-icon>
             <v-icon small @click="deleteItem(props.item)">delete</v-icon>
@@ -65,7 +65,8 @@ export default {
     headers: [
       { text: "Titles", align: "center", value: "titles" },
       { text: "Writers", align: "center", value: "writers" },
-      { text: "Actions", value: "name", sortable: false }
+      { text: "Date", align: "center", value: "date" },
+      { text: "Actions", align: "center",value: "name", sortable: false }
     ],
     datas: [],
     editedIndex: -1,
@@ -117,7 +118,7 @@ export default {
       // ];
       this.getPosts();
     },
-    async getPosts(){
+    async getPosts() {
       this.datas = await FirebaseService.getPost();
     },
     editItem(item) {
@@ -141,7 +142,11 @@ export default {
     },
 
     save() {
-      FirebaseService.addPost(this.editedItem.titles,this.editedItem.contents,this.editedItem.writers);
+      FirebaseService.addPost(
+        this.editedItem.titles,
+        this.editedItem.contents,
+        this.editedItem.writers
+      );
       this.close();
     }
   }
