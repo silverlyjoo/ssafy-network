@@ -6,17 +6,22 @@
     <v-text-field v-model="body" label="내용" ></v-text-field>
     <v-btn @click="submit">작성</v-btn>
     <ImgUpload></ImgUpload>
+    <div></div>
+    
   </div>
 </template>
 
 
 <script>
 import FirebaseService from "@/services/FirebaseService";
-import ImgUpload from "@/components/common/ImgUpload"
+import ImgUpload from "@/components/common/ImgUpload";
+
+
 export default {
   name: 'TestComponent',
   components: {
-    ImgUpload
+    ImgUpload,
+    LoginPage
   },
   data(){
     return {

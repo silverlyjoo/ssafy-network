@@ -18,12 +18,6 @@ import 'firebase/auth'
   const firestore = firebase.firestore();
   
   export default{
-    data(){
-        return{
-
-        }
-    },
-    methods:{
       async getData(){
         return firestore.collection("portfolio").get().then((docSnapshots) => {
           return docSnapshots.docs.map((doc) => {
@@ -43,19 +37,12 @@ import 'firebase/auth'
       delData(){
         
       },
-      loginwithFacebook(){
+      async loginWithFacebook(){
         let provider = new firebase.auth.FacebookAuthProvider();
         return firebase.auth().signInWithPopup(provider).then(function(result) {
-          // let token = result.credential.accessToken;
-          // let user = result.user;
+          let token = result.credential.accessToken;
+          let user = result.user;
           return result;
-        }).catch(function(error) {
-            console.log(error);
-          // let errorCode = error.code;
-          // let errorMessage = error.message;
-          // let email = error.email;
-          // let credential = error.credential;
-        });
+        }).catch();
       }
-    }
   }
