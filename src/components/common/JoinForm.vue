@@ -35,7 +35,7 @@
             required
           ></v-text-field>
           <v-text-field
-            ref="password"
+            ref="passwordCheck"
             v-model="passwordCheck"
             :append-icon="show1 ? 'visibility' : 'visibility_off'"
             :rules="[rules.required, rules.min]"
@@ -93,7 +93,8 @@ export default {
       return {
         name: this.name,
         address: this.address,
-        password: this.password
+        password: this.password,
+        passwordCheck:this.passwordCheck
       };
     }
   },
