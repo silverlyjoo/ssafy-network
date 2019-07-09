@@ -67,6 +67,8 @@
 
 
 <script>
+import FirebaseService from "@/services/FirebaseService";
+
 export default {
   data: () => ({
     errorMessages: "",
@@ -123,9 +125,12 @@ export default {
 
           this.$refs[f].validate(true);
         });
+        
+        FirebaseService.addUser(this.address, this.password);
       } else {
           alert("Please match your PASSWORD");
       }
+      
     }
   }
 };

@@ -71,7 +71,7 @@ export default {
       { text: "Titles", align: "center", value: "titles" },
       { text: "Writers", align: "center", value: "writers" },
       { text: "Date", align: "center", value: "date" },
-      { text: "Actions", value: "name", sortable: false }
+      { text: "Actions", align: "center",value: "name", sortable: false }
     ],
     datas: [],
     editedIndex: -1,
@@ -125,7 +125,7 @@ export default {
       // ];
       this.getPosts();
     },
-    async getPosts(){
+    async getPosts() {
       this.datas = await FirebaseService.getPost();
     },
     editItem(item) {
@@ -149,7 +149,11 @@ export default {
     },
 
     save() {
-      FirebaseService.addPost(this.editedItem.titles,this.editedItem.contents,this.editedItem.writers);
+      FirebaseService.addPost(
+        this.editedItem.titles,
+        this.editedItem.contents,
+        this.editedItem.writers
+      );
       this.close();
       this.getPosts();
     }

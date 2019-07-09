@@ -52,13 +52,36 @@ import 'firebase/auth'
           date: firebase.firestore.FieldValue.serverTimestamp()
         });
       },
-      addPost(title, content, writer){
-        return firestore.collection('post').add({
-          title,
-          content,
-          writer,
-          date: firebase.firestore.FieldValue.serverTimestamp()
+      addUser(email, password){
+        firebase.auth().createUserWithEmailAndPassword(email, password).catch(function(error) {
+          var errorCode = error.code;
+          var errorMessage = error.message;
+          if (errorCode == 'auth/weak-password') {
+            alert('The password is too weak.');
+          } else {
+            alert(errorMessage);
+          }
+          console.log(error);
+          alert("가입 성공!");
         });
+      },loginUser(email, password){
+        if(firebase.auth().currentUser){
+          firebase.auth().signOut();
+        }else{
+          firebase.auth().signInWithEmailAndPassword(email, password).catch(function(error) {
+            var errorCode = error.code;
+            var errorMessage = error.message;
+            if (errorCode === 'auth/wrong-password') {
+              alert('Wrong password.');
+            } else {
+              alert(errorMessage);
+            }
+            console.log(firebase.auth().currentUser);
+            this.$store.state.user = email;
+            console.log(error);
+            alert("로그인 성공!");
+          });
+        }
       },
       delData(){
         

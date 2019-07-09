@@ -15,12 +15,17 @@
     </form>
 
     <v-flex>
+      <h3 style="opacity:0.35;">Image</h3>
+      <v-divider class="my-3"></v-divider>
       <v-btn @click="myImage">My image</v-btn>
       <v-btn @click="randomImage">Random image</v-btn>
       <div v-if="ImgShow">
-        <input type="file" @change="onFileChange" />
+        <input type="file" @change="onFileChange">
       </div>
     </v-flex>
+
+    <br>
+    <br>
 
     <v-textarea v-model="content" box label="Content" auto-grow value></v-textarea>
     <v-btn @click="submit">글 쓰기</v-btn>
