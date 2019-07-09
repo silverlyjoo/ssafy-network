@@ -34,6 +34,20 @@
             @click:append="show1 = !show1"
             required
           ></v-text-field>
+          <v-text-field
+            ref="passwordCheck"
+            v-model="passwordCheck"
+            :append-icon="show1 ? 'visibility' : 'visibility_off'"
+            :rules="[rules.required, rules.min]"
+            :type="show1 ? 'text' : 'password'"
+            name="input-10-1"
+            label="Normal with hint text"
+            hint="At least 8 characters"
+            counter
+            @click:append="show1 = !show1"
+            required
+          ></v-text-field>
+          <span v-if="password!=passwordCheck">PassWord is not matched.</span>
         </v-card-text>
         <v-divider class="mt-5"></v-divider>
         <v-card-actions>
@@ -59,6 +73,7 @@ export default {
     name: null,
     address: "",
     password: null,
+    passwordCheck: null,
     show1: false,
     formHasErrors: false,
     title: "Preliminary report",
@@ -78,7 +93,8 @@ export default {
       return {
         name: this.name,
         address: this.address,
-        password: this.password
+        password: this.password,
+        passwordCheck:this.passwordCheck
       };
     }
   },
@@ -99,13 +115,17 @@ export default {
       });
     },
     submit() {
-      this.formHasErrors = false;
+      if (this.password == this.passwordCheck) {
+        this.formHasErrors = false;
 
-      Object.keys(this.form).forEach(f => {
-        if (!this.form[f]) this.formHasErrors = true;
+        Object.keys(this.form).forEach(f => {
+          if (!this.form[f]) this.formHasErrors = true;
 
-        this.$refs[f].validate(true);
-      });
+          this.$refs[f].validate(true);
+        });
+      } else {
+          alert("Please match your PASSWORD");
+      }
     }
   }
 };
