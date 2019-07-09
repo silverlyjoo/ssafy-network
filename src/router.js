@@ -8,14 +8,14 @@ import Project from '@/views/ProjectPage.vue'
 import Postdetail from './components/Post/Postdetail.vue'
 import PortfolioWriter from '@/components/Portfolio/PortfolioWriter'
 import PortfolioDetail from '@/components/Portfolio/PortfolioDetail'
+import JoinForm from '@/components/common/JoinForm'
 
 Vue.use(Router)
 
 export default new Router({
   mode: 'history',
   base: process.env.BASE_URL,
-  routes: [
-    {
+  routes: [{
       path: '/',
       name: 'home',
       component: Home
@@ -39,12 +39,12 @@ export default new Router({
       path: '/project',
       name: 'project',
       component: Project
-    } ,{
-			path:'/Postdetail',
-			name:'Postdetail',
-			component: Postdetail,
-			props: true
-		},
+    }, {
+      path: '/Postdetail',
+      name: 'Postdetail',
+      component: Postdetail,
+      props: true
+    },
     {
       path: '/portfoliowriter',
       name: 'portfoliowriter',
@@ -55,6 +55,11 @@ export default new Router({
       name: 'portfoliodetail',
       component: PortfolioDetail,
       props: true
+    },
+    {
+      path: '/joinform',
+      name: 'join',
+      component: JoinForm
     },
   ]
 })
