@@ -18,7 +18,7 @@ import 'firebase/auth'
   const firestore = firebase.firestore();
   
   export default{
-      async getData(){
+      async getPortfolio(){
         return firestore.collection("portfolio").get().then((docSnapshots) => {
           return docSnapshots.docs.map((doc) => {
               let data = doc.data()
@@ -27,11 +27,28 @@ import 'firebase/auth'
           })
         })
       },
-      addData(title, image,content){
+      async getPost(){
+        return firestore.collection("post").get().then((docSnapshots) => {
+          return docSnapshots.docs.map((doc) => {
+              let data = doc.data()
+              let id = doc.id
+              return {id , data}
+          })
+        })
+      },
+      addPortfolio(title, image,content){
         return firestore.collection('portfolio').add({
           title,
           image,
           content,
+          date: firebase.firestore.FieldValue.serverTimestamp()
+        });
+      },
+      addPost(title, content, writer){
+        return firestore.collection('post').add({
+          title,
+          content,
+          writer,
           date: firebase.firestore.FieldValue.serverTimestamp()
         });
       },

@@ -40,7 +40,7 @@ export default {
 	},
 	methods: {
 		async getPortfolios() {
-			this.portfolios = await FirebaseService.getData()
+			this.portfolios = await FirebaseService.getPortfolio()
 		},
 		loadMorePortfolios() {
 			
