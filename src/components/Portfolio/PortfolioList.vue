@@ -1,10 +1,16 @@
 <template>
   <v-layout mt-5 wrap>
     <v-flex v-for="i in portfolios.length > limits ? limits : portfolios.length"  xs12 sm6 md4>
-      <Portfolio class="ma-3"
+      <router-link :to='{ name: "portfoliodetail", params: { title:portfolios[i - 1].title,
+          content:portfolios[i - 1].content,
+          imgSrc:portfolios[i - 1].image }}' style="text-decoration:none!important">
+
+        <Portfolio class="ma-3"
               :title="portfolios[i - 1].title"
-              :body="portfolios[i - 1].body"
-      ></Portfolio>
+              :content="portfolios[i - 1].content"
+			  :imgSrc="portfolios[i - 1].image"
+        ></Portfolio>
+      </router-link>
     </v-flex>
 
     <v-flex xs12 text-xs-center round my-5 v-if="loadMore">
@@ -26,7 +32,7 @@ export default {
 		}
 	},
 	components: {
-		Portfolio
+		Portfolio,
 	},
 	mounted() {
 		this.getPortfolios()
