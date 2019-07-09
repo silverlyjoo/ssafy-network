@@ -124,7 +124,6 @@ export default {
     loginUser(){
       FirebaseService.loginUser(this.email,this.password);
       console.log(this.$store.state)
-      alert( this.$store.state.user +"님 환영합니다. ");
     },
     async loginWithFacebook() {
 			const result = await FirebaseService.loginWithFacebook()
