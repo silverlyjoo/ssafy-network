@@ -7,6 +7,7 @@ import Portfolio from '@/views/PortfolioPage.vue'
 import Project from '@/views/ProjectPage.vue'
 import Postdetail from './components/Post/Postdetail.vue'
 import PortfolioWriter from '@/components/Portfolio/PortfolioWriter'
+import PortfolioDetail from '@/components/Portfolio/PortfolioDetail'
 import JoinForm from '@/components/common/JoinForm'
 
 Vue.use(Router)
@@ -48,6 +49,12 @@ export default new Router({
       path: '/portfoliowriter',
       name: 'portfoliowriter',
       component: PortfolioWriter
+    },
+    {
+      path: '/portfoliodetail',
+      name: 'portfoliodetail',
+      component: PortfolioDetail,
+      props: true
     },
     {
       path: '/joinform',
