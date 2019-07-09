@@ -15,6 +15,7 @@
               <v-flex xs12 sm6 md4>
                 <v-text-field v-model="editedItem.titles" label="Titles"></v-text-field>
               </v-flex>
+
               <v-flex xs12 sm6 md4>
                 <v-text-field v-model="editedItem.writers" label="Writers"></v-text-field>
               </v-flex>
@@ -66,7 +67,7 @@ export default {
       { text: "Titles", align: "center", value: "titles" },
       { text: "Writers", align: "center", value: "writers" },
       { text: "Date", align: "center", value: "date" },
-      { text: "Actions", align: "center",value: "name", sortable: false }
+      { text: "Actions", align: "center", value: "name", sortable: false }
     ],
     datas: [],
     editedIndex: -1,
