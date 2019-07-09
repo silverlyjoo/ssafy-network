@@ -36,13 +36,18 @@
         <template v-slot:items="props">
           <router-link
             style="text-decoration:none!important"
-            :to="{name:'Postdetail', params:{titles : props.item.data.title, writers : props.item.data.writer ,date : props.item.data.date , contents : props.item.data.content}}"
+            :to="{name:'Postdetail', params:{
+              titles : props.item.data.title, 
+              writers : props.item.data.writer ,
+              date : props.item.data.date , 
+              contents : props.item.data.content}
+              }"
           >
-            <td class="text-xs-left">{{ props.item.data.title }}</td>
+            <td class="text-xs-center">{{ props.item.data.title }}</td>
           </router-link>
 
-          <td class="text-xs-left">{{ props.item.data.writer }}</td>
-          <td class="text-xs-left">{{ props.item.data.date }}</td>
+          <td class="text-xs-center">{{ props.item.data.writer }}</td>
+          <td class="text-xs-center">{{ props.item.data.date }}</td>
           <td class="justify-center layout px-0">
             <v-icon small class="mr-2" @click="editItem(props.item)">edit</v-icon>
             <v-icon small @click="deleteItem(props.item)">delete</v-icon>
@@ -73,11 +78,13 @@ export default {
     editedItem: {
       titles: "",
       writers: "",
+      date:"",
       contents: ""
     },
     defaultItem: {
       titles: "",
       writers: "",
+      date:"",
       contents: ""
     }
   }),
@@ -148,6 +155,7 @@ export default {
         this.editedItem.writers
       );
       this.close();
+      this.getPosts();
     }
   }
 };

@@ -25,8 +25,8 @@
 
         <v-spacer></v-spacer>
         <v-card-actions>
-          <v-spacer></v-spacer>
           <v-btn color="red" flat to="/joinform" @click="dialog_login = false">회원가입</v-btn>
+          <v-spacer></v-spacer>
           <v-btn color="blue darken-1" flat @click="dialog_login = false">Close</v-btn>
           <v-btn color="blue darken-1" flat @click="loginUser">Login</v-btn>
         </v-card-actions>
