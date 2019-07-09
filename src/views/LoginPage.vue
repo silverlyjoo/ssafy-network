@@ -23,7 +23,7 @@ export default {
 			const result = await FirebaseService.loginWithFacebook()
 			this.$store.state.accessToken = result.credential.accessToken
             this.$store.state.user = result.user
-            // console.log(this.$store.state.user.displayName)
+            console.log(this.$store.state.user.displayName)
 		}
 	},
 	mounted() {
