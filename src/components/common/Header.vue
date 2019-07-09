@@ -25,8 +25,8 @@
 
         <v-spacer></v-spacer>
         <v-card-actions>
-          <v-spacer></v-spacer>
           <v-btn color="red" flat to="/joinform" @click="dialog_login = false">회원가입</v-btn>
+          <v-spacer></v-spacer>
           <v-btn color="blue darken-1" flat @click="dialog_login = false">Close</v-btn>
           <v-btn color="blue darken-1" flat @click="loginUser">Login</v-btn>
         </v-card-actions>
@@ -40,7 +40,10 @@
       <v-spacer></v-spacer>
 
       <v-toolbar-items v-if="loginCondition">
-        <v-btn flat @click.stop="dialog_login = true">Login</v-btn>
+        <v-btn flat @click="dialog_login = true">Login</v-btn>
+      </v-toolbar-items>
+      <v-toolbar-items v-if="!loginCondition">
+        <v-btn flat @click="logout()">{{this.$store.state.user}} : LogOut</v-btn>
       </v-toolbar-items>
 
       <v-toolbar-items class="hidden-xs-only" v-for="item in items" :key="item.title">
@@ -121,17 +124,31 @@ export default {
     goPage(pageLink) {
       this.$router.push(pageLink);
     },
-    loginUser(){
-      FirebaseService.loginUser(this.email,this.password);
-      console.log(this.$store.state)
-      alert( this.$store.state.user +"님 환영합니다. ");
-    },
+    async loginUser(){
+      const user = await FirebaseService.loginUser(this.email,this.password);
+      if(user == true){
+        this.$store.state.user = FirebaseService.loginSuccess();
+        this.loginCondition = false;
+      }else{
+
+      }
+      this.email = '';
+      this.password = '';
+      this.dialog_login = false;
+
+   },
     async loginWithFacebook() {
 			const result = await FirebaseService.loginWithFacebook()
 			this.$store.state.accessToken = result.credential.accessToken
       this.$store.state.user = result.user
             // console.log(this.$store.state.user.displayName)
-		}
+    },
+    logout(){
+      FirebaseService.logout();
+      this.email = '';
+      this.password = '';
+      this.loginCondition = true;
+    }
   }
 };
 </script>

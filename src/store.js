@@ -6,7 +6,9 @@ Vue.use(Vuex)
 export default new Vuex.Store({
   state: {
     accessToken: '',
-		user: ''
+    user: '',
+    client_id : 'AetgEpzEEJwY_huWAvbA',
+    client_secret : 'Kl27wCCWOe'
   },
   mutations: {
 
