@@ -8,44 +8,25 @@
         <v-card-text>
           <v-container grid-list-md>
             <v-layout wrap>
-              <v-flex xs12 sm6 md4>
-                <v-text-field label="Legal first name*" required></v-text-field>
-              </v-flex>
-              <v-flex xs12 sm6 md4>
-                <v-text-field label="Legal middle name" hint="example of helper text only on focus"></v-text-field>
-              </v-flex>
-              <v-flex xs12 sm6 md4>
-                <v-text-field
-                  label="Legal last name*"
-                  hint="example of persistent helper text"
-                  persistent-hint
-                  required
-                ></v-text-field>
-              </v-flex>
               <v-flex xs12>
                 <v-text-field label="Email*" required></v-text-field>
               </v-flex>
               <v-flex xs12>
                 <v-text-field label="Password*" type="password" required></v-text-field>
               </v-flex>
-              <v-flex xs12 sm6>
-                <v-select :items="['0-17', '18-29', '30-54', '54+']" label="Age*" required></v-select>
-              </v-flex>
-              <v-flex xs12 sm6>
-                <v-autocomplete
-                  :items="['Skiing', 'Ice hockey', 'Soccer', 'Basketball', 'Hockey', 'Reading', 'Writing', 'Coding', 'Basejump']"
-                  label="Interests"
-                  multiple
-                ></v-autocomplete>
+              <v-flex xs12>
+                <v-btn round color="blue" dark v-on:click="loginWithFacebook" style="width:100%;">
+                  <v-icon size="25" class="mr-2">fab fa-facebook-f</v-icon>facebook 로그인
+                </v-btn>
               </v-flex>
             </v-layout>
           </v-container>
-          <small>*ndicates required field</small>
         </v-card-text>
 
         <v-spacer></v-spacer>
         <v-card-actions>
           <v-spacer></v-spacer>
+          <v-btn color="red" flat to="/joinform" @click="dialog_login = false">회원가입</v-btn>
           <v-btn color="blue darken-1" flat @click="dialog_login = false">Close</v-btn>
           <v-btn color="blue darken-1" flat @click="dialog_login = false">Save</v-btn>
         </v-card-actions>
@@ -59,7 +40,7 @@
       <v-spacer></v-spacer>
 
       <v-toolbar-items>
-          <v-btn flat @click.stop="dialog_login = true">Login</v-btn>
+        <v-btn flat @click.stop="dialog_login = true">Login</v-btn>
       </v-toolbar-items>
 
       <v-toolbar-items class="hidden-xs-only" v-for="item in items" :key="item.title">
