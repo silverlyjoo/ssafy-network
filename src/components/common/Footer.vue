@@ -40,8 +40,6 @@ export default {
         this.temp_min = Math.round(result.data.main.temp_min - 273)
         this.temp_max = Math.round(result.data.main.temp_max - 273)
         this.view = true
-        console.log(result.data.main.temp)
-        console.log(this.temp)
       })
     }
   }
