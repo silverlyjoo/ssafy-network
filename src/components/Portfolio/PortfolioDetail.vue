@@ -68,6 +68,7 @@ export default {
       this.$router.push("/portfolio");
     },
     async translate(content) {
+      if (!content) { return }
       try {
         const taxios = await axios.create({
           baseURL: "https://translation.googleapis.com"

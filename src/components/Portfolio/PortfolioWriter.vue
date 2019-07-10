@@ -15,11 +15,13 @@
     </form>
 
     <v-flex>
-      <h3 class="image">Image</h3>
+      <h3 class="image">&nbsp; &nbsp; &nbsp; &nbsp; Image</h3>
       <v-divider class="my-3 divider"></v-divider>
-      <v-btn @click="myImage">My image</v-btn>
-      <v-btn @click="randomImage">Random image</v-btn>
-      <div v-if="ImgShow">
+      <div class="btn-box">
+        <v-btn @click="myImage">My image</v-btn>
+        <v-btn @click="randomImage">Random image</v-btn>
+      </div>
+      <div class="btn-box" v-if="ImgShow">
         <input type="file" @change="onFileChange" />
       </div>
     </v-flex>
@@ -27,9 +29,11 @@
     <br />
     <br />
 
-    <v-textarea class="content" model="content" box label="Content" auto-grow value></v-textarea>
-    <v-btn @click="submit">글 쓰기</v-btn>
-    <v-btn @click="goback">취소</v-btn>
+    <div class="content">
+      <v-textarea model="content" box label="Content" auto-grow value></v-textarea>
+      <v-btn @click="submit">글 쓰기</v-btn>
+      <v-btn @click="goback">취소</v-btn>
+    </div>
   </v-container>
 </template>
 
@@ -135,8 +139,15 @@ export default {
 }
 
 .image {
+  width: 50%;
   opacity: 0.35;
   text-align: center;
+}
+
+.btn-box {
+  width: 50%;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 .divider {
