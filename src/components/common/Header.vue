@@ -35,7 +35,13 @@
 
     <v-toolbar fixed app clipped-right>
       <v-toolbar-title>
-        <router-link to="/" style="text-decoration:none!important">SSAFY</router-link>
+        <v-layout nowrap>
+          <v-flex align-self-center>
+            <router-link to="/" style="text-decoration:none!important">
+              <v-img src="./Favicon.png" style="width:37px;"></v-img>SSAFY
+            </router-link>
+          </v-flex>
+        </v-layout>
       </v-toolbar-title>
       <v-spacer></v-spacer>
 
@@ -115,8 +121,8 @@ export default {
       right: null,
       clipped: false,
       dialog_login: false,
-      email:'',
-      password:'',
+      email: "",
+      password: "",
       loginCondition: true
     };
   },
@@ -124,29 +130,27 @@ export default {
     goPage(pageLink) {
       this.$router.push(pageLink);
     },
-    async loginUser(){
-      const user = await FirebaseService.loginUser(this.email,this.password);
-      if(user == true){
+    async loginUser() {
+      const user = await FirebaseService.loginUser(this.email, this.password);
+      if (user == true) {
         this.$store.state.user = FirebaseService.loginSuccess();
         this.loginCondition = false;
-      }else{
-
+      } else {
       }
-      this.email = '';
-      this.password = '';
+      this.email = "";
+      this.password = "";
       this.dialog_login = false;
-
-   },
-    async loginWithFacebook() {
-			const result = await FirebaseService.loginWithFacebook()
-			this.$store.state.accessToken = result.credential.accessToken
-      this.$store.state.user = result.user
-            // console.log(this.$store.state.user.displayName)
     },
-    logout(){
+    async loginWithFacebook() {
+      const result = await FirebaseService.loginWithFacebook();
+      this.$store.state.accessToken = result.credential.accessToken;
+      this.$store.state.user = result.user;
+      // console.log(this.$store.state.user.displayName)
+    },
+    logout() {
       FirebaseService.logout();
-      this.email = '';
-      this.password = '';
+      this.email = "";
+      this.password = "";
       this.loginCondition = true;
     }
   }
