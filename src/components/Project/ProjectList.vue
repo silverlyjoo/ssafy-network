@@ -26,7 +26,7 @@
     <v-layout row justify-center>
       <v-flex xs10>
         <div v-for="userPjt in projects">
-          <ProjectSum :userPjt="userPjt"></ProjectSum>
+          <ProjectSum :userPjt="userPjt" ></ProjectSum>
         </div>
       </v-flex>
     </v-layout>
@@ -54,9 +54,13 @@ export default {
         .get(`https://lab.ssafy.com/api/v4/users/${userName}/projects?private_token=fwjHN_fSR1p_Pk6tcCJq`)
         .then(response => {
           this.projects.push(response.data);
+
           //   console.log('object', object)
         });
       console.log(this.projects);
+    },
+    getCommit(repoName){
+      
     }
   },
   mounted() {
