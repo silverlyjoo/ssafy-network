@@ -1,7 +1,8 @@
 <template>
   <div id="app">
-    <div style="height:100px"></div>
+    <Imgbanner></Imgbanner>
     <Header></Header>
+    <div style="height:100px"></div>
 
     <v-content>
       <router-view />
@@ -12,6 +13,7 @@
 </template>
 
 <script>
+import ImgBanner from "@/components/common/ImgBanner.vue";
 import Header from "@/components/common/Header";
 import Footer from "@/components/common/Footer";
 
@@ -19,7 +21,8 @@ export default {
   name: "App",
   components: {
     Header,
-    Footer
+    Footer,
+    ImgBanner
   },
   data() {
     return {
