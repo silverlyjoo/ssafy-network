@@ -19,7 +19,7 @@
             <br />
             <br />
 
-            <span class="subheading" v-if="translateflag">{{content}}</span>
+            <span class="subheading" id="content" v-if="translateflag">{{content}}</span>
             <span class="subheading" v-else>{{ textresult }}</span>
             <v-btn @click="translateflag=!translateflag">번역</v-btn>
 
@@ -56,7 +56,12 @@ export default {
     };
   },
   mounted() {
-    this.translate(this.content);
+    try {
+      this.translate(this.content);
+    } catch (err) {
+      console.log('translate error')
+    }
+    
   },
   methods: {
     back() {
