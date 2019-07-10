@@ -55,9 +55,7 @@ export default {
         .then(response => {
           this.projects.push(response.data);
 
-          //   console.log('object', object)
         });
-      console.log(this.projects);
     },
     getCommit(repoName){
       
