@@ -79,6 +79,11 @@ export default {
       }
       else{
         FirebaseService.addPortfolio(this.title,this.image,this.content);
+        exports.helloError = functions.https.onRequest((request, response) => {
+  console.log('업로드 message');
+  response.send('업로드 send');
+});
+
         alert("업로드 되었습니다");
         this.title = "";
         this.image = "";

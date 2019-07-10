@@ -1,5 +1,5 @@
 module.exports = {
     devServer: {
-        proxy: 'http://localhost:8080/',
+        proxy: 'https://wmproject-9876.firebaseapp.com',
     }
   }

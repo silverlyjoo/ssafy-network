@@ -43,10 +43,9 @@ export default {
       let content = {
         method: "GET",
         headers: {
-          'Access-Control-Allow-Origin':'*',
+          'Access-Control-Allow-Origin':'true',
           'private_token' : 'fwjHN_fSR1p_Pk6tcCJq'
-        },
-        mode : 'no-cors'
+        }
       };
 
       fetch(Url,content)
