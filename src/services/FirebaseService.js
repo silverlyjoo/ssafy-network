@@ -73,22 +73,19 @@ import 'firebase/auth'
           alert("가입 성공!");
         });
       },async loginUser(email, password){
-         try {
-          const user = await firebase.auth().signInWithEmailAndPassword(email, password);
+        return  firebase.auth().signInWithEmailAndPassword(email, password).then(function(user){
           console.log("로그인 성공");
           return true;
-        }
-        catch (error) {
+        }).catch(function(error) {
           var errorCode = error.code;
           var errorMessage = error.message;
           if (errorCode === 'auth/wrong-password') {
             alert('Wrong password.');
-          }
-          else {
+          } else {
             alert(errorMessage);
           }
           return false;
-        }
+        });
       },loginSuccess(){
         if(firebase.auth().currentUser == null){
           return null;
