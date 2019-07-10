@@ -7,8 +7,7 @@ export default new Vuex.Store({
   state: {
     accessToken: '',
     user: '',
-    client_id : 'AetgEpzEEJwY_huWAvbA',
-    client_secret : 'Kl27wCCWOe'
+    api_key : 'AIzaSyBDwtzcQGyL_sDA0QuK6R86wybiroUk_88'
   },
   mutations: {
 
