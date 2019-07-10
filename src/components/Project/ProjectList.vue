@@ -51,12 +51,16 @@ export default {
   methods: {
     getProjects(userName) {
       axios
-        .get(`https://lab.ssafy.com/api/v4/users/${userName}/projects`)
+        .get(`https://lab.ssafy.com/api/v4/users/${userName}/projects?private_token=fwjHN_fSR1p_Pk6tcCJq`)
         .then(response => {
           this.projects.push(response.data);
+
           //   console.log('object', object)
         });
       console.log(this.projects);
+    },
+    getCommit(repoName){
+      
     }
   },
   mounted() {

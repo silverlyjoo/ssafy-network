@@ -30,7 +30,9 @@ export default {
     return {};
   },
   methods: {},
-  mounted() {}
+  mounted() {
+    console.log(userPjt)
+  }
 };
 </script>
 <style>
