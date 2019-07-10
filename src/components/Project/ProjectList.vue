@@ -26,7 +26,7 @@
     <v-layout row justify-center>
       <v-flex xs10>
         <div v-for="userPjt in projects">
-          <ProjectSum :userPjt="userPjt"></ProjectSum>
+          <ProjectSum :userPjt="userPjt" ></ProjectSum>
         </div>
       </v-flex>
     </v-layout>
