@@ -1,17 +1,17 @@
 <template>
 <div>
-  <ImgBanner></ImgBanner>
+  <!-- <ImgBanner></ImgBanner> -->
   <LoginPage></LoginPage>
 </div>
 </template>
 
 <script>
-import ImgBanner from "@/components/common/ImgBanner.vue";
+// import ImgBanner from "@/components/common/ImgBanner.vue";
 import LoginPage from "@/views/LoginPage";
 
 export default {
   components: {
-    ImgBanner,
+    // ImgBanner,
     LoginPage
   }
 }

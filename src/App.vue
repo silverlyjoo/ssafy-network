@@ -1,8 +1,8 @@
 <template>
   <div id="app">
-    <Imgbanner></Imgbanner>
+    <div style="height:30px"></div>
+    <ImgBanner></ImgBanner>
     <Header></Header>
-    <div style="height:100px"></div>
 
     <v-content>
       <router-view />
