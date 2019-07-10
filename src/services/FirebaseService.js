@@ -27,19 +27,32 @@ import 'firebase/auth'
           })
         })
       },
+      changeDate(nowDate){
+        let time = 
+        nowDate.getFullYear() + "-" +
+        nowDate.getMonth() + "-" +
+        nowDate.getDay() + " " +
+        nowDate.getHours() + ":" +
+        nowDate.getMinutes() + ":" +
+        nowDate.getSeconds();
+        return time;
+      },
       async getPost(){
         return firestore.collection("post").get().then((docSnapshots) => {
           return docSnapshots.docs.map((doc) => {
               let data = doc.data()
+              data.date = this.changeDate(new Date(data.date.toDate()));
+              return data
+          })
+        })
+      },
+      async getPostSort(header,sortflag){
+        return firestore.collection("post").orderBy(header, sortflag)
+        .get().then((docSnapshots) => {
+          return docSnapshots.docs.map((doc) => {
+              let data = doc.data()
               let id = doc.id
-              let nowDate = new Date(data.date.toDate());
-              data.date = 
-              nowDate.getFullYear() + "-" +
-              nowDate.getMonth() + "-" +
-              nowDate.getDay() + " " +
-              nowDate.getHours() + ":" +
-              nowDate.getMinutes() + ":" +
-              nowDate.getSeconds();
+              data.date = this.changeDate(new Date(data.date.toDate()));
               return {id , data}
           })
         })
