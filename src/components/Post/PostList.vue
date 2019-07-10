@@ -41,20 +41,20 @@
           <router-link
             style="text-decoration:none!important"
             :to="{name:'Postdetail', params:{
-              titles : props.item.data.title, 
-              writers : props.item.data.writer ,
-              date : props.item.data.date , 
-              contents : props.item.data.content}
+              titles : props.item.title, 
+              writers : props.item.writer ,
+              date : props.item.date , 
+              contents : props.item.content}
               }"
           >
-            <td class="text-xs-center">{{ props.item.data.title }}</td>
+            <td class="text-xs-center">{{ props.item.title }}</td>
           </router-link>
 
-          <td class="text-xs-center">{{ props.item.data.writer }}</td>
-          <td class="text-xs-center">{{ props.item.data.date }}</td>
+          <td class="text-xs-center">{{ props.item.writer }}</td>
+          <td class="text-xs-center">{{ props.item.date }}</td>
           <td class="justify-center layout px-0">
-            <v-icon small class="mr-2" @click="editItem(props.item.data)">edit</v-icon>
-            <v-icon small @click="deleteItem(props.item.data)">delete</v-icon>
+            <v-icon small class="mr-2" @click="editItem(props.item)">edit</v-icon>
+            <v-icon small @click="deleteItem(props.item)">delete</v-icon>
           </td>
         </template>
         <template v-slot:no-data>
@@ -72,8 +72,8 @@ export default {
   data: () => ({
     dialog: false,
     headers: [
-      { text: "Titles", align: "center", value: "titles" },
-      { text: "Writers", align: "center", value: "writers" },
+      { text: "Titles", align: "center", value: "title" },
+      { text: "Writers", align: "center", value: "writer" },
       { text: "Date", align: "center", value: "date" },
       { text: "Actions", align: "center", value: "name", sortable: false }
     ],
@@ -160,7 +160,8 @@ export default {
       );
       this.close();
       
-    }
+    },
+    
   }
 };
 </script>
