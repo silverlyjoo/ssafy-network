@@ -42,7 +42,7 @@ export default {
     getJSONdata(){
       const jaxios = axios.create({
         baseURL: "https://lab.ssafy.com/mwh5026/testproject/network/master?format=json",
-        header: {
+        headers: {
           'Access-Control-Allow-Origin': '*'
         }
       })
