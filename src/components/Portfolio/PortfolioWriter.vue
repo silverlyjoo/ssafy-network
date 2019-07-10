@@ -1,6 +1,6 @@
 <template>
   <v-container fluid grid-list-md>
-    <form>
+    <form class="title">
       <v-text-field
         v-model="title"
         v-validate="'required|max:50'"
@@ -10,24 +10,24 @@
         data-vv-name="name"
         required
       ></v-text-field>
-      <br>
-      <br>
+      <br />
+      <br />
     </form>
 
     <v-flex>
-      <h3 style="opacity:0.35;">Image</h3>
-      <v-divider class="my-3"></v-divider>
+      <h3 class="image">Image</h3>
+      <v-divider class="my-3 divider"></v-divider>
       <v-btn @click="myImage">My image</v-btn>
       <v-btn @click="randomImage">Random image</v-btn>
       <div v-if="ImgShow">
-        <input type="file" @change="onFileChange">
+        <input type="file" @change="onFileChange" />
       </div>
     </v-flex>
 
-    <br>
-    <br>
+    <br />
+    <br />
 
-    <v-textarea v-model="content" box label="Content" auto-grow value></v-textarea>
+    <v-textarea class="content" model="content" box label="Content" auto-grow value></v-textarea>
     <v-btn @click="submit">글 쓰기</v-btn>
     <v-btn @click="goback">취소</v-btn>
   </v-container>
@@ -45,7 +45,7 @@ export default {
   $_veeValidate: {
     validator: "new"
   },
-  
+
   data: () => ({
     name: "",
     dictionary: {
@@ -53,12 +53,12 @@ export default {
         name: {
           required: () => "Title can not be empty",
           max: "The title field may not be greater than 50 characters"
-        },
+        }
       }
     },
-    title: '',
-    content:'',
-    image: '',
+    title: "",
+    content: "",
+    image: "",
     ImgShow: false
   }),
 
@@ -68,32 +68,29 @@ export default {
 
   methods: {
     submit() {
-      if(this.title == ""){
+      if (this.title == "") {
         alert("제목을 입력하세요");
-      }
-      else if(this.image == ""){
+      } else if (this.image == "") {
         alert("이미지를 선택하세요");
-      }
-      else if(this.content == ""){
+      } else if (this.content == "") {
         alert("내용을 입력하세요");
-      }
-      else{
-        FirebaseService.addPortfolio(this.title,this.image,this.content);
+      } else {
+        FirebaseService.addPortfolio(this.title, this.image, this.content);
         alert("업로드 되었습니다");
         this.title = "";
         this.image = "";
         this.content = "";
       }
     },
-    myImage(){
+    myImage() {
       this.ImgShow = true;
     },
-    randomImage(){
+    randomImage() {
       this.ImgShow = false;
       this.image = "https://source.unsplash.com/random";
     },
     goback() {
-        // 
+      //
     },
     onFileChange(e) {
       // file 세팅
@@ -129,3 +126,28 @@ export default {
   }
 };
 </script>
+
+<style>
+.title {
+  width: 50%;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.image {
+  opacity: 0.35;
+  text-align: center;
+}
+
+.divider {
+  width: 50%;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.content {
+  width: 50%;
+  margin-left: auto;
+  margin-right: auto;
+}
+</style>
