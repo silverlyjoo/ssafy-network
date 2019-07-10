@@ -19,8 +19,9 @@
             <br />
             <br />
 
-            <span class="subheading" id="content">{{content}}</span>
-            <v-btn @click="translate(content)">번역</v-btn>
+            <span class="subheading" v-if="translateflag">{{content}}</span>
+            <span class="subheading" v-else>{{ textresult }}</span>
+            <v-btn @click="translateflag=!translateflag">번역</v-btn>
 
             <br />
             <br />
@@ -42,7 +43,7 @@ import qs from "qs";
 export default {
   name: "PortfolioDetail",
   props: {
-    id : {type:String},
+    id: { type: String },
     title: { type: String },
     content: { type: String },
     imgSrc: { type: String }
@@ -50,40 +51,33 @@ export default {
   data() {
     return {
       translateflag: true,
-      client_id: this.$store.state.client_id,
-      client_secret: this.$store.state.client_secret,
+      api_key: this.$store.state.api_key,
       textresult: null
     };
+  },
+  mounted() {
+    this.translate(this.content);
   },
   methods: {
     back() {
       this.$router.push("/portfolio");
     },
-    translate(content) {
-      console.log(content);
-      const taxios = axios.create({
-        baseURL: "https://openapi.naver.com",
-        withCredentials: false,
-        headers: {
-          'Accept': "application/json",
-          "X-Naver-Client-Id": this.client_id,
-          "X-Naver-Client-Secret": this.client_secret,
-          "Access-Control-Allow-Origin": "*"
-        }
-      });
-      let data = {
-          source: "en",
-          target: "ko",
-          text: content
+    async translate(content) {
+      try {
+        const taxios = await axios.create({
+          baseURL: "https://translation.googleapis.com"
+        });
+        const getTranslate = await taxios.post("/language/translate/v2", null, {
+          params: {
+            source: "en",
+            target: "ko",
+            q: content,
+            key: this.api_key
+          }
+        });
+        this.textresult = getTranslate.data.data.translations[0].translatedText
+      } catch (err) {
       }
-
-      // console.log(data);
-      taxios.post("/v1/papago/n2mt", data=data)
-      .then((response) => {
-        console.log(response)
-      })
-
-      // axios.post( )
     }
   }
 };
