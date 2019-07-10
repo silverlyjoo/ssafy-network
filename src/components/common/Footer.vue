@@ -5,12 +5,12 @@
       <div>
         <p>&copy; {{ new Date().getFullYear() }}</p>
       </div>
-      <div>
+      <!-- <div>
         <button type="button" @click="searchWeather">날씨정보</button>
-      </div>
-      <div v-if='view === true'>
-        <p> : {{ country }}, {{ city }}, 습도 : {{ humidity }}% / 100%</p>
-      </div>
+      </div> -->
+      <!-- <div v-if='view === true'> -->
+        <p v-if='view === true'>Korea, Daejeon, 온도 : {{ temp }}, 최고기온 : {{ temp_max }}, 최저기온 : {{ temp_min }}, 습도 : {{ humidity }}% / 100%</p>
+      <!-- </div> -->
     </v-layout>
   </v-footer>
 </template>
@@ -22,9 +22,10 @@ export default {
   data() {
     return {
       view: false,
-      country: '',
-      city: '',
+      temp: '',
       humidity: '',
+      temp_min: '',
+      temp_max: ''
     }
   },
   computed: {
@@ -38,9 +39,10 @@ export default {
       axios.get (`${BASE_URL}`)
       .then( (result) => {
         console.log(result)
-        this.country = result.data.sys.country
-        this.city = result.data.name
+        this.temp = result.data.main.temp - 273.15
         this.humidity = result.data.main.humidity
+        this.temp_min = result.data.main.temp_min
+        this.temp_max = result.data.main.temp_max
         this.view = true
       })
     }

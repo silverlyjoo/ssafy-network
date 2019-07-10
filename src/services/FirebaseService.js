@@ -52,6 +52,14 @@ import 'firebase/auth'
           date: firebase.firestore.FieldValue.serverTimestamp()
         });
       },
+      addPost(title, content, writer){
+        return firestore.collection('post').add({
+          title,
+          content,
+          writer,
+          date: firebase.firestore.FieldValue.serverTimestamp()
+        });
+      },
       addUser(email, password){
         firebase.auth().createUserWithEmailAndPassword(email, password).catch(function(error) {
           var errorCode = error.code;
