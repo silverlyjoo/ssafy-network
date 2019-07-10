@@ -24,7 +24,7 @@
 
 
 <script>
-import Axios from 'axios';
+import axios from "axios";
 export default {
   name: "ProjectSum",
   props: {
@@ -32,27 +32,40 @@ export default {
   },
   data() {
     return {
-      data:[]
+      data: []
     };
   },
   methods: {
-    getData(i){
-      return this.userPjt[i-1].web_url + "/network/master?format=json";
+    getData(i) {
+      return this.userPjt[i - 1].web_url + "/network/master?format=json";
     },
-    getJSONdata(){
-      const jaxios = axios.create({
-        baseURL: "https://lab.ssafy.com/mwh5026/testproject/network/master?format=json",
-        headers: {
-          'Access-Control-Allow-Origin': '*'
-        }
-      })
+    getJSONdata() {
+      // const jaxios = axios.create({
+      //   baseURL: "https://lab.ssafy.com/mwh5026/testproject/network/master?format=json",
+      //   withCredentials: false,
+      //   headers: {
+      //     // 'Accept': "application/json",
+      //     // 'Access-Control-Allow-Origin': '*'
+      //   }
+      // })
+      // jaxios.get()
+      //   .then(response => console.log(response))
 
-      jaxios.get()
-        .then(response => console.log(response))
+      const a = axios({
+        method: "get",
+        url:
+          "https://lab.ssafy.com/mwh5026/testproject/network/master?format=json",
+        headers: {
+          "Accept": "application/json",
+          "Access-Control-Allow-Origin": "*"
+        }
+      });
+      console.log(a)
     }
   },
+
   mounted() {
-    this.getJSONdata()
+    this.getJSONdata();
   }
 };
 </script>
