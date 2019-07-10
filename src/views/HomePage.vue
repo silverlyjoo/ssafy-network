@@ -1,7 +1,7 @@
 <template>
 <div>
   <ImgBanner></ImgBanner>
-  <LoginPage></LoginPage>
+  <h2>메인 페이지 입니다.</h2>
 </div>
 </template>
 
