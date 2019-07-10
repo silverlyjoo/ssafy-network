@@ -24,7 +24,6 @@
 
 
 <script>
-import Axios from 'axios';
 export default {
   name: "ProjectSum",
   props: {
@@ -40,15 +39,27 @@ export default {
       return this.userPjt[i-1].web_url + "/network/master?format=json";
     },
     getJSONdata(){
-      const jaxios = axios.create({
-        baseURL: "https://lab.ssafy.com/mwh5026/testproject/network/master?format=json",
-        header: {
-          'Access-Control-Allow-Origin': '*'
-        }
-      })
+      const Url = "https://lab.ssafy.com/mwh5026/testproject/network/master?format=json";
+      let content = {
+        method: "GET",
+        headers: {
+          'Access-Control-Allow-Origin':'*',
+          'private_token' : 'fwjHN_fSR1p_Pk6tcCJq'
+        },
+        mode : 'no-cors'
+      };
 
-      jaxios.get()
-        .then(response => console.log(response))
+      fetch(Url,content)
+        .then((response) => {
+          if(response.ok){
+            return response.json();
+          }
+          throw new Error("네트워크 에러");
+        }).then((json) => {
+          this.data.push(json);
+        }).catch((error) => {
+          console.log(error);
+        });
     }
   },
   mounted() {
