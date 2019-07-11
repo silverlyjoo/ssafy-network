@@ -29,11 +29,13 @@
     <br />
     <br />
 
-    <div class="content">
-      <v-textarea model="content" box label="Content" auto-grow value></v-textarea>
-      <v-btn @click="submit">글 쓰기</v-btn>
-      <v-btn @click="goback">취소</v-btn>
-    </div>
+    <v-flex>
+      <v-textarea v-model="content" box label="Content" auto-grow value></v-textarea>
+      <div class="btn-box">
+        <v-btn @click="submit">글 쓰기</v-btn>
+        <v-btn @click="goback">취소</v-btn>
+      </div>
+    </v-flex>
   </v-container>
 </template>
 
@@ -158,6 +160,7 @@ export default {
 
 .content {
   width: 50%;
+  height: 20vw;
   margin-left: auto;
   margin-right: auto;
 }
