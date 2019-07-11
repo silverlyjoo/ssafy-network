@@ -39,14 +39,13 @@ export default {
     getData(i) {
       return this.userPjt[i - 1].web_url + "/network/master?format=json";
     },
-    getJSONdata() {
-      const Url =
-        "https://lab.ssafy.com/mwh5026/testproject/network/master?format=json";
+    getJSONdata(){
+      const Url = "https://lab.ssafy.com/silverlyjoo/webmobile-sub2/network/master?format=json";
       let content = {
         method: "GET",
         headers: {
-          "Access-Control-Allow-Origin": "*",
-          private_token: "fwjHN_fSR1p_Pk6tcCJq"
+          'Access-Control-Allow-Origin':'*',
+          'Private-token' : 'fwjHN_fSR1p_Pk6tcCJq'
         }
       };
 
@@ -67,7 +66,7 @@ export default {
   },
 
   mounted() {
-    //this.getJSONdata();
+    this.getJSONdata();
   }
 };
 </script>

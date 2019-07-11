@@ -35,14 +35,21 @@
 
     <v-toolbar fixed app clipped-right>
       <v-toolbar-title>
-        <v-layout nowrap>
+        <v-layout>
           <v-flex align-self-center>
             <router-link to="/" style="text-decoration:none!important">
-              <v-img src="./Favicon.png" style="width:37px;"></v-img>SSAFY
+              <v-img src="./Favicon.png" style="width:37px;"></v-img>
+            </router-link>
+          </v-flex>
+          &nbsp;&nbsp;
+          <v-flex align-self-center>
+            <router-link to="/" style="text-decoration:none!important">
+              <span>SSAFY</span>
             </router-link>
           </v-flex>
         </v-layout>
       </v-toolbar-title>
+
       <v-spacer></v-spacer>
 
       <v-toolbar-items v-if="loginCondition">
@@ -136,6 +143,7 @@ export default {
         this.$store.state.user = FirebaseService.loginSuccess();
         this.loginCondition = false;
       } else {
+        alert("로그인 실패...");
       }
       this.email = "";
       this.password = "";
