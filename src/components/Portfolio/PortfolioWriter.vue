@@ -84,6 +84,7 @@ export default {
         this.title = "";
         this.image = "";
         this.content = "";
+        this.$router.push("/portfolio");
       }
     },
     myImage() {

@@ -65,7 +65,7 @@ import 'firebase/auth'
           date: firebase.firestore.FieldValue.serverTimestamp()
         });
       },
-      addPost(title, content, writer){
+      async addPost(title, content, writer){
         return firestore.collection('post').add({
           title,
           content,

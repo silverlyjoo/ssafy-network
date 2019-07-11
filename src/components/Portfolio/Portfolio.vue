@@ -4,7 +4,7 @@
       <v-card slot-scope="{ hover }" :class="`elevation-${hover ? 12 : 2}`">
         <v-img :aspect-ratio="16/9" :src="imgSrc"></v-img>
         <v-card-title>
-          <div>
+          <div style="width:100%;">
             <div class="headline title">{{title}}</div>
             <!-- <div class="d-flex"> -->
             <span class="grey--text content">{{content}}</span>
@@ -44,6 +44,7 @@ export default {
 	max-height: 70px;      /* fallback */
 	-webkit-line-clamp: 1; /* number of lines to show */
 	-webkit-box-orient: vertical;
+  width:100%!important;
 }
 
 .content {
@@ -54,5 +55,6 @@ export default {
 	max-height: 70px;      /* fallback */
 	-webkit-line-clamp: 4; /* number of lines to show */
 	-webkit-box-orient: vertical;
+  width:100%!important;
 }
 </style>
