@@ -25,6 +25,8 @@
 
 
 <script>
+import gitgraph from "@/services/graph.js"
+
 export default {
   name: "ProjectSum",
   props: {
@@ -48,25 +50,20 @@ export default {
           'Private-token' : 'fwjHN_fSR1p_Pk6tcCJq'
         }
       };
-
-      fetch(Url, content)
-        .then(response => {
-          if (response.ok) {
-            return response.json();
-          }
-          throw new Error("네트워크 에러");
-        })
-        .then(json => {
-          this.data.push(json);
-        })
-        .catch(error => {
-          console.log(error);
-        });
+    },
+    getGraph (elementId) {
+      const graph = gitgraph(elementId)
+      graph._graph.author = "Seongjoo"
+      const master = gitgraph.branch("master")
+      master.commit("Initial commit")
+      console.log(graph)
     }
+
   },
 
   mounted() {
     this.getJSONdata();
+    this.getGraph("graph-container")
   }
 };
 </script>
