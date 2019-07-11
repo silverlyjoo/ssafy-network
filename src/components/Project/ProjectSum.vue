@@ -13,8 +13,8 @@
           <div class="headline mb-2">{{userPjt[i-1].path}}</div>
           <blockquote class="body-1">{{userPjt[i-1].description}}</blockquote>
         </a>
-        <v-flex style="width:100%; height:200px;">
-          <div id="graph-container"></div>
+        <v-flex hidden-xs-only>
+          <GitGraph :repoId="userPjt[i-1].id"></GitGraph>
         </v-flex>
       </v-card>
     </v-flex>
@@ -25,8 +25,14 @@
 
 
 <script>
+import GitGraph from "@/components/Project/GitGraph.vue";
+
+
 export default {
   name: "ProjectSum",
+  components:{
+    GitGraph
+  },
   props: {
     userPjt: { type: Array }
   },
@@ -36,37 +42,9 @@ export default {
     };
   },
   methods: {
-    getData(i) {
-      return this.userPjt[i - 1].web_url + "/network/master?format=json";
-    },
-    getJSONdata(){
-      const Url = "https://lab.ssafy.com/silverlyjoo/webmobile-sub2/network/master?format=json";
-      let content = {
-        method: "GET",
-        headers: {
-          'Access-Control-Allow-Origin':'*',
-          'Private-token' : 'fwjHN_fSR1p_Pk6tcCJq'
-        }
-      };
-
-      fetch(Url, content)
-        .then(response => {
-          if (response.ok) {
-            return response.json();
-          }
-          throw new Error("네트워크 에러");
-        })
-        .then(json => {
-          this.data.push(json);
-        })
-        .catch(error => {
-          console.log(error);
-        });
-    }
+    
   },
-
   mounted() {
-    this.getJSONdata();
   }
 };
 </script>
