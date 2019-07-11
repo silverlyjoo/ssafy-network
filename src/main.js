@@ -6,7 +6,10 @@ import router from './router'
 import store from './store'
 import axios from 'axios'
 import VueApexCharts from 'vue-apexcharts'
+import VueSession from 'vue-session'
 
+Vue.use(VueSession)
+Vue.component('apexchart', VueApexCharts)
 Vue.use(VueApexCharts)
 
 Vue.config.productionTip = false

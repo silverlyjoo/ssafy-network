@@ -51,7 +51,7 @@ export default {
   methods: {
     getProjects(userName) {
       axios
-        .get(`https://lab.ssafy.com/api/v4/users/${userName}/projects?private_token=fwjHN_fSR1p_Pk6tcCJq`)
+        .get(`https://lab.ssafy.com/api/v4/users/${userName}/projects?private_token=`+this.$store.state.private_token)
         .then(response => {
           this.projects.push(response.data);
 
