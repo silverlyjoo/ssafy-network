@@ -1,7 +1,6 @@
 <template>
-<div>
-  <ImgBanner></ImgBanner>
-  <h2>메인 페이지 입니다.</h2>
+<div class="mainPage">
+  <div class="mainLogo">WM project</div>
   <GitGraph></GitGraph>
 </div>
 </template>
@@ -14,6 +13,28 @@ export default {
   components: {
     ImgBanner,
     GitGraph
+  },
+  methods: {
+    pageLog() {
+      console.log(this.$router.history.current)
+    }
+  },
+  mounted() {
+
+    this.pageLog()
   }
 }
 </script>
+<style>
+.mainPage {
+  background-color:rgb(46, 46, 46);
+  position: absolute;
+  width: 100vw;
+  height: 100vh;
+}
+.mainLogo {
+  color: rgb(163, 194, 240);
+  font-size: 60px;
+  font-family: 'Roboto Mono', monospace;
+}
+</style>

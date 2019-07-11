@@ -46,24 +46,14 @@ export default {
       let content = {
         method: "GET",
         headers: {
-          'Access-Control-Allow-Origin':'*',
-          'Private-token' : 'fwjHN_fSR1p_Pk6tcCJq'
+          'Access-Control-Allow-Origin':'*'
         }
       };
-    },
-    getGraph (elementId) {
-      const graph = gitgraph(elementId)
-      graph._graph.author = "Seongjoo"
-      const master = gitgraph.branch("master")
-      master.commit("Initial commit")
-      console.log(graph)
     }
-
   },
 
   mounted() {
     this.getJSONdata();
-    this.getGraph("graph-container")
   }
 };
 </script>

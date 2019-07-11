@@ -1,10 +1,10 @@
 <template>
   <div id="app">
-    <Header></Header>
+    <Header v-if="mainflag"></Header>
     <v-content>
       <router-view />
     </v-content>
-    <Footer></Footer>
+    <Footer v-if="mainflag"></Footer>
   </div>
 </template>
 
@@ -20,8 +20,13 @@ export default {
   },
   data() {
     return {
-      //
+      mainflag : true
     };
+  },
+  mounted () {
+    if (this.$router.history.current.path === '/') {
+      this.mainflag = false
+    }
   }
 };
 </script>
