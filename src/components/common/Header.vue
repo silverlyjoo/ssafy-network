@@ -41,6 +41,7 @@
               <v-img src="./Favicon.png" style="width:37px;"></v-img>
             </router-link>
           </v-flex>
+          &nbsp;&nbsp;
           <v-flex align-self-center>
             <router-link to="/" style="text-decoration:none!important">
               <span>SSAFY</span>
@@ -142,6 +143,7 @@ export default {
         this.$store.state.user = FirebaseService.loginSuccess();
         this.loginCondition = false;
       } else {
+        alert("로그인 실패...");
       }
       this.email = "";
       this.password = "";

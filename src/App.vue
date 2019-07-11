@@ -1,11 +1,9 @@
 <template>
   <div id="app">
-    <div style="height:30px"></div>
     <Header></Header>
     <v-content>
       <router-view />
     </v-content>
-    <div style="height:100px"></div>
     <Footer></Footer>
   </div>
 </template>
