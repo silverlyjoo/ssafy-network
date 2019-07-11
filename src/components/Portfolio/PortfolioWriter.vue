@@ -29,13 +29,11 @@
     <br />
     <br />
 
-    <v-flex>
-      <v-textarea class="" v-model="content" box label="Content" auto-grow value></v-textarea>
-      <div class="btn-box">
-        <v-btn @click="submit">글 쓰기</v-btn>
-        <v-btn @click="goback">취소</v-btn>
-      </div>
-    </v-flex>
+    <v-textarea box label="Content" v-model="content" auto-grow value></v-textarea>
+    <div class="btn-box">
+      <v-btn @click="submit">글 쓰기</v-btn>
+      <v-btn @click="goback">취소</v-btn>
+    </div>
   </v-container>
 </template>
 
@@ -69,7 +67,7 @@ export default {
   }),
 
   mounted() {
-    this.$validator.localize("en", this.dictionary);
+    this.$validator.localize("ko", this.dictionary);
   },
 
   methods: {
@@ -161,7 +159,6 @@ export default {
 
 .content {
   width: 50%;
-  height: 20vw;
   margin-left: auto;
   margin-right: auto;
 }

@@ -1,5 +1,5 @@
 <template>
-  <v-footer style="height:50px" fixed>
+  <v-footer style="height:50px; bottom:0%!important; position:relative!important;">
     <v-spacer></v-spacer>
     <v-layout>
       <div>
