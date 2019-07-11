@@ -1,8 +1,8 @@
 <template>
   <v-container id="projectsum">
     <v-flex xs12 class="mb-3">
-      <span class="headline">{{ userPjt[0].namespace.name}}</span>
-      <span class="title">
+      <span class="headline">
+        {{ userPjt[0].namespace.name}}
         's repositories
         <br />
       </span>
@@ -14,13 +14,14 @@
           <blockquote class="body-1">{{userPjt[i-1].description}}</blockquote>
         </a>
         <v-flex style="width:100%; height:200px;">
-          <div class="network-graph" :data-url="data" data-commit-url></div>
+          <div id="graph-container"></div>
         </v-flex>
       </v-card>
     </v-flex>
     <!-- <div>{{ userPjt }}</div> -->
   </v-container>
 </template>
+
 
 
 <script>
@@ -31,7 +32,7 @@ export default {
   },
   data() {
     return {
-      data: ''
+      data: ""
     };
   },
   methods: {
@@ -48,15 +49,17 @@ export default {
         }
       };
 
-      fetch(Url,content)
-        .then((response) => {
-          if(response.ok){
+      fetch(Url, content)
+        .then(response => {
+          if (response.ok) {
             return response.json();
           }
           throw new Error("네트워크 에러");
-        }).then((json) => {
+        })
+        .then(json => {
           this.data.push(json);
-        }).catch((error) => {
+        })
+        .catch(error => {
           console.log(error);
         });
     }
