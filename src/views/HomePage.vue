@@ -7,7 +7,6 @@
 
 <script>
 import ImgBanner from "@/components/common/ImgBanner.vue";
-import GitGraph from "@/components/Project/GitGraph.vue";
 
 export default {
   components: {

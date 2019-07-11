@@ -56,7 +56,7 @@
         <v-btn flat @click="dialog_login = true">Login</v-btn>
       </v-toolbar-items>
       <v-toolbar-items v-if="!loginCondition">
-        <v-btn flat @click="logout()">{{this.$store.state.user}} : LogOut</v-btn>
+        <v-btn flat @click="logout()">{{this.$session.get("user")}} : LogOut</v-btn>
       </v-toolbar-items>
 
       <v-toolbar-items class="hidden-xs-only" v-for="item in items" :key="item.title">
@@ -140,8 +140,8 @@ export default {
     async loginUser() {
       const user = await FirebaseService.loginUser(this.email, this.password);
       if (user == true) {
-        this.$store.state.user = FirebaseService.loginSuccess();
         this.loginCondition = false;
+        this.$session.set("user" , FirebaseService.loginSuccess());
       } else {
         alert("로그인 실패...");
       }
@@ -160,6 +160,14 @@ export default {
       this.email = "";
       this.password = "";
       this.loginCondition = true;
+      this.$session.clear();
+    }
+  },
+  mounted (){
+    if(this.$session.get("user") == null){
+      this.loginCondition = true;
+    }else {
+      this.loginCondition = false;
     }
   }
 };
