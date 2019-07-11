@@ -9,11 +9,15 @@
 <script>
 import ImgBanner from "@/components/common/ImgBanner.vue";
 import GitGraph from "@/components/Project/GitGraph.vue";
+import FirebaseService from '@/services/FirebaseService';
 
 export default {
   components: {
     ImgBanner,
     GitGraph
+  },
+  mounted(){
+    FirebaseService.SendLog("HomePage");
   }
 }
 </script>

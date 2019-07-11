@@ -26,6 +26,7 @@ export default {
 		}
 	},
 	mounted() {
+		FirebaseService.SendLog("LoginPage");
 	}
 }
 </script>

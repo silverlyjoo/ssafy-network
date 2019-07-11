@@ -15,11 +15,15 @@
 
 <script>
 import PortfolioList from '@/components/Portfolio/PortfolioList'
+import FirebaseService from '@/services/FirebaseService';
 
 export default {
 	name: 'PortfolioPage',
 	components: {
         PortfolioList,
-	},
+  },
+  mounted() {
+		FirebaseService.SendLog("PortfolioPage");
+	}
 }
 </script>
