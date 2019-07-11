@@ -152,12 +152,14 @@ export default {
       }, 300);
     },
 
-    save() {
-      FirebaseService.addPost(
+    async save() {
+      const data = await FirebaseService.addPost(
         this.editedItem.titles,
         this.editedItem.contents,
         this.editedItem.writers
       );
+      this.getPosts();
+      this.$router.push("/post");
       this.close();
       
     },
