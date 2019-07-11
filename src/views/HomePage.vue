@@ -7,10 +7,14 @@
 
 <script>
 import ImgBanner from "@/components/common/ImgBanner.vue";
+import FirebaseService from '@/services/FirebaseService';
 
 export default {
   components: {
     ImgBanner
+  },
+  mounted(){
+    FirebaseService.SendLog("HomePage");
   }
 }
 </script>

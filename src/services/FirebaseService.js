@@ -109,6 +109,12 @@ import 'firebase/auth'
       delData(){
         
       },
+      async SendLog(page){
+        return firestore.collection('log').add({
+          page,
+          date: firebase.firestore.FieldValue.serverTimestamp()
+        });
+      },
       async loginWithFacebook(){
         let provider = new firebase.auth.FacebookAuthProvider();
         return firebase.auth().signInWithPopup(provider).then(function(result) {
