@@ -14,7 +14,6 @@ export default {
   components: {
     ImgBanner
   },
-<<<<<<< HEAD
   methods: {
     pageLog() {
       console.log(this.$router.history.current);
@@ -56,10 +55,3 @@ export default {
   
 }
 </style>
-=======
-  mounted(){
-    FirebaseService.SendLog("HomePage");
-  }
-}
-</script>
->>>>>>> f37786b1e949745836ad082b33468193a14be746
