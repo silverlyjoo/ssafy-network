@@ -12,10 +12,15 @@
 
 <script>
 import PostList from '../components/Post/PostList'
+import FirebaseService from '@/services/FirebaseService';
+
 export default {
     name: 'Post',
     components: {
         PostList
-    }
+    },
+    mounted() {
+		FirebaseService.SendLog("PostPage");
+	}
 }
 </script>
