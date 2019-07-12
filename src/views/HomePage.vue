@@ -1,6 +1,7 @@
 <template>
   <div class="mainPage">
     <div class="mainLogo Absolute-Center">WM project</div>
+    
     <router-link to="/project" class="projectlink linktext">project</router-link>
   </div>
 </template>

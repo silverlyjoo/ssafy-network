@@ -23,10 +23,10 @@ export default {
       mainflag : true
     };
   },
-  mounted () {
-    if (this.$router.history.current.path === '/') {
-      this.mainflag = false
-    }
+  watch () {
+    // if (this.$router.history.current.path === '/') {
+    //   this.mainflag = false
+    // }
   }
 };
 </script>
