@@ -1,4 +1,5 @@
 import Vue from 'vue'
+import './plugins/vuetify'
 import App from './App.vue'
 import router from './router'
 import store from './store'
@@ -11,6 +12,7 @@ import { Editor, Viewer } from '@toast-ui/vue-editor'
 Vue.component('editor', Editor)
 Vue.component('viewer', Viewer)
 
+
 Vue.config.productionTip = false
 
 new Vue({
@@ -18,3 +20,4 @@ new Vue({
   store,
   render: h => h(App)
 }).$mount('#app')
+
