@@ -3,14 +3,14 @@
     <v-toolbar-title class="white--text">SSAFY WM</v-toolbar-title>
     <v-spacer/>
     <v-toolbar-items>
-      <v-btn icon>
-      <v-icon>dashboard</v-icon>
+      <v-btn icon >
+      <v-icon color="white">dashboard</v-icon>
     </v-btn>
     <v-btn icon>
-      <v-icon>notifications</v-icon>
+      <v-icon color="white">notifications</v-icon>
     </v-btn>
     <v-btn icon>
-      <v-icon>person</v-icon>
+      <v-icon color="white">person</v-icon>
     </v-btn>
     </v-toolbar-items>
   </v-toolbar>
