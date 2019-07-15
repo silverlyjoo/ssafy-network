@@ -1,40 +1,55 @@
 <template>
   <div id="app">
-    <v-layout>
-      <v-flex xs2 class="navLayout">
-        <Nav></Nav>
-      </v-flex>
-
-      <v-flex xs10>
-        <Header></Header>
-        <router-view></router-view>
-        <Footer></Footer>
-      </v-flex>
-    </v-layout>
+    <div v-if="login">
+      <v-layout>
+        <div class="navLayout">
+          <div class="navBg">
+            <Nav></Nav>
+          </div>
+        </div>
+        <div class="navBg"></div>
+        <div class="mainsection">
+          <Header></Header>
+          <router-view></router-view>
+          <Footer></Footer>
+        </div>
+      </v-layout>
+    </div>
+    <div v-else>
+      <MainPage></MainPage>
+    </div>
   </div>
 </template>
 <script>
 import Header from "@/components/common/Header";
 import Footer from "@/components/common/Footer";
 import Nav from "@/components/common/Nav";
+import MainPage from "@/components/common/MainPage";
 
 export default {
   name: "App",
   components: {
     Header,
     Footer,
-    Nav
+    Nav,
+    MainPage
   },
   data() {
-    return {};
+    return {
+      login: this.$store.state.login,
+      foldflag: this.$store.state.foldflag
+    };
+  },
+  watch: {
+    // foldflag : function(this.$store.state.foldflag) {
+    //   this.foldflag = this.$store.state.foldflag
+    // }
   }
 };
 </script>
 
 <style>
-
-.navLayout {
-  height: 100vh;
-  background:rgba(230, 230, 230, 0.295);
+.mainsection {
+  width: calc(100vw - 200px);
 }
 </style>
