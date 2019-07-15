@@ -1,7 +1,7 @@
 <template>
   <div id="app">
     <v-layout>
-      <v-flex xs2 class="Nav">
+      <v-flex xs2 class="navLayout">
         <Nav></Nav>
       </v-flex>
 
@@ -32,7 +32,8 @@ export default {
 };
 </script>
 <style>
-.Nav {
+.navLayout {
   height: 100vh;
+  background:rgba(230, 230, 230, 0.295);
 }
 </style>
