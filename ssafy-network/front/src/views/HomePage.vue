@@ -1,5 +1,5 @@
 <template>
-  <div class="about">
+  <div class="home">
     <h1>This is an Home page</h1>
     <!-- session 값 있을때 바로 페이지 -->
     <router-link to="/about">about</router-link>
@@ -23,3 +23,10 @@ export default {
   }
 };
 </script>
+<style>
+
+.home {
+  background: rgb(10, 0, 56);
+  color: rgb(218, 234, 248);
+}
+</style>
