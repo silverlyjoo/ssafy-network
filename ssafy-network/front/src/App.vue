@@ -30,7 +30,9 @@ export default {
   }
 };
 </script>
+
 <style>
+
 .navLayout {
   height: 100vh;
   background:rgba(230, 230, 230, 0.295);
