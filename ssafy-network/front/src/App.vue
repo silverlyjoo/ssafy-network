@@ -41,7 +41,9 @@ export default {
   }
 };
 </script>
+
 <style>
+
 .navLayout {
   position: fixed;
   height: 100vh;
