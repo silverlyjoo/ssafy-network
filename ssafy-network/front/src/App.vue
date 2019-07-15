@@ -2,12 +2,22 @@
   <div id="app">
     <div v-if="login">
       <v-layout>
-        <div class="navLayout">
-          <div class="navBg">
-            <Nav></Nav>
+        <div v-if="foldflag">
+          <div class="navLayout">
+            <div class="navBg">
+              <Nav></Nav>
+            </div>
           </div>
+          <div class="navBg"></div>
         </div>
-        <div class="navBg"></div>
+        <!-- <div v-else>
+          <div class="navLayoutf">
+            <div class="navBgf">
+              <Nav></Nav>
+            </div>
+          </div>
+          <div class="navBgf"></div>
+        </div> -->
         <div class="mainsection">
           <Header></Header>
           <router-view></router-view>
@@ -36,14 +46,20 @@ export default {
   },
   data() {
     return {
-      login: true
+      login: this.$store.state.login,
+      foldflag: this.$store.state.navFoldFlag
     };
+  },
+  watch: {
+    check() {
+      this.foldflag = this.$store.state.navFoldFlag;
+      console.log(this.$store.state.navFoldFlag);
+    }
   }
 };
 </script>
 
 <style>
-
 .navLayout {
   position: fixed;
   height: 100vh;
@@ -52,6 +68,15 @@ export default {
 }
 .navBg {
   width: 200px;
+}
+.navLayoutf {
+  position: fixed;
+  height: 100vh;
+  background: rgb(64, 120, 253);
+  z-index: 100;
+}
+.navBgf {
+  width: 100px;
 }
 .mainsection {
   width: calc(100vw - 200px);
