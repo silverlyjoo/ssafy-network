@@ -1,4 +1,4 @@
-import NotePage from '../views/NotePage.vue'
+import NotePage from '@/views/NotePage.vue'
 import NoteWriter from '@/components/note/NoteWriter.vue'
 import NoteDetail from '@/components/note/NoteDetail.vue'
 import NoteUpdate from '@/components/note/NoteUpdate.vue'
@@ -8,16 +8,16 @@ export default {
     component: NotePage,
     children:[
         {
-            path: '/notewrite',
+            path: 'write',
             name: 'notewrite',
             component: NoteWriter,
           },
           {
-            path: '/notedetail',
+            path: 'detail',
             name: 'notedetail',
             component: NoteDetail,
           }, {
-            path: '/noteupdate',
+            path: 'update',
             name: 'noteupdate',
             component: NoteUpdate,
           },
