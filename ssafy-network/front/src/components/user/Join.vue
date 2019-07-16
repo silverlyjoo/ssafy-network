@@ -127,7 +127,7 @@ export default {
           this.$nextTick(() => this.$refs.IDCheckBtn.$el.focus());
           return;
         }
-        fetch("http://192.168.31.55:3000/users/addUser", {
+        fetch(this.$store.state.dbserver + "/users/addUser", {
           method: "POST",
           headers: {
             "Access-Control-Allow-Origin": "*",
@@ -162,7 +162,7 @@ export default {
         this.IDCheck = false;
         return;
       }
-      fetch("http://192.168.31.55:3000/users/getUserByIdCheck", {
+      fetch(this.$store.state.dbserver + "/users/getUserByIdCheck", {
         method: "POST",
         headers: {
           "Access-Control-Allow-Origin": "*",
@@ -194,7 +194,7 @@ export default {
         this.NickNameCheck = false;
         return;
       }
-      fetch("http://192.168.31.55:3000/users/getUserByNicknameCheck", {
+      fetch(this.$store.state.dbserver + "/users/getUserByNicknameCheck", {
         method: "POST",
         headers: {
           "Access-Control-Allow-Origin": "*",
