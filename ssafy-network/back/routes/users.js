@@ -26,6 +26,19 @@ router.post('/getUserById', function(req, res){
   })
 });
 
+//아이디를 통해 그런 아이디를 가진 유저가 있는지 확인
+router.post('/getUserByIdCheck', function(req, res){
+  User.findOne({id: req.body.id}, function(err, user){
+      if(err){
+        return res.status(500).json({error: err});
+      } 
+      if(!user){
+        return res.json({result:false});
+      } 
+      res.json({result:true});
+  })
+});
+
 //멤버쉽 정보를 통해 유저 정보 반환
 router.post('/getUserByMembership', function(req, res){
   User.find({membership: req.body.membership}, function(err, users){
