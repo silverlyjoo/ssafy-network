@@ -4,16 +4,17 @@ var User = require('../models/user');
 
 //모든 유저 리스트를 반환
 router.get('/getAllUsers', function(req,res){
+  var sort = {name: 1};
   User.find(function(err, users){
       if(err) {
         return res.status(500).send({error: 'database failure'});
       }
       res.json(users);
-  });
+  }).sort(sort);
 });
 
 //아이디를 통해 유저 정보 반환
-router.get('/getUserInfo/:id', function(req, res){
+router.get('/getUserById/:id', function(req, res){
   User.findOne({id: req.params.id}, function(err, user){
       if(err){
         return res.status(500).json({error: err});
@@ -22,6 +23,19 @@ router.get('/getUserInfo/:id', function(req, res){
         return res.status(404).json({error: 'user not found'});
       } 
       res.json(user);
+  })
+});
+
+//멤버쉽 정보를 통해 유저 정보 반환
+router.get('/getUserByMembership/:membership', function(req, res){
+  User.find({membership: req.params.membership}, function(err, users){
+      if(err){
+        return res.status(500).json({error: err});
+      } 
+      if(!users){
+        return res.status(404).json({error: 'user not found'});
+      } 
+      res.json(users);
   })
 });
 
@@ -49,7 +63,7 @@ router.post('/addUser', function(req, res){
 
 
 //유저 정보를 업데이트한다.
-router.put('/updateUser/:id', function(req, res){
+router.put('/updateUserById/:id', function(req, res){
   User.update({ id: req.params.id }, { $set: req.body }, function(err, output){
       if(err){
         res.status(500).json({ error: 'database failure' });
@@ -63,13 +77,26 @@ router.put('/updateUser/:id', function(req, res){
 });
 
 //유저 정보를 삭제한다.
-router.delete('/deleteUser/:id', function(req, res){
+router.delete('/deleteUserById/:id', function(req, res){
   User.remove({ id: req.params.id }, function(err, output){
       if(err){
         return res.status(500).json({ error: "database failure" });
       } 
       res.status(204).end();
   })
+});
+
+//로그인
+router.post('/Login', function(req, res){
+  User.findOne({id: req.body.id, pwd: req.body.pwd}, function(err, user){
+    if(err){
+      return res.status(500).json({error: err});
+    } 
+    if(!user){
+      return res.status(404).json({error: 'user not found'});
+    } 
+    res.json(user);
+  });
 });
 
 module.exports = router;

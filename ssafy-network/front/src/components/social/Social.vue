@@ -1,5 +1,17 @@
 <template>
-  <div class="about">
-    <h1>This is an Social</h1>
+  <div>
+    <v-content>
+      <h1>hello</h1>
+      <router-view></router-view>
+    </v-content>
   </div>
 </template>
+
+<script>
+export default {
+  name: 'Social',
+  data() {
+    return {};
+  }
+};
+</script>
