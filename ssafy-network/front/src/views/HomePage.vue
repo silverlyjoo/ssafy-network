@@ -7,9 +7,6 @@
     <router-link to="/code">code</router-link>
     <router-link to="/social">social</router-link>
     <router-view></router-view>
-    <div v-if="session"></div>
-    <!-- session 값 없을때 로그인 창 -->
-    <div v-else></div>
   </div>
 </template>
 
@@ -24,7 +21,6 @@ export default {
 };
 </script>
 <style>
-
 .home {
   background: rgb(10, 0, 56);
   color: rgb(218, 234, 248);
