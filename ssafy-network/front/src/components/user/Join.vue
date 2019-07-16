@@ -23,7 +23,7 @@
               </v-flex>
               <v-text-field
                 type="password"
-                ref="password"
+                ref="Password"
                 v-validate="'required|min:6|pwdChecked'"
                 data-vv-name="Password"
                 :error-messages="errors.collect('Password')"
