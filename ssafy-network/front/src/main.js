@@ -5,14 +5,23 @@ import router from './router'
 import store from './store'
 import './registerServiceWorker'
 import VeeValidate from 'vee-validate'
+import ko from 'vee-validate/dist/locale/ko.js'
 import 'tui-editor/dist/tui-editor.css'
 import 'tui-editor/dist/tui-editor-contents.css'
 import 'codemirror/lib/codemirror.css'
 import { Editor, Viewer } from '@toast-ui/vue-editor'
 
+
+
 Vue.component('editor', Editor)
 Vue.component('viewer', Viewer)
-Vue.use(VeeValidate)
+Vue.use(VeeValidate, {
+  errorBagName: 'errors',
+  locale: 'ko' , 
+  dictionary: {
+    ko
+  }
+})
 
 Vue.config.productionTip = false
 
