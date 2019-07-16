@@ -23,7 +23,9 @@ import Login from "@/components/user/Login"
 export default {
   name: "mainpage",
   data() {
-    return {};
+    return {
+   
+    };
   },
   components : {
     Login
