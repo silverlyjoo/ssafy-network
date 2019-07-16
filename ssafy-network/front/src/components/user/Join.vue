@@ -9,8 +9,8 @@
           <v-form ref="form">
           <v-card-text>
             <v-text-field v-model="id" label="ID" required></v-text-field>
-            <v-text-field type="password" v-model="pwd" label="Password" required></v-text-field>
-            <v-text-field type="password" v-model="pwdCheck" label="PasswordCheck" required></v-text-field>
+            <v-text-field type="password" v-validate="'required|min:6'" v-model="pwd" label="Password" required></v-text-field>
+            <v-text-field type="password" v-validate="'required|confirmed:password'" v-model="pwdCheck" label="PasswordCheck" required></v-text-field>
             <v-text-field v-model="name" label="Name" required></v-text-field>
             <v-text-field v-model="nickname" label="NickName" required></v-text-field>
             <v-select
@@ -61,15 +61,18 @@ export default {
   },
   methods: {
     submit() {
-      console.log("11")
-      fetch('https://192.168.31.55:3000/users/addUser',{
+      fetch('http://192.168.31.55:3000/users/addUser',{
         method:'POST',
-        headers:new Headers(),
+        headers:{
+          'Access-Control-Allow-Origin': "*",
+          "Content-Type": "application/json"
+        },
         body:JSON.stringify({name:this.name, id:this.id,pwd : this.pwd, nickname : this.nickname,region :this.region,year:this.year,membership:false})
       })
       .then((res) => res.json())
         .then((data) => console.log(data))
         .catch((error) => console.log(error))
+        .finally(this.$refs.form.reset());
     },
     clear() {
       this.$refs.form.reset();
