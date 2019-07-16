@@ -8,7 +8,7 @@
               <v-img :src="require('@/assets/ssafy.png')" />
             </div>
             <div class="navBtn">
-              <router-link to="/" style="text-decoration: none !important">
+              <router-link to="/index" style="text-decoration: none !important">
                 <v-layout align-center class="pa-2 mb-5">
                   <v-flex xs4 text-xs-center>
                     <i class="fas fa-home fa-2x navtcolor"></i>
@@ -19,9 +19,9 @@
                 </v-layout>
               </router-link>
             </div>
-  
+
             <v-divider class="mb-5" style="border-color: rgb(218, 234, 248);"></v-divider>
-  
+
             <div class="navBtn">
               <router-link to="/note" style="text-decoration: none !important">
                 <v-layout align-center class="pa-2 mb-5">
@@ -34,7 +34,7 @@
                 </v-layout>
               </router-link>
             </div>
-  
+
             <div class="navBtn">
               <router-link to="/code" style="text-decoration: none !important">
                 <v-layout align-center class="pa-2 mb-5">
@@ -47,7 +47,7 @@
                 </v-layout>
               </router-link>
             </div>
-  
+
             <div class="navBtn">
               <router-link to="/social" style="text-decoration: none !important">
                 <v-layout align-center class="pa-2 mb-5">

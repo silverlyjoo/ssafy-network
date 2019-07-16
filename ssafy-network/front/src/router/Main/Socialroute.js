@@ -1,4 +1,4 @@
-import SocialPage from '../views/SocialPage.vue'
+import SocialPage from '@/views/SocialPage.vue'
 
 export default {
     path: '/social',

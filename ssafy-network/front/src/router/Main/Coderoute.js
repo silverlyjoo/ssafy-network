@@ -1,4 +1,4 @@
-import CodePage from '../views/CodePage.vue'
+import CodePage from '@/views/CodePage.vue'
 
 export default {
     path: '/code',
