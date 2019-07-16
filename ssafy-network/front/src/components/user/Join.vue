@@ -147,7 +147,7 @@ export default {
           .then(data => console.log(data))
           .catch(error => console.log(error))
           .finally(this.$refs.form.reset(),
-          this.$validator.reset() );
+          this.$validator.reset(), alert("회원가입 성공!!") , this.$router.push('/login') );
       });
     },
     clear() {
