@@ -19,24 +19,24 @@
                 type="password"
                 ref="password"
                 v-validate="'required|min:6|pwdChecked'"
-                data-vv-name="password"
-                :error-messages="errors.collect('password')"
+                data-vv-name="Password"
+                :error-messages="errors.collect('Password')"
                 v-model="pwd"
                 label="Password"
                 required
               ></v-text-field>
               <v-text-field
                 type="password"
-                v-validate="'required|confirmed:password'"
+                v-validate="'required|confirmed:Password'"
                 :error-messages="errors.collect('pwdCheck')"
-                data-vv-as="password"
+                data-vv-as="Password"
                 data-vv-name="pwdCheck"
                 v-model="pwdCheck"
                 label="PasswordCheck"
                 required
               ></v-text-field>
-              <v-text-field v-model="name" label="Name" data-vv-name="name" required></v-text-field>
-              <v-text-field v-model="nickname" label="NickName" data-vv-name="nickname" required></v-text-field>
+              <v-text-field v-model="name" label="Name" v-validate="'required|min:2'" :error-messages="errors.collect('Name')" data-vv-name="Name" required></v-text-field>
+              <v-text-field v-model="nickname" label="NickName" data-vv-name="NickName" v-validate="'required|min:2'"  :error-messages="errors.collect('NickName')" required></v-text-field>
               <v-select
                 v-model="region"
                 label="지역"
