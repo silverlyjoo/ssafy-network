@@ -9,8 +9,15 @@
           <v-form ref="form">
             <v-card-text>
               <v-flex d-inline-flex align-center>
-                <v-text-field v-model="id" label="ID" v-validate="'required|min:4'" data-vv-name="ID"
-                :error-messages="errors.collect('ID')" ref="IDText" required></v-text-field>&nbsp;&nbsp;&nbsp;&nbsp;
+                <v-text-field
+                  v-model="id"
+                  label="ID"
+                  v-validate="'required|min:4'"
+                  data-vv-name="ID"
+                  :error-messages="errors.collect('ID')"
+                  ref="IDText"
+                  required
+                ></v-text-field>&nbsp;&nbsp;&nbsp;&nbsp;
                 <v-btn @click="useridCheck" ref="IDCheckBtn">중복체크</v-btn>&nbsp;&nbsp;&nbsp;&nbsp;
                 <span v-if="IDCheck" style="color:blue;">중복체크 완료</span>
               </v-flex>
@@ -136,9 +143,9 @@ export default {
     },
     useridCheck() {
       // 서버에 보내서 id 값 체크
-      if(this.id.length < 4){
-        alert("ID의 최소길이는 4입니다.")
-        this.$refs.IDText.focus()
+      if (this.id.length < 4) {
+        alert("ID의 최소길이는 4입니다.");
+        this.$refs.IDText.focus();
         this.IDCheck = false;
         return;
       }
@@ -155,12 +162,12 @@ export default {
         .then(res => res.json())
         .then(data => {
           if (data.result) {
-            alert("ID가 존재합니다.")
-            this.$refs.IDText.focus()
-            this.$refs.IDText.reset()
+            alert("ID가 존재합니다.");
+            this.$refs.IDText.focus();
+            this.$refs.IDText.reset();
             this.IDCheck = false;
             return;
-          }else{
+          } else {
             this.IDCheck = true;
           }
         })

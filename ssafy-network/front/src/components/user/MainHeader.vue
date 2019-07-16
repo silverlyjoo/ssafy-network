@@ -1,6 +1,8 @@
 <template>
-  <v-toolbar color="transparent" flat>
-    <v-toolbar-title class="white--text title">SSAFY WM</v-toolbar-title>
+  <v-toolbar color="transparent" flat fixed>
+    <v-toolbar-items>
+      <v-btn flat to="/" class="white--text headline">SSAFY WM</v-btn>
+    </v-toolbar-items>
     <v-spacer />
     <v-toolbar-items>
       <v-btn flat class="white--text title" to="/about">About Us</v-btn>
