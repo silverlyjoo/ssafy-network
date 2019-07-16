@@ -43,7 +43,7 @@
                 :items="regions"
                 :rules="[v => !!v || '지역을 선택해주세요.']"
                 required
-                attach="#menulist"
+                <!-- attach="#menulist" -->
               ></v-select>
               <v-select
                 v-model="year"
@@ -51,7 +51,7 @@
                 :items="years"
                 :rules="[v => !!v || '기수를 선택해 주세요.']"
                 required
-                attach="#menulist"
+                <!-- attach="#menulist" -->
               ></v-select>
             </v-card-text>
           </v-form>
@@ -141,8 +141,8 @@ export default {
 };
 </script>
 <style>
-#menulist {
+/* #menulist {
   left: 0 !important;
   top: 0 !important;
-}
+} */
 </style>
