@@ -1,10 +1,13 @@
 <template>
   <v-container justify-center align-content-center class="py-0">
     <v-layout column class="mains" justify-center>
-      <v-flex xs8 class="flex1" align-center>
-        <div style="height: 50vh; width:40vw">
+      <v-flex xs6 class="flex1" align-center>
+        <div class="mainlogo">
           <v-img :src="require('@/assets/ssafy.png')" />
         </div>
+      </v-flex>
+      <v-flex xs12 sm6 md3>
+        <Login></Login>
       </v-flex>
       <v-flex xs4 class="flex1" align-center>
         <h1 style="color: rgb(218, 234, 248);">you are not logged-in</h1>
@@ -14,10 +17,16 @@
 </template>
 
 <script>
+import Login from "@/components/user/Login"
+
+
 export default {
   name: "mainpage",
   data() {
     return {};
+  },
+  components : {
+    Login
   },
   methods: {
     changeBGC() {
@@ -48,5 +57,15 @@ export default {
 .flex1 {
   display: flex;
   justify-content: center;
+}
+.mainlogo {
+  width: 40vw;
+  height: 40vh;
+}
+@media (min-width: 1024px) {
+  .mainlogo {
+    width: 410px;
+    height: 318px;
+  }
 }
 </style>
