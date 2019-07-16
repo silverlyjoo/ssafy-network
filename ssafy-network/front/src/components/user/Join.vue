@@ -9,10 +9,9 @@
           <v-form ref="form">
             <v-card-text>
               <v-flex d-inline-flex align-center>
-                <v-text-field v-model="id" label="ID" v-validate="'required'"  required></v-text-field>
-                &nbsp;&nbsp;&nbsp;&nbsp;
-                <v-btn :disabled="IDCheck" @click ="useridCheck" ref="IDCheckBtn">중복체크</v-btn>
-                &nbsp;&nbsp;&nbsp;&nbsp;
+                <v-text-field v-model="id" label="ID" v-validate="'required|min:4'" data-vv-name="ID"
+                :error-messages="errors.collect('ID')" ref="IDText" required></v-text-field>&nbsp;&nbsp;&nbsp;&nbsp;
+                <v-btn @click="useridCheck" ref="IDCheckBtn">중복체크</v-btn>&nbsp;&nbsp;&nbsp;&nbsp;
                 <span v-if="IDCheck" style="color:blue;">중복체크 완료</span>
               </v-flex>
               <v-text-field
@@ -35,8 +34,22 @@
                 label="PasswordCheck"
                 required
               ></v-text-field>
-              <v-text-field v-model="name" label="Name" v-validate="'required|min:2'" :error-messages="errors.collect('Name')" data-vv-name="Name" required></v-text-field>
-              <v-text-field v-model="nickname" label="NickName" data-vv-name="NickName" v-validate="'required|min:2'"  :error-messages="errors.collect('NickName')" required></v-text-field>
+              <v-text-field
+                v-model="name"
+                label="Name"
+                v-validate="'required|min:2'"
+                :error-messages="errors.collect('Name')"
+                data-vv-name="Name"
+                required
+              ></v-text-field>
+              <v-text-field
+                v-model="nickname"
+                label="NickName"
+                data-vv-name="NickName"
+                v-validate="'required|min:2'"
+                :error-messages="errors.collect('NickName')"
+                required
+              ></v-text-field>
               <v-select
                 v-model="region"
                 label="지역"
@@ -86,46 +99,73 @@ export default {
   },
   methods: {
     submit() {
-      this.$validator.validateAll().then((res) => {
-        if(!res){
-          alert("값이 유효한지 체크해주세요.")
+      this.$validator.validateAll().then(res => {
+        if (!res) {
+          alert("값이 유효한지 체크해주세요.");
           return;
         }
-        if(!this.IDCheck){
-          alert("ID중복체크를 해주세요.")
-          this.$nextTick(() => this.$refs.IDCheckBtn.$el.focus())
+        if (!this.IDCheck) {
+          alert("ID중복체크를 해주세요.");
+          this.$nextTick(() => this.$refs.IDCheckBtn.$el.focus());
           return;
         }
         fetch("http://192.168.31.55:3000/users/addUser", {
+          method: "POST",
+          headers: {
+            "Access-Control-Allow-Origin": "*",
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({
+            name: this.name,
+            id: this.id,
+            pwd: this.pwd,
+            nickname: this.nickname,
+            region: this.region,
+            year: this.year,
+            membership: false
+          })
+        })
+          .then(res => res.json())
+          .then(data => console.log(data))
+          .catch(error => console.log(error))
+          .finally(this.$refs.form.reset());
+      });
+    },
+    clear() {
+      this.$refs.form.reset();
+    },
+    useridCheck() {
+      // 서버에 보내서 id 값 체크
+      if(this.id.length < 4){
+        alert("ID의 최소길이는 4입니다.")
+        this.$refs.IDText.focus()
+        this.IDCheck = false;
+        return;
+      }
+      fetch("http://192.168.31.55:3000/users/getUserByIdCheck", {
         method: "POST",
         headers: {
           "Access-Control-Allow-Origin": "*",
           "Content-Type": "application/json"
         },
         body: JSON.stringify({
-          name: this.name,
-          id: this.id,
-          pwd: this.pwd,
-          nickname: this.nickname,
-          region: this.region,
-          year: this.year,
-          membership: false
+          id: this.id
         })
       })
         .then(res => res.json())
-        .then(data => console.log(data))
+        .then(data => {
+          if (data.result) {
+            alert("ID가 존재합니다.")
+            this.$refs.IDText.focus()
+            this.$refs.IDText.reset()
+            this.IDCheck = false;
+            return;
+          }else{
+            this.IDCheck = true;
+          }
+        })
         .catch(error => console.log(error))
-        .finally(this.$refs.form.reset());
-      });
-
-      
-    },
-    clear() {
-      this.$refs.form.reset();
-    },
-    useridCheck(){
-      // 서버에 보내서 id 값 체크 
-      this.IDCheck = true;
+        .finally();
     }
   },
   created() {
@@ -136,7 +176,6 @@ export default {
         return /^.*(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[$@$!%*#?&]).*$/.test(value);
       }
     });
-
   }
 };
 </script>
