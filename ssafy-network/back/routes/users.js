@@ -3,7 +3,7 @@ var router = express.Router();
 var User = require('../models/user');
 
 //모든 유저 리스트를 반환
-router.get('/getAllUsers', function(req,res){
+router.post('/getAllUsers', function(req,res){
   var sort = {name: 1};
   User.find(function(err, users){
       if(err) {
@@ -14,8 +14,8 @@ router.get('/getAllUsers', function(req,res){
 });
 
 //아이디를 통해 유저 정보 반환
-router.get('/getUserById/:id', function(req, res){
-  User.findOne({id: req.params.id}, function(err, user){
+router.post('/getUserById', function(req, res){
+  User.findOne({id: req.body.id}, function(err, user){
       if(err){
         return res.status(500).json({error: err});
       } 
@@ -27,8 +27,8 @@ router.get('/getUserById/:id', function(req, res){
 });
 
 //멤버쉽 정보를 통해 유저 정보 반환
-router.get('/getUserByMembership/:membership', function(req, res){
-  User.find({membership: req.params.membership}, function(err, users){
+router.post('/getUserByMembership', function(req, res){
+  User.find({membership: req.body.membership}, function(err, users){
       if(err){
         return res.status(500).json({error: err});
       } 
@@ -49,6 +49,8 @@ router.post('/addUser', function(req, res){
   user.region = req.body.region;
   user.year = req.body.year;
   user.membership = req.body.membership;
+
+  console.log(req.body);
 
   user.save(function(err){
       if(err){
@@ -72,7 +74,7 @@ router.put('/updateUserById/:id', function(req, res){
       if(!output.n){
         return res.status(404).json({ error: 'user not found' });
       } 
-      res.json( { message: 'user updated' } );
+      res.json({result: 1});
   })
 });
 
@@ -82,7 +84,7 @@ router.delete('/deleteUserById/:id', function(req, res){
       if(err){
         return res.status(500).json({ error: "database failure" });
       } 
-      res.status(204).end();
+      res.json({result: 1});
   })
 });
 
