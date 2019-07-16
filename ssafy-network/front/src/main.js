@@ -4,6 +4,7 @@ import App from './App.vue'
 import router from './router'
 import store from './store'
 import './registerServiceWorker'
+import VeeValidate from 'vee-validate'
 import 'tui-editor/dist/tui-editor.css'
 import 'tui-editor/dist/tui-editor-contents.css'
 import 'codemirror/lib/codemirror.css'
@@ -11,7 +12,7 @@ import { Editor, Viewer } from '@toast-ui/vue-editor'
 
 Vue.component('editor', Editor)
 Vue.component('viewer', Viewer)
-
+Vue.use(VeeValidate)
 
 Vue.config.productionTip = false
 
