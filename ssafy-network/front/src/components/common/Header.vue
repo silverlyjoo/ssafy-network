@@ -1,6 +1,6 @@
 <template>
   <v-toolbar color="indigo lighten-1">
-    <v-toolbar-title class="white--text">SSAFY WM</v-toolbar-title>
+    <v-toolbar-title class="white--text title">SSAFY WM</v-toolbar-title>
     <v-spacer/>
     <v-toolbar-items>
       <v-btn icon >
