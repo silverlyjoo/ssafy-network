@@ -17,8 +17,9 @@
                   :error-messages="errors.collect('ID')"
                   ref="IDText"
                   required
-                ></v-text-field>&nbsp;&nbsp;&nbsp;&nbsp;
-                <v-btn @click="useridCheck" ref="IDCheckBtn">중복체크</v-btn>&nbsp;&nbsp;&nbsp;&nbsp;
+                  class="mr-5"
+                ></v-text-field>
+                <v-btn @click="useridCheck" ref="IDCheckBtn" class="mr-5">중복체크</v-btn>
                 <span v-if="IDCheck" style="color:blue;">중복체크 완료</span>
               </v-flex>
               <v-text-field
@@ -49,7 +50,9 @@
                 data-vv-name="Name"
                 required
               ></v-text-field>
-              <v-text-field
+              <v-flex d-inline-flex align-center>
+              <v-text-field class="mr-5"
+              ref="NickName"
                 v-model="nickname"
                 label="NickName"
                 data-vv-name="NickName"
@@ -57,11 +60,16 @@
                 :error-messages="errors.collect('NickName')"
                 required
               ></v-text-field>
+              <v-btn @click="userNickNameCheck" ref="NickNameCheckBtn" class="mr-5">중복체크</v-btn>
+              <span v-if="NickNameCheck" style="color:blue;">중복체크 완료</span>
+              </v-flex>
               <v-select
                 v-model="region"
                 label="지역"
                 :items="regions"
-                :rules="[v => !!v || '지역을 선택해주세요.']"
+                v-validate="'required'"
+                data-vv-name="region"
+                :error-messages="errors.collect('region')"
                 required
                 attach="#menulist"
               ></v-select>
@@ -69,7 +77,9 @@
                 v-model="year"
                 label="기수"
                 :items="years"
-                :rules="[v => !!v || '기수를 선택해 주세요.']"
+                v-validate="'required'"
+                data-vv-name="Year"
+                :error-messages="errors.collect('Year')"
                 required
                 attach="#menulist"
               ></v-select>
@@ -98,10 +108,11 @@ export default {
       name: "",
       nickname: "",
       region: "",
-      year: { type: Number },
+      year: "",
       regions: ["서울", "대전", "구미", "광주"],
       years: [1, 2],
-      IDCheck: false
+      IDCheck: false,
+      NickNameCheck : false
     };
   },
   methods: {
@@ -135,11 +146,13 @@ export default {
           .then(res => res.json())
           .then(data => console.log(data))
           .catch(error => console.log(error))
-          .finally(this.$refs.form.reset());
+          .finally(this.$refs.form.reset(),
+          this.$validator.reset() );
       });
     },
     clear() {
       this.$refs.form.reset();
+      this.$validator.reset();
     },
     useridCheck() {
       // 서버에 보내서 id 값 체크
@@ -173,6 +186,38 @@ export default {
         })
         .catch(error => console.log(error))
         .finally();
+    },
+    userNickNameCheck(){
+      if (this.nickname.length < 2) {
+        alert("NickName의 최소길이는 2입니다.");
+        this.$refs.NickName.focus();
+        this.NickNameCheck = false;
+        return;
+      }
+      fetch("http://192.168.31.55:3000/users/getUserByNicknameCheck", {
+        method: "POST",
+        headers: {
+          "Access-Control-Allow-Origin": "*",
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          nickname: this.nickname
+        })
+      })
+        .then(res => res.json())
+        .then(data => {
+          if (data.result) {
+            alert("NickName이 존재합니다.");
+            this.$refs.NickName.focus();
+            this.$refs.NickName.reset();
+            this.NickNameCheck = false;
+            return;
+          } else {
+            this.NickNameCheck = true;
+          }
+        })
+        .catch(error => console.log(error))
+        .finally();
     }
   },
   created() {
@@ -183,6 +228,14 @@ export default {
         return /^.*(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[$@$!%*#?&]).*$/.test(value);
       }
     });
+  },
+  watch:{
+    'id' (to,from){
+      this.IDCheck = false;
+    },
+    'nickname'(to,from){
+      this.NickNameCheck = false;
+    }
   }
 };
 </script>
