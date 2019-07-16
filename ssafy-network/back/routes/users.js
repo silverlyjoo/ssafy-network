@@ -26,9 +26,22 @@ router.post('/getUserById', function(req, res){
   })
 });
 
-//아이디를 통해 그런 아이디를 가진 유저가 있는지 확인
+//아이디 중복 체크
 router.post('/getUserByIdCheck', function(req, res){
   User.findOne({id: req.body.id}, function(err, user){
+      if(err){
+        return res.status(500).json({error: err});
+      } 
+      if(!user){
+        return res.json({result:false});
+      } 
+      res.json({result:true});
+  })
+});
+
+//닉네임 중복 체크
+router.post('/getUserByNicknameCheck', function(req, res){
+  User.findOne({nickname: req.body.nickname}, function(err, user){
       if(err){
         return res.status(500).json({error: err});
       } 
