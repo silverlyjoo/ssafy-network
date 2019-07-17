@@ -1,20 +1,16 @@
 <template>
-  <div>
-    <CodeList></CodeList>
-  </div>
+  <v-container>
+    <Code></Code>
+  </v-container>
 </template>
 
 <script>
-import Code from '@/components/code/Code.vue';
-import CodeList from '@/components/code/CodeList.vue';
-import CodeWriter from '@/components/code/CodeWriter.vue';
+import Code from "@/components/code/Code.vue";
 
 export default {
-  name:'CodePage',
+  name: "CodePage",
   component: {
-    Code,
-    CodeList,
-    CodeWriter,
-  },
-}
+    Code
+  }
+};
 </script>
