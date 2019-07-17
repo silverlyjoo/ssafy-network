@@ -6,8 +6,8 @@ Vue.use(Vuex)
 export default new Vuex.Store({
   state: {
     login: true,
-    navFoldFlag : true
-
+    navFoldFlag : true,
+    dbserver : 'http://192.168.31.55:3000'
   },
   mutations: {
 
