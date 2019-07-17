@@ -9,7 +9,10 @@ import ko from 'vee-validate/dist/locale/ko.js'
 import 'tui-editor/dist/tui-editor.css'
 import 'tui-editor/dist/tui-editor-contents.css'
 import 'codemirror/lib/codemirror.css'
-import { Editor, Viewer } from '@toast-ui/vue-editor'
+import {
+  Editor,
+  Viewer
+} from '@toast-ui/vue-editor'
 
 
 
@@ -17,7 +20,7 @@ Vue.component('editor', Editor)
 Vue.component('viewer', Viewer)
 Vue.use(VeeValidate, {
   errorBagName: 'errors',
-  locale: 'ko' , 
+  locale: 'ko',
   dictionary: {
     ko
   }
@@ -25,9 +28,18 @@ Vue.use(VeeValidate, {
 
 Vue.config.productionTip = false
 
+router.beforeEach(function (to, from, next) {
+  if (store.state.login === false && !(to.path == '/' || to.path == '/login' || to.path == '/join' || to.path == '/about')) {
+    next('/')
+  } else if (store.state.login === true && (to.path == '/' || to.path == '/login' || to.path == '/join' || to.path == '/about'))  {
+    next('/index')
+  }
+  next()
+})
+
+
 new Vue({
   router,
   store,
   render: h => h(App)
 }).$mount('#app')
-

@@ -7,7 +7,7 @@
       <div v-if="path === '/'" class="flex1" >
         <v-flex xs6 class="flex1" align-center>
           <div class="mainlogo">
-            <v-img :src="require('@/assets/ssafy.png')" />
+            <v-img :src="require('@/assets/ssafy.png')" style="border-radius: 20px;"/>
           </div>
         </v-flex>
         <v-flex xs12 class="flex1 mb-4" align-center>
