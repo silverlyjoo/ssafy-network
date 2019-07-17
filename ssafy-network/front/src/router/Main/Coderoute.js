@@ -1,5 +1,5 @@
 import CodePage from '@/views/CodePage.vue'
-import CodeWriter from '@/components/code/CodeWriter.vue'
+import CodeBoard from '@/components/code/CodeBoard.vue'
 
 export default {
     path: '/code',
@@ -7,9 +7,9 @@ export default {
     component: CodePage,
     children: [
         {
-            path: '/write',
-            name: 'codewrite',
-            component: CodeWriter,
-        },
+            path: 'board',
+            name: 'board',
+            component: CodeBoard,
+        }
     ]
 }

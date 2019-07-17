@@ -1,7 +1,9 @@
 <template>
-  <v-container>
-    <Code></Code>
-  </v-container>
+  <div>
+    <Code>
+      <h2>왜안나와</h2>
+    </Code>
+  </div>
 </template>
 
 <script>
