@@ -15,4 +15,8 @@ module.exports = () => {
   }
   connect();
   mongoose.connection.on('disconnected', connect);
+
+  require('./models/user');
+  require('./models/chat');
+  require('./models/room');
 };
