@@ -14,8 +14,8 @@ router.get('/all', function(req,res){
 });
 
 //아이디를 통해 유저 정보 반환
-router.get('/id', function(req, res){
-  User.findOne({id: req.body.id}, function(err, user){
+router.get('/:id', function(req, res){
+  User.findOne({id: req.params.id}, function(err, user){
       if(err){
         return res.status(500).json({error: err});
       } 
@@ -27,8 +27,8 @@ router.get('/id', function(req, res){
 });
 
 //아이디 중복 체크
-router.get('/id/check', function(req, res){
-  User.findOne({id: req.body.id}, function(err, user){
+router.get('/:id/check', function(req, res){
+  User.findOne({id: req.params.id}, function(err, user){
       if(err){
         return res.status(500).json({error: err});
       } 
@@ -40,8 +40,8 @@ router.get('/id/check', function(req, res){
 });
 
 //닉네임 중복 체크
-router.get('/nickname/check', function(req, res){
-  User.findOne({nickname: req.body.nickname}, function(err, user){
+router.get('/:nickname/check', function(req, res){
+  User.findOne({nickname: req.params.nickname}, function(err, user){
       if(err){
         return res.status(500).json({error: err});
       } 
@@ -53,8 +53,8 @@ router.get('/nickname/check', function(req, res){
 });
 
 //멤버쉽 정보를 통해 유저 정보 반환
-router.get('/membership', function(req, res){
-  User.find({membership: req.body.membership}, function(err, users){
+router.get('/:membership', function(req, res){
+  User.find({membership: req.params.membership}, function(err, users){
       if(err){
         return res.status(500).json({error: err});
       } 
@@ -105,8 +105,8 @@ router.put('/id', function(req, res){
 });
 
 //유저 정보를 삭제한다.
-router.delete('/id', function(req, res){
-  User.remove({ id: req.body.id }, function(err, output){
+router.delete('/:id', function(req, res){
+  User.remove({ id: req.params.id }, function(err, output){
       if(err){
         return res.status(500).json({ error: "database failure" });
       } 
