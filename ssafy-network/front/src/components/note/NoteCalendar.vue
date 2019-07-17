@@ -1,27 +1,26 @@
 <template>
-  <v-container>
     <v-layout column>
-      <v-flex align-self-center class="ma-5" row wrap d-flex style="width:100%;">
-          <v-flex align-self-center>
-              <h2 style="color:blue;">{{this.focusYear}}년</h2>
-          </v-flex>
-          <v-flex align-self-center class="pa-2">
-        <v-btn fab text small @click="prevMonth">
-          <v-icon small>arrow_back_ios</v-icon>
-        </v-btn>
+      <v-flex align-self-center class="ma-5" row wrap d-flex style="width:80%;">
+        <v-flex align-self-center>
+          <h2 style="color:blue;">{{this.focusYear}}년</h2>
         </v-flex>
         <v-flex align-self-center class="pa-2">
-        <h1>{{this.focusMonth}}월</h1>
+          <v-btn fab text small @click="prevMonth">
+            <v-icon small>arrow_back_ios</v-icon>
+          </v-btn>
         </v-flex>
         <v-flex align-self-center class="pa-2">
-        <v-btn fab text small @click="nextMonth">
-          <v-icon small>arrow_forward_ios</v-icon>
-        </v-btn>
+          <h1>{{this.focusMonth}}월</h1>
+        </v-flex>
+        <v-flex align-self-center class="pa-2">
+          <v-btn fab text small @click="nextMonth">
+            <v-icon small>arrow_forward_ios</v-icon>
+          </v-btn>
         </v-flex>
       </v-flex>
-      <v-flex align-center>
-        <v-sheet height="500">
-          <v-calendar v-model="focus" :value="today" color="indigo" ref="calendar">
+      <v-flex align-center >
+        <v-sheet height="500px">
+          <v-calendar v-model="focus" :value="today" color="primary" ref="calendar">
             <template v-slot:day="{ date }">
               <template v-for="event in eventsMap[date]">
                 <v-menu :key="event.title" v-model="event.open" full-width offset-x>
@@ -30,6 +29,7 @@
                       v-if="!event.time"
                       v-ripple
                       class="my-event"
+                      :key="event.title"
                       v-on="on"
                       v-html="event.title"
                     ></div>
@@ -62,7 +62,6 @@
         </v-sheet>
       </v-flex>
     </v-layout>
-  </v-container>
 </template>
 
 <script>
@@ -71,9 +70,9 @@ export default {
     return {
       today: "",
       month: "",
-      focus:"",
-      focusMonth:"",
-      focusYear:"",
+      focus: "",
+      focusMonth: "",
+      focusYear: "",
       events: [
         {
           title: "Vacation",
@@ -155,39 +154,39 @@ export default {
       this.today = yyyy + "-" + mm + "-" + dd;
       this.focus = this.today;
     },
-    prevMonth(){
-        this.$refs.calendar.prev()
+    prevMonth() {
+      this.$refs.calendar.prev();
     },
-    nextMonth(){    
-        this.$refs.calendar.next()
+    nextMonth() {
+      this.$refs.calendar.next();
     }
   },
   mounted() {
     this.getDay();
   },
-  watch :{
-      'focus'(to,from){
-        var day = new Date(this.focus);
-        this.focusMonth = day.getMonth() + 1; 
-        this.focusYear = day.getFullYear();
-      }
+  watch: {
+    focus(to, from) {
+      var day = new Date(this.focus);
+      this.focusMonth = day.getMonth() + 1;
+      this.focusYear = day.getFullYear();
+    }
   }
 };
 </script>
 
 <style lang="stylus" scoped>
-.my-event {
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  border-radius: 2px;
-  background-color: #1867c0;
-  color: #ffffff;
-  border: 1px solid #1867c0;
-  width: 100%;
-  font-size: 12px;
-  padding: 3px;
-  cursor: pointer;
-  margin-bottom: 1px;
-}
+  .my-event {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    border-radius: 2px;
+    background-color: #1867c0;
+    color: #ffffff;
+    border: 1px solid #1867c0;
+    width: 100%;
+    font-size: 12px;
+    padding: 3px;
+    cursor: pointer;
+    margin-bottom: 1px;
+  }
 </style>

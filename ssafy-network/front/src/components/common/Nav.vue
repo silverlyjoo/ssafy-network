@@ -17,7 +17,7 @@
             <v-divider class="mb-3" style="border-color: rgb(218, 234, 248);"></v-divider>
 
             <div class="navBtn">
-              <router-link to="/note" style="text-decoration: none !important">
+              <router-link to="/note/calendar" style="text-decoration: none !important">
                 <v-layout align-center class="pa-2 mb-3">
                   <v-flex xs7 text-xs-center>
                     <span class="navtext navtcolor">NOTE</span>
