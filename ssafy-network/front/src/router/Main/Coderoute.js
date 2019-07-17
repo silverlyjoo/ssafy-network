@@ -4,12 +4,12 @@ import CodePage from '@/views/CodePage.vue'
 export default {
     path: '/code',
     name: 'code',
-    // component: CodePage,
-    // children: [
+    component: CodePage,
+    children: [
     //     {
     //         path: '/write',
     //         name: 'codewrite',
     //         component: CodeWriter,
     //     },
-    // ]
+    ]
 }
