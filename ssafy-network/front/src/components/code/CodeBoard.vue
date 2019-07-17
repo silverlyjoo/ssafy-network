@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="pa-2"style="width:80%; margin-left:auto; margin-right:auto; ">
     <v-data-table
       :headers="headers"
       :items="articles"
@@ -10,7 +10,7 @@
     >
       <template v-slot:items="props">
         <td>{{ props.item.index }}</td>
-        <td class="text-xs-right">{{ props.item.title }}</td>
+        <td class="text-xs-right" style="width:40%;">{{ props.item.title }}</td>
         <td class="text-xs-right">{{ props.item.writer }}</td>
         <td class="text-xs-right">{{ props.item.hit }}</td>
       </template>
@@ -32,12 +32,27 @@
           {
             text: 'No',
             align: 'left',
-            sortable: false,
+            sortable: true,
             value: 'index'
           },
-          { text: 'Title', value: 'title' },
-          { text: 'Writer', value: 'writer' },
-          { text: 'Hit', value: 'hit' },
+          {
+            text: 'Title',
+            align: 'center',
+            sortable: false,
+            value: 'title'
+          },
+          {
+            text: 'Writer',
+            align: 'center',
+            sortable: false,
+            value: 'writer'
+          },
+          {
+            text: 'Hit',
+            align: 'center',
+            sortable: false,
+            value: 'hit'
+          },
         ],
         articles: [
           {
