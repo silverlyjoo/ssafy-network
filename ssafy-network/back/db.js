@@ -9,7 +9,7 @@ module.exports = () => {
           console.error('mongodb connection error', error);
         }
         else{
-          console.log('mongodb connected');
+          console.log('몽고DB 연결 성공');
         }
       });
   }
@@ -19,4 +19,5 @@ module.exports = () => {
   require('./models/user');
   require('./models/chat');
   require('./models/room');
+  require('./models/board');
 };
