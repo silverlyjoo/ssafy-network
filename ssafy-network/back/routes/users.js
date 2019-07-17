@@ -27,7 +27,7 @@ router.get('/:id', function(req, res){
 });
 
 //아이디 중복 체크
-router.get('/:id/check', function(req, res){
+router.get('/:id/icheck', function(req, res){
   User.findOne({id: req.params.id}, function(err, user){
       if(err){
         return res.status(500).json({error: err});
@@ -40,7 +40,7 @@ router.get('/:id/check', function(req, res){
 });
 
 //닉네임 중복 체크
-router.get('/:nickname/check', function(req, res){
+router.get('/:nickname/ncheck', function(req, res){
   User.findOne({nickname: req.params.nickname}, function(err, user){
       if(err){
         return res.status(500).json({error: err});
@@ -115,8 +115,8 @@ router.delete('/:id', function(req, res){
 });
 
 //로그인
-router.get('/login', function(req, res){
-  User.findOne({id: req.body.id, pwd: req.body.pwd}, function(err, user){
+router.get('/login/:id/:pwd', function(req, res){
+  User.findOne({id: req.params.id, pwd: req.params.pwd}, function(err, user){
     if(err){
       return res.status(500).json({error: err});
     } 
