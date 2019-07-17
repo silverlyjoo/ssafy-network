@@ -1,11 +1,12 @@
 <template>
     <v-layout column>
-      <v-flex align-self-center class="ma-5" row wrap d-flex style="width:80%;">
+      <v-flex align-self-center class="mt-4" row wrap d-flex style="width:80%;">
         <v-flex align-self-center>
           <h2 style="color:blue;">{{this.focusYear}}년</h2>
         </v-flex>
         <v-flex align-self-center class="pa-2">
           <v-btn fab text small @click="prevMonth">
+            &nbsp;
             <v-icon small>arrow_back_ios</v-icon>
           </v-btn>
         </v-flex>
@@ -19,7 +20,7 @@
         </v-flex>
       </v-flex>
       <v-flex align-center >
-        <v-sheet height="500px">
+        <v-sheet height="500px" class="ma-4">
           <v-calendar v-model="focus" :value="today" color="primary" ref="calendar">
             <template v-slot:day="{ date }">
               <template v-for="event in eventsMap[date]">

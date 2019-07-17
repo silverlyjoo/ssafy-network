@@ -1,8 +1,6 @@
 <template>
   <div>
-    <Code>
-      <h2>왜안나와</h2>
-    </Code>
+    <Code></Code>
   </div>
 </template>
 
@@ -11,7 +9,7 @@ import Code from "@/components/code/Code.vue";
 
 export default {
   name: "CodePage",
-  component: {
+  components: {
     Code
   }
 };
