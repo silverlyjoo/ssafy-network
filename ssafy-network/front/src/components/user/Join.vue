@@ -162,15 +162,12 @@ export default {
         this.IDCheck = false;
         return;
       }
-      fetch(this.$store.state.dbserver + "/users/getUserByIdCheck", {
-        method: "POST",
+      fetch(this.$store.state.dbserver + "/users/"+this.id+"/icheck", {
+        method: "GET",
         headers: {
           "Access-Control-Allow-Origin": "*",
           "Content-Type": "application/json"
-        },
-        body: JSON.stringify({
-          id: this.id
-        })
+        }
       })
         .then(res => res.json())
         .then(data => {
@@ -194,15 +191,12 @@ export default {
         this.NickNameCheck = false;
         return;
       }
-      fetch(this.$store.state.dbserver + "/users/getUserByNicknameCheck", {
-        method: "POST",
+      fetch(this.$store.state.dbserver + "/users/"+this.nickname+"/ncheck", {
+        method: "GET",
         headers: {
           "Access-Control-Allow-Origin": "*",
           "Content-Type": "application/json"
-        },
-        body: JSON.stringify({
-          nickname: this.nickname
-        })
+        }
       })
         .then(res => res.json())
         .then(data => {
