@@ -3,7 +3,7 @@ var router = express.Router();
 var User = require('../models/user');
 
 //모든 유저 리스트를 반환
-router.post('/getAllUsers', function(req,res){
+router.get('/all', function(req,res){
   var sort = {name: 1};
   User.find(function(err, users){
       if(err) {
@@ -14,7 +14,7 @@ router.post('/getAllUsers', function(req,res){
 });
 
 //아이디를 통해 유저 정보 반환
-router.post('/getUserById', function(req, res){
+router.get('/id', function(req, res){
   User.findOne({id: req.body.id}, function(err, user){
       if(err){
         return res.status(500).json({error: err});
@@ -27,7 +27,7 @@ router.post('/getUserById', function(req, res){
 });
 
 //아이디 중복 체크
-router.post('/getUserByIdCheck', function(req, res){
+router.get('/id/check', function(req, res){
   User.findOne({id: req.body.id}, function(err, user){
       if(err){
         return res.status(500).json({error: err});
@@ -40,7 +40,7 @@ router.post('/getUserByIdCheck', function(req, res){
 });
 
 //닉네임 중복 체크
-router.post('/getUserByNicknameCheck', function(req, res){
+router.get('/nickname/check', function(req, res){
   User.findOne({nickname: req.body.nickname}, function(err, user){
       if(err){
         return res.status(500).json({error: err});
@@ -53,7 +53,7 @@ router.post('/getUserByNicknameCheck', function(req, res){
 });
 
 //멤버쉽 정보를 통해 유저 정보 반환
-router.post('/getUserByMembership', function(req, res){
+router.get('/membership', function(req, res){
   User.find({membership: req.body.membership}, function(err, users){
       if(err){
         return res.status(500).json({error: err});
@@ -66,7 +66,7 @@ router.post('/getUserByMembership', function(req, res){
 });
 
 //유저를 추가한다.
-router.post('/addUser', function(req, res){
+router.post('/', function(req, res){
   var user = new User();
   user.name = req.body.name;
   user.id = req.body.id;
@@ -91,8 +91,8 @@ router.post('/addUser', function(req, res){
 
 
 //유저 정보를 업데이트한다.
-router.put('/updateUserById/:id', function(req, res){
-  User.update({ id: req.params.id }, { $set: req.body }, function(err, output){
+router.put('/id', function(req, res){
+  User.update({ id: req.body.id }, { $set: req.body }, function(err, output){
       if(err){
         res.status(500).json({ error: 'database failure' });
       }
@@ -105,8 +105,8 @@ router.put('/updateUserById/:id', function(req, res){
 });
 
 //유저 정보를 삭제한다.
-router.delete('/deleteUserById/:id', function(req, res){
-  User.remove({ id: req.params.id }, function(err, output){
+router.delete('/id', function(req, res){
+  User.remove({ id: req.body.id }, function(err, output){
       if(err){
         return res.status(500).json({ error: "database failure" });
       } 
@@ -115,7 +115,7 @@ router.delete('/deleteUserById/:id', function(req, res){
 });
 
 //로그인
-router.post('/Login', function(req, res){
+router.get('/login', function(req, res){
   User.findOne({id: req.body.id, pwd: req.body.pwd}, function(err, user){
     if(err){
       return res.status(500).json({error: err});
