@@ -37,7 +37,7 @@
             </div>
 
             <div class="navBtn">
-              <router-link to="/social/chatlist" style="text-decoration: none !important">
+              <router-link to="/social/list" style="text-decoration: none !important">
                 <v-layout align-center class="pa-2 mb-3">
                   <v-flex xs7 text-xs-center>
                     <span class="navtext navtcolor">SOCIAL</span>

@@ -18,7 +18,8 @@
         </v-card>
       </v-flex>
     </v-layout>
-    <router-link to="/social/chatroom">start chat</router-link>
+    <v-btn to="/social/room">Start chat</v-btn>
+    <v-btn to="/social/new">New chat</v-btn>
   </v-container>
 </template>
 
