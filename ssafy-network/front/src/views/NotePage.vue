@@ -6,7 +6,7 @@
 
 
 <script>
-import Note from '@/components/note/Note.vue';
+import Note from '@/components/note/Note.vue'
 
 export default {
   name:'NotePage',

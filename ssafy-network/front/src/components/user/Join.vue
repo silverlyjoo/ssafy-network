@@ -4,7 +4,7 @@
       <v-flex xs12 sm10>
         <v-card class="elevation-12 pa-4">
           <v-card-title>
-            <h3>회원가입</h3>
+            <h1>회원가입</h1>
           </v-card-title>
           <v-form ref="form">
             <v-card-text>
