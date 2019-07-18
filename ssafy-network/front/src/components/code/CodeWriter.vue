@@ -4,6 +4,7 @@
       <div class="codemirror">
         <!-- codemirror -->
         <codemirror v-model="code" :options="cmOption"></codemirror>
+        <h2 class="display-3 text-xs-center">CRUD 中 C or U</h2>
       </div>
     </md-card-media>
   </md-card>
