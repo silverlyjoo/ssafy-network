@@ -1,206 +1,132 @@
 <template>
-  <div class="vue-codemirror" :class="{ merge }">
-    <div ref="mergeview" v-if="merge"></div>
-    <textarea ref="textarea" :name="name" :placeholder="placeholder" v-else></textarea>
-  </div>
+  <v-card>
+    <v-card-media>
+      <div class="vue">
+        <div class="codemirror">
+          <!-- codemirror -->
+          <codemirror v-model="code" 
+                      :options="cmOption"
+                      @cursorActivity="onCmCursorActivity"
+                      @ready="onCmReady"
+                      @focus="onCmFocus"
+                      @blur="onCmBlur">
+          </codemirror>
+        </div>
+        <pre class="pre">{{ code }}</pre>
+      </div>
+    </v-card-media>
+  </v-card>
 </template>
 
 <script>
-  // lib
-  import _CodeMirror from 'codemirror'
-  import codemirror from './codemirror.vue'
-  
-  const CodeMirror = window.CodeMirror || _CodeMirror
-  // pollfill
-  if (typeof Object.assign != 'function') {
-    Object.defineProperty(Object, 'assign', {
-      value(target, varArgs) {
-        if (target == null) {
-          throw new TypeError('Cannot convert undefined or null to object')
-        }
-        const to = Object(target)
-        for (let index = 1; index < arguments.length; index++) {
-          const nextSource = arguments[index]
-          if (nextSource != null) {
-            for (const nextKey in nextSource) {
-              if (Object.prototype.hasOwnProperty.call(nextSource, nextKey)) {
-                to[nextKey] = nextSource[nextKey]
-              }
-            }
-          }
-        }
-        return to
-      },
-      writable: true,
-      configurable: true
-    })
-  }
-  // export
+  // language
+  import 'codemirror/mode/vue/vue.js'
+  // theme css
+  import 'codemirror/theme/base16-dark.css'
+  // active-line.js
+  import 'codemirror/addon/selection/active-line.js'
+  // styleSelectedText
+  import 'codemirror/addon/selection/mark-selection.js'
+  import 'codemirror/addon/search/searchcursor.js'
+  // highlightSelectionMatches
+  import 'codemirror/addon/scroll/annotatescrollbar.js'
+  import 'codemirror/addon/search/matchesonscrollbar.js'
+  import 'codemirror/addon/search/searchcursor.js'
+  import 'codemirror/addon/search/match-highlighter.js'
+  // keyMap
+  import 'codemirror/mode/clike/clike.js'
+  import 'codemirror/addon/edit/matchbrackets.js'
+  import 'codemirror/addon/comment/comment.js'
+  import 'codemirror/addon/dialog/dialog.js'
+  import 'codemirror/addon/dialog/dialog.css'
+  import 'codemirror/addon/search/searchcursor.js'
+  import 'codemirror/addon/search/search.js'
+  import 'codemirror/keymap/sublime.js'
+  // foldGutter
+  import 'codemirror/addon/fold/foldgutter.css'
+  import 'codemirror/addon/fold/brace-fold.js'
+  import 'codemirror/addon/fold/comment-fold.js'
+  import 'codemirror/addon/fold/foldcode.js'
+  import 'codemirror/addon/fold/foldgutter.js'
+  import 'codemirror/addon/fold/indent-fold.js'
+  import 'codemirror/addon/fold/markdown-fold.js'
+  import 'codemirror/addon/fold/xml-fold.js'
   export default {
-    name: 'codemirror',
+    data() {
+      const code = ''
+`<template>
+  <h1>Hello World!</h1>
+  <codemirror v-model="code" :options="cmOption"></codemirror>
+</template>
+<script>
+  // import 'some-codemirror-resource'
+  export default {
     data() {
       return {
-        content: '',
-        codemirror: null,
-        cminstance: null
-      }
-    },
-    props: {
-      code: String,
-      value: String,
-      marker: Function,
-      unseenLines: Array,
-      name: {
-        type: String,
-        default: 'codemirror'
-      },
-      placeholder: {
-        type: String,
-        default: ''
-      },
-      merge: {
-        type: Boolean,
-        default: false
-      },
-      options: {
-        type: Object,
-        default: () => ({})
-      },
-      events: {
-        type: Array,
-        default: () => ([])
-      },
-      globalOptions: {
-        type: Object,
-        default: () => ({})
-      },
-      globalEvents: {
-        type: Array,
-        default: () => ([])
-      }
-    },
-    watch: {
-      options: {
-        deep: true,
-        handler(options) {
-          for (const key in options) {
-            this.cminstance.setOption(key, options[key])
+        code: 'const A = 10',
+        cmOption: {
+          tabSize: 4,
+          styleActiveLine: true,
+          lineNumbers: true,
+          line: true,
+          foldGutter: true,
+          styleSelectedText: true,
+          mode: 'text/javascript',
+          keyMap: "sublime",
+          matchBrackets: true,
+          showCursorWhenSelecting: true,
+          theme: "monokai",
+          extraKeys: { "Ctrl": "autocomplete" },
+          hintOptions:{
+            completeSingle: false
           }
         }
-      },
-      merge() {
-        this.$nextTick(this.switchMerge)
-      },
-      code(newVal) {
-        this.handerCodeChange(newVal)
-      },
-      value(newVal) {
-        this.handerCodeChange(newVal)
-      },
+      }
+    }
+  }
+<\/script>
+<style lang="scss">
+  @import './sass/mixins';
+  @import './sass/variables';
+  main {
+    position: relative;
+  }
+</style>`
+      return {
+        code,
+        cmOption: {
+          tabSize: 4,
+          foldGutter: true,
+          styleActiveLine: true,
+          lineNumbers: true,
+          line: true,
+          keyMap: "sublime",
+          mode: 'text/x-vue',
+          theme: 'base16-dark',
+          extraKeys: {
+            'F11'(cm) {
+              cm.setOption("fullScreen", !cm.getOption("fullScreen"))
+            },
+            'Esc'(cm) {
+              if (cm.getOption("fullScreen")) cm.setOption("fullScreen", false)
+            }
+          }
+        }
+      }
     },
     methods: {
-      initialize() {
-        const cmOptions = Object.assign({}, this.globalOptions, this.options)
-        if (this.merge) {
-          this.codemirror = CodeMirror.MergeView(this.$refs.mergeview, cmOptions)
-          this.cminstance = this.codemirror.edit
-        } else {
-          this.codemirror = CodeMirror.fromTextArea(this.$refs.textarea, cmOptions)
-          this.cminstance = this.codemirror
-          this.cminstance.setValue(this.code || this.value || this.content)
-        }
-        this.cminstance.on('change', cm => {
-          this.content = cm.getValue()
-          if (this.$emit) {
-            this.$emit('input', this.content)
-          }
-        })
-        // 所有有效事件（驼峰命名）+ 去重
-        const tmpEvents = {}
-        const allEvents = [
-          'scroll',
-          'changes',
-          'beforeChange',
-          'cursorActivity',
-          'keyHandled',
-          'inputRead',
-          'electricInput',
-          'beforeSelectionChange',
-          'viewportChange',
-          'swapDoc',
-          'gutterClick',
-          'gutterContextMenu',
-          'focus',
-          'blur',
-          'refresh',
-          'optionChange',
-          'scrollCursorIntoView',
-          'update'
-        ]
-        .concat(this.events)
-        .concat(this.globalEvents)
-        .filter(e => (!tmpEvents[e] && (tmpEvents[e] = true)))
-        .forEach(event => {
-          // 循环事件，并兼容 run-time 事件命名
-          this.cminstance.on(event, (...args) => {
-            // console.log('当有事件触发了', event, args)
-            this.$emit(event, ...args)
-            const lowerCaseEvent = event.replace(/([A-Z])/g, '-$1').toLowerCase()
-            if (lowerCaseEvent !== event) {
-              this.$emit(lowerCaseEvent, ...args)
-            }
-          })
-        })
-        this.$emit('ready', this.codemirror)
-        this.unseenLineMarkers()
-        // prevents funky dynamic rendering
-        this.refresh()
+      onCmCursorActivity(codemirror) {
+        console.log('onCmCursorActivity', codemirror)
       },
-      refresh() {
-        this.$nextTick(() => {
-          this.cminstance.refresh()
-        })
+      onCmReady(codemirror) {
+        console.log('onCmReady', codemirror)
       },
-      destroy() {
-        // garbage cleanup
-        const element = this.cminstance.doc.cm.getWrapperElement()
-        element && element.remove && element.remove()
+      onCmFocus(codemirror) {
+        console.log('onCmFocus', codemirror)
       },
-      handerCodeChange(newVal) {
-        const cm_value = this.cminstance.getValue()
-        if (newVal !== cm_value) {
-          const scrollInfo = this.cminstance.getScrollInfo()
-          this.cminstance.setValue(newVal)
-          this.content = newVal
-          this.cminstance.scrollTo(scrollInfo.left, scrollInfo.top)
-        }
-        this.unseenLineMarkers()
-      },
-      unseenLineMarkers() {
-        if (this.unseenLines !== undefined && this.marker !== undefined) {
-          this.unseenLines.forEach(line => {
-            const info = this.cminstance.lineInfo(line)
-            this.cminstance.setGutterMarker(line, 'breakpoints', info.gutterMarkers ? null : this.marker())
-          })
-        }
-      },
-      switchMerge() {
-        // Save current values
-        const history = this.cminstance.doc.history
-        const cleanGeneration = this.cminstance.doc.cleanGeneration
-        this.options.value = this.cminstance.getValue()
-        this.destroy()
-        this.initialize()
-        // Restore values
-        this.cminstance.doc.history = history
-        this.cminstance.doc.cleanGeneration = cleanGeneration
+      onCmBlur(codemirror) {
+        console.log('onCmBlur', codemirror)
       }
-    },
-    mounted() {
-      this.initialize()
-    },
-    beforeDestroy() {
-      this.destroy()
     }
   }
 </script>
