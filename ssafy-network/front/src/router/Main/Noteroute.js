@@ -2,6 +2,8 @@ import NotePage from '@/views/NotePage.vue'
 import NoteWriter from '@/components/note/NoteWriter.vue'
 import NoteDetail from '@/components/note/NoteDetail.vue'
 import NoteUpdate from '@/components/note/NoteUpdate.vue'
+import NoteCalendar from '@/components/note/NoteCalendar.vue'
+
 export default {
     path: '/note',
     name: 'notepage',
@@ -20,6 +22,10 @@ export default {
             path: 'update',
             name: 'noteupdate',
             component: NoteUpdate,
-          },
+          },{
+            path:'calendar',
+            name: 'calendar',
+            component: NoteCalendar
+          }
     ]
 }

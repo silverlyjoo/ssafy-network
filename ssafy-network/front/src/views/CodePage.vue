@@ -1,15 +1,20 @@
 <template>
-  <div class="about">
-    <h1>This is an Code page</h1>
+  <div>
     <Code></Code>
   </div>
 </template>
 
 <script>
-import Code from '@/components/code/Code.vue';
+import Code from "@/components/code/Code.vue";
 
 export default {
-  name:'CodePage',
-  component: Code
-}
+  name: "CodePage",
+  components: {
+    Code
+  }
+};
 </script>
+
+<style>
+
+</style>
