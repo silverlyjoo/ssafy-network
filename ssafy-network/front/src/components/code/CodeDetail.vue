@@ -35,12 +35,14 @@ export default {
   methods: {
     update() {
       this.$router.push("/code/write");
+      alert("수정하기");
     },
     back() {
       this.$router.push("/code/board");
     },
     remove() {
       this.$router.push("/code/board");
+      alert("삭제하기");
     }
   }
 };
