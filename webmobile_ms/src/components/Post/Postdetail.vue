@@ -40,7 +40,7 @@
                   <v-divider></v-divider>
                   <v-card-actions>
                     <v-btn color="blue darken-1" flat @click="dialog = false">Cancel</v-btn>
-                    <v-btn color="blue darken-1" flat @click="save">Save</v-btn>
+                    <v-btn color="blue darken-1" flat @click="dialog = false">Save</v-btn>
                   </v-card-actions>
                 </v-card>
               </v-dialog>

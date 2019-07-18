@@ -13,14 +13,14 @@ router.post('/', function(req,res){
 
     chat.save();
 
-    res.send(chat);
+    //res.send(chat);
 });
 
 //특정 방의 채팅정보를 가져온다.
-router.post('/room',function(req,res){
+router.get('/:room',function(req,res){
     var rule = {createdAt: 1};
 
-    Chat.find({room: req.body.room}, function(err, chats){
+    Chat.find({room: req.params.room}, function(err, chats){
         if(err){
           return res.status(500).json({error: err});
         } 

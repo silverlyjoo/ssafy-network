@@ -153,7 +153,10 @@ export default {
       const result = await FirebaseService.loginWithFacebook();
       this.$store.state.accessToken = result.credential.accessToken;
       this.$store.state.user = result.user;
-      // console.log(this.$store.state.user.displayName)
+      this.$session.set('user',result.user.displayName);
+      this.loginCondition = false;
+      this.dialog_login = false;
+      this.$router.push('/');
     },
     logout() {
       FirebaseService.logout();

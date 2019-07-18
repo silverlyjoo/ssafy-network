@@ -26,7 +26,6 @@ Vue.use(VeeValidate, {
     ko
   }
 })
-
 Vue.config.productionTip = false
 
 router.beforeEach(function (to, from, next) {

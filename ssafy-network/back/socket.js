@@ -8,7 +8,7 @@ module.exports = (server) => {
         //메세지를 받아 로그에 띄우고 다른 클라이언트에게 전송하는 과정
         socket.on('chat', function(data) {
             console.log('Message from %s: %s', data.name, data.msg);
-        
+            
             var msg = {
               from: {
                 name: data.name,
