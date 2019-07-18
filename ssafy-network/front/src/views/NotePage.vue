@@ -11,7 +11,7 @@ import Note from '@/components/note/Note.vue'
 export default {
   name:'NotePage',
   components: {
-    Note
+      Note
     }
 }
 </script>
