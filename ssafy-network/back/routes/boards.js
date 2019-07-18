@@ -49,4 +49,20 @@ router.put('/_id', function(req, res){
     })
 });
 
+//조회수를 업데이트한다.
+router.put('/:_id', function(req, res){
+    Board.findOne({_id: req.params._id}, function(err,board){
+        Board.update({ _id: req.params._id }, { $set: { hit: board.hit + 1 }}, function(err, output){
+            if(err){
+              res.status(500).json({ error: 'database failure' });
+            }
+            console.log(output);
+            if(!output.n){
+              return res.status(404).json({ error: 'board not found' });
+            } 
+            res.json({result: 1});
+        })
+    });
+});
+
 module.exports = router;

@@ -4,13 +4,13 @@ var User = require('../models/user');
 
 //모든 유저 리스트를 반환
 router.get('/all', function(req,res){
-  var sort = {name: 1};
+  var rule = {name: 1};
   User.find(function(err, users){
       if(err) {
         return res.status(500).send({error: 'database failure'});
       }
       res.json(users);
-  }).sort(sort);
+  }).sort(rule);
 });
 
 //아이디를 통해 유저 정보 반환
