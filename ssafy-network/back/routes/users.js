@@ -2,7 +2,17 @@ var express = require('express');
 var router = express.Router();
 var User = require('../models/user');
 
-//모든 유저 리스트를 반환
+/**
+ * @swagger
+ *  /users/all:
+ *    get:
+ *      tags:
+ *      - User
+ *      description: 모든 유저 리스트를 반환
+ *      responses:
+ *       200:
+ *        description: 유저 정보를 json 리스트에 담음
+ */
 router.get('/all', function(req,res){
   var rule = {name: 1};
   User.find(function(err, users){
@@ -13,7 +23,23 @@ router.get('/all', function(req,res){
   }).sort(rule);
 });
 
-//아이디를 통해 유저 정보 반환
+/**
+ * @swagger
+ *  /users/{id}:
+ *    get:
+ *      tags:
+ *      - User
+ *      description: 아이디로 유저정보 반환.
+ *      parameters:
+ *      - name: id
+ *        in: path
+ *        description: "아이디"
+ *        required: true
+ *        type: string
+ *      responses:
+ *       200:
+ *        description: 유저 정보를 json에 담음
+ */
 router.get('/:id', function(req, res){
   User.findOne({id: req.params.id}, function(err, user){
       if(err){
@@ -26,7 +52,23 @@ router.get('/:id', function(req, res){
   })
 });
 
-//아이디 중복 체크
+/**
+ * @swagger
+ *  /users/{id}/icheck:
+ *    get:
+ *      tags:
+ *      - User
+ *      description: 아이디 중복 체크
+ *      parameters:
+ *      - name: id
+ *        in: path
+ *        description: "아이디"
+ *        required: true
+ *        type: string
+ *      responses:
+ *       200:
+ *        description: true 일 경우 중복
+ */
 router.get('/:id/icheck', function(req, res){
   User.findOne({id: req.params.id}, function(err, user){
       if(err){
@@ -39,7 +81,23 @@ router.get('/:id/icheck', function(req, res){
   })
 });
 
-//닉네임 중복 체크
+/**
+ * @swagger
+ *  /users/{nickname}/ncheck:
+ *    get:
+ *      tags:
+ *      - User
+ *      description: 닉네임 중복 체크
+ *      parameters:
+ *      - name: nickname
+ *        in: path
+ *        description: "닉네임"
+ *        required: true
+ *        type: string
+ *      responses:
+ *       200:
+ *        description: true 일 경우 중복
+ */
 router.get('/:nickname/ncheck', function(req, res){
   User.findOne({nickname: req.params.nickname}, function(err, user){
       if(err){
@@ -52,7 +110,23 @@ router.get('/:nickname/ncheck', function(req, res){
   })
 });
 
-//멤버쉽 정보를 통해 유저 정보 반환
+/**
+ * @swagger
+ *  /users/{membership}:
+ *    get:
+ *      tags:
+ *      - User
+ *      description: 멤버쉽으로 유저 정보 반환.
+ *      parameters:
+ *      - name: membership
+ *        in: path
+ *        description: "회원/비회원"
+ *        required: true
+ *        type: string
+ *      responses:
+ *       200:
+ *        description: 회원인지 비회원인지 판단
+ */
 router.get('/:membership', function(req, res){
   User.find({membership: req.params.membership}, function(err, users){
       if(err){
@@ -65,7 +139,40 @@ router.get('/:membership', function(req, res){
   })
 });
 
-//유저를 추가한다.
+/**
+ * @swagger
+ *  /users:
+ *    post:
+ *      tags:
+ *      - User
+ *      description: 유저 정보를 추가
+ *      parameters:
+ *      - in: body
+ *        name: addUser
+ *        description: "유저 정보 추가"
+ *        schema:
+ *          type: object
+ *          properties:
+ *            name:
+ *              type: string
+ *            id:
+ *              type: string
+ *              required: true
+ *            pwd:
+ *              type: string
+ *              required: true
+ *            nickname:
+ *              type: string
+ *            region:
+ *              type: string
+ *            year:
+ *              type: integer
+ *            membership:
+ *              type: boolean
+ *      responses:
+ *       200:
+ *        description: "result = 1 일 경우 정상적으로 작동"
+ */
 router.post('/', function(req, res){
   var user = new User();
   user.name = req.body.name;
@@ -90,7 +197,39 @@ router.post('/', function(req, res){
 });
 
 
-//유저 정보를 업데이트한다.
+/**
+ * @swagger
+ *  /users/id:
+ *    put:
+ *      tags:
+ *      - User
+ *      description: 유저 정보를 업데이트
+ *      parameters:
+ *      - in: body
+ *        name: updateUser
+ *        description: "유저 정보 업데이트"
+ *        schema:
+ *          type: object
+ *          properties:
+ *            name:
+ *              type: string
+ *            id:
+ *              type: string
+ *              required: true
+ *            pwd:
+ *              type: string
+ *            nickname:
+ *              type: string
+ *            region:
+ *              type: string
+ *            year:
+ *              type: integer
+ *            membership:
+ *              type: boolean
+ *      responses:
+ *       200:
+ *        description: result = 1 일 경우 정상적으로 작동
+ */
 router.put('/id', function(req, res){
   User.update({ id: req.body.id }, { $set: req.body }, function(err, output){
       if(err){
@@ -104,7 +243,23 @@ router.put('/id', function(req, res){
   })
 });
 
-//유저 정보를 삭제한다.
+/**
+ * @swagger
+ *  /users/{id}:
+ *    delete:
+ *      tags:
+ *      - User
+ *      description: 유저 삭제
+ *      parameters:
+ *      - name: id
+ *        in: path
+ *        description: "아이디"
+ *        required: true
+ *        type: string
+ *      responses:
+ *       200:
+ *        description: 아이디를 통해 유저 삭제
+ */
 router.delete('/:id', function(req, res){
   User.remove({ id: req.params.id }, function(err, output){
       if(err){
@@ -114,8 +269,29 @@ router.delete('/:id', function(req, res){
   })
 });
 
-//로그인
-router.get('/login/:id/:pwd', function(req, res){
+/**
+ * @swagger
+ *  /users/{id}/{pwd}:
+ *    get:
+ *      tags:
+ *      - User
+ *      description: 로그인
+ *      parameters:
+ *      - name: id
+ *        in: path
+ *        description: "아이디"
+ *        required: true
+ *        type: string
+ *      - name: pwd
+ *        in: path
+ *        description: "비밀번호"
+ *        required: true
+ *        type: string
+ *      responses:
+ *       200:
+ *        description: 로그인
+ */
+router.get('/:id/:pwd', function(req, res){
   User.findOne({id: req.params.id, pwd: req.params.pwd}, function(err, user){
     if(err){
       return res.status(500).json({error: err});
