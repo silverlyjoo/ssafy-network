@@ -127,7 +127,7 @@ export default {
           this.$nextTick(() => this.$refs.IDCheckBtn.$el.focus());
           return;
         }
-        fetch(this.$store.state.dbserver + "/users/addUser", {
+        fetch(this.$store.state.dbserver + "/users", {
           method: "POST",
           headers: {
             "Access-Control-Allow-Origin": "*",
