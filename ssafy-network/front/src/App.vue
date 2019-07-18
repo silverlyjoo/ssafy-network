@@ -11,6 +11,14 @@ export default {
 
   data() {
     return {};
+  },
+  mounted(){
+    if (this.$session.get("user")!=null) {
+      this.$store.state.login = true;
+      this.$router.push('index');
+    }else{
+      this.$store.state.login = false;
+    }
   }
 };
 </script>
