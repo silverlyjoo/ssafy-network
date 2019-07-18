@@ -9,6 +9,7 @@ import ko from 'vee-validate/dist/locale/ko.js'
 import 'tui-editor/dist/tui-editor.css'
 import 'tui-editor/dist/tui-editor-contents.css'
 import 'codemirror/lib/codemirror.css'
+import VueSession from 'vue-session'
 
 import {
   Editor,
@@ -19,6 +20,7 @@ import {
 
 Vue.component('editor', Editor)
 Vue.component('viewer', Viewer)
+Vue.use(VueSession)
 Vue.use(VeeValidate, {
   errorBagName: 'errors',
   locale: 'ko',
