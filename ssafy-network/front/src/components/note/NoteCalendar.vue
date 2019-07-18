@@ -1,7 +1,6 @@
 <template>
-    <v-layout column>
-      
-      <!-- <v-flex align-self-center class="mt-4" row wrap d-flex style="width:80%;">
+  <v-layout column>
+    <!-- <v-flex align-self-center class="mt-4" row wrap d-flex style="width:80%;">
         <v-flex align-self-center>
           <h2 style="color:blue;">{{this.focusYear}}년</h2>
         </v-flex>
@@ -19,23 +18,24 @@
             <v-icon small>arrow_forward_ios</v-icon>
           </v-btn>
         </v-flex>
-      </v-flex> -->
-      <v-flex align-center class="ma-3">
-        <Calendar :events="events"></Calendar>
-      </v-flex>
-      <v-flex align-center width="100%" >
-        <CalendarForm :today="today" ></CalendarForm>
-      </v-flex>
-    </v-layout>
+    </v-flex>-->
+    <v-flex align-center class="ma-3">
+      <Calendar :events="events" @eventClick="eventClick">
+      </Calendar>
+    </v-flex>
+    <v-flex align-center width="100%">
+      <CalendarForm :today="today"></CalendarForm>
+    </v-flex>
+  </v-layout>
 </template>
 
 <script>
-import Calendar from '@/components/note/Calendar.vue';
-import CalendarForm from '@/components/note/CalendarForm.vue';
+import Calendar from "@/components/note/Calendar.vue";
+import CalendarForm from "@/components/note/CalendarForm.vue";
 
 export default {
-  name:'NoteCalendar',
-  components:{
+  name: "NoteCalendar",
+  components: {
     Calendar,
     CalendarForm
   },
@@ -46,27 +46,25 @@ export default {
       focus: "",
       focusMonth: "",
       focusYear: "",
-      events:[{
-            title     : 'event1',
-            start     : '2019-07-09',
-            cssClass  : 'blue'
-          },
-          {
-            title     : 'event2',
-            start     : '2019-07-08',
-            end       : '2019-07-13',
-            cssClass  : 'red'
-          }]
+      events: [
+        {
+          title: "event1",
+          start: "2019-07-09",
+          cssClass: "blue"
+        },
+        {
+          title: "event2",
+          start: "2019-07-08",
+          end: "2019-07-13",
+          cssClass: "red"
+        }
+      ]
     };
   },
-  computed: {
-    eventsMap() {
-      const map = {};
-      this.events.forEach(e => (map[e.date] = map[e.date] || []).push(e));
-      return map;
-    }
-  },
   methods: {
+    eventClick(event, jsEvent, pos) {
+      console.log("eventClick", event, jsEvent, pos);
+    },
     open(event) {
       alert(event.title);
     },
@@ -108,18 +106,18 @@ export default {
 </script>
 
 <style lang="stylus" scoped>
-  .my-event {
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-    border-radius: 2px;
-    background-color: #1867c0;
-    color: #ffffff;
-    border: 1px solid #1867c0;
-    width: 100%;
-    font-size: 12px;
-    padding: 3px;
-    cursor: pointer;
-    margin-bottom: 1px;
-  }
+.my-event {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  border-radius: 2px;
+  background-color: #1867c0;
+  color: #ffffff;
+  border: 1px solid #1867c0;
+  width: 100%;
+  font-size: 12px;
+  padding: 3px;
+  cursor: pointer;
+  margin-bottom: 1px;
+}
 </style>
