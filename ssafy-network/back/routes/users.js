@@ -271,35 +271,37 @@ router.delete('/:id', function(req, res){
 
 /**
  * @swagger
- *  /users/{id}/{pwd}:
- *    get:
+ *  /users/login:
+ *    post:
  *      tags:
  *      - User
  *      description: 로그인
  *      parameters:
- *      - name: id
- *        in: path
- *        description: "아이디"
- *        required: true
- *        type: string
- *      - name: pwd
- *        in: path
- *        description: "비밀번호"
- *        required: true
- *        type: string
+ *      - in: body
+ *        name: login
+ *        description: "로그인"
+ *        schema:
+ *          type: object
+ *          properties:
+ *            id:
+ *              type: string
+ *              required: true
+ *            pwd:
+ *              type: string
+ *              required: true
  *      responses:
  *       200:
- *        description: 로그인
+ *        description: 성공시 result = true
  */
-router.get('/:id/:pwd', function(req, res){
-  User.findOne({id: req.params.id, pwd: req.params.pwd}, function(err, user){
+router.post('/login', function(req, res){
+  User.findOne({id: req.body.id, pwd: req.body.pwd}, function(err, user){
     if(err){
       return res.status(500).json({error: err});
     } 
     if(!user){
-      return res.status(404).json({error: 'user not found'});
+      return res.json({result: false});
     } 
-    res.json(user);
+    res.json({result: true});
   });
 });
 
