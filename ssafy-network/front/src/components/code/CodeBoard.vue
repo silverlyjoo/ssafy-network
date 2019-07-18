@@ -1,6 +1,11 @@
 <template>
   <div class="pa-5 board">
-    <h2 class="board-title">Code Review 게시판</h2><br>
+    <h2 class="board-title">Code Review 게시판</h2>
+    <div>
+      <router-link to="/code/write">
+        <v-btn class="info write-btn">글 쓰기</v-btn><br><br><br>
+      </router-link>
+    </div>
     <v-data-table
       :headers="headers"
       :items="articles"
@@ -141,13 +146,8 @@
     margin-left:auto;
     margin-right:auto;
   }
-  .title {
-    /* width:50%; */
-  }
-  .writer {
-    /* width:50%; */
-  }
-  .hit {
-    /* width:50%; */
+  .write-btn {
+    float: right;
+    /* padding-right: 100px; */
   }
 </style>

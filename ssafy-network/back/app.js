@@ -15,7 +15,7 @@ var boardsRouter = require('./routes/boards');
 
 var app = express();
 var db = require('./db');
-
+var swagger = require('./swagger');
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -30,6 +30,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use(cors());
 
 db();
+app.use(swagger);
 
 app.use('/', indexRouter);
 app.use('/users', usersRouter);

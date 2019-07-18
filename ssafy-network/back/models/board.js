@@ -1,10 +1,7 @@
 const mongoose = require('mongoose');
 
 const boardSchema = new mongoose.Schema({
-    code: {
-        type: String,
-        required: true,
-    },
+    code: String,
     writer:{
         type: String,
         required: true,
