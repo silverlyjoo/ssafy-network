@@ -17,13 +17,25 @@
             <v-divider class="mb-3" style="border-color: rgb(218, 234, 248);"></v-divider>
 
             <div class="navBtn">
-              <router-link to="/note/calendar" style="text-decoration: none !important">
-                <v-layout align-center class="pa-2 mb-3">
+                <v-layout align-center class="pa-2 mb-3" @click="goNote()">
                   <v-flex xs7 text-xs-center>
                     <span class="navtext navtcolor">NOTE</span>
                   </v-flex>
                 </v-layout>
-              </router-link>
+              <v-treeview
+                v-model="tree"
+                :open="open"
+                :items="items"
+                activatable
+                item-key="name"
+                open-on-click
+                v-if="click"
+              >
+                <template v-slot:prepend="{ item, open }">
+                  <v-icon v-if="!item.file">{{ open ? 'mdi-folder-open' : 'mdi-folder' }}</v-icon>
+                  <v-icon v-else>{{ files[item.file] }}</v-icon>
+                </template>
+              </v-treeview>
             </div>
 
             <div class="navBtn">
@@ -58,10 +70,56 @@ export default {
   name: "Nav",
   data() {
     return {
-      foldflag: this.$store.state.navFoldFlag
+      foldflag: this.$store.state.navFoldFlag,
+      click : false,
+      open: [],
+      files: {
+        html: 'mdi-language-html5',
+        js: 'mdi-nodejs',
+        json: 'mdi-json',
+        md: 'mdi-markdown',
+        pdf: 'mdi-file-pdf',
+        png: 'mdi-file-image',
+        txt: 'mdi-file-document-outline',
+        xls: 'mdi-file-excel'
+      },
+      tree: [],
+      items: [
+        {
+          name: '.git'
+        },
+        {
+          name: 'node_modules'
+        },
+        {
+          name: 'public',
+          children: [
+            {
+              name: 'static',
+              children: [{
+                name: 'logo.png',
+                file: 'png'
+              }]
+            },
+            {
+              name: 'favicon.ico',
+              file: 'png'
+            },
+            {
+              name: 'index.html',
+              file: 'html'
+            }
+          ]
+        }
+      ]
     };
   },
-  methods: {}
+  methods: {
+    goNote(){
+      this.$router.push('/note/calendar');
+      this.click = !this.click;
+    }
+  }
 };
 </script>
 <style>
