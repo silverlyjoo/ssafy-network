@@ -16,7 +16,7 @@ export default {
   },
   methods: {
     pageLog() {
-      console.log(this.$router.history.current);
+      
     }
   },
   mounted() {

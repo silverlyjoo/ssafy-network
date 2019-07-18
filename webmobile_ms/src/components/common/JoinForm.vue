@@ -1,5 +1,5 @@
 <template>
-  <v-layout justify-center>
+  <v-layout justify-center class="ma-5">
     <v-flex xs12 sm10 md8 lg6>
       <v-card ref="form">
         <v-card-text>
@@ -127,6 +127,7 @@ export default {
         });
         
         FirebaseService.addUser(this.address, this.password);
+        this.$router.push('/');
       } else {
           alert("Please match your PASSWORD");
       }
