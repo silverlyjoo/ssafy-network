@@ -1,5 +1,6 @@
 <template>
-  <div class="pa-2"style="width:80%; margin-left:auto; margin-right:auto; ">
+  <div class="pa-5 board">
+    <h2 class="board-title">Code Review 게시판</h2><br>
     <v-data-table
       :headers="headers"
       :items="articles"
@@ -10,9 +11,9 @@
     >
       <template v-slot:items="props">
         <td>{{ props.item.index }}</td>
-        <td class="text-xs-right" style="width:40%;">{{ props.item.title }}</td>
-        <td class="text-xs-right">{{ props.item.writer }}</td>
-        <td class="text-xs-right">{{ props.item.hit }}</td>
+        <td class="text-xs-left title">{{ props.item.title }}</td>
+        <td class="text-xs-center writer">{{ props.item.writer }}</td>
+        <td class="text-xs-center hit">{{ props.item.hit }}</td>
       </template>
     </v-data-table>
     <div class="text-xs-center pt-2">
@@ -57,8 +58,8 @@
         articles: [
           {
             index: 1,
-            title: '파이썬 질문 있어요',
-            writer: '파이썬마스터',
+            title: 'I have a question about python',
+            writer: 'Maestro_Of_Python',
             hit: 5,
           },
           {
@@ -129,3 +130,24 @@
     }
   }
 </script>
+
+<style>
+  .board-title {
+    color: grey
+  }
+  .board {
+    height: 100%;
+    width: 80%;
+    margin-left:auto;
+    margin-right:auto;
+  }
+  .title {
+    /* width:50%; */
+  }
+  .writer {
+    /* width:50%; */
+  }
+  .hit {
+    /* width:50%; */
+  }
+</style>

@@ -39,7 +39,7 @@
             </div>
 
             <div class="navBtn">
-              <router-link to="/code" style="text-decoration: none !important">
+              <router-link to="/code/board" style="text-decoration: none !important">
                 <v-layout align-center class="pa-2 mb-3">
                   <v-flex xs7 text-xs-center>
                     <span class="navtext navtcolor">CODE</span>
@@ -118,7 +118,7 @@ export default {
     goNote(){
       this.$router.push('/note/calendar');
       this.click = !this.click;
-    }
+    },
   }
 };
 </script>
