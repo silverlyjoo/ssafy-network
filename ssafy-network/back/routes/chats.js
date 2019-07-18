@@ -16,4 +16,19 @@ router.post('/', function(req,res){
     res.send(chat);
 });
 
+//특정 방의 채팅정보를 가져온다.
+router.post('/room',function(req,res){
+    var rule = {createdAt: 1};
+
+    Chat.find({room: req.body.room}, function(err, chats){
+        if(err){
+          return res.status(500).json({error: err});
+        } 
+        if(!chats){
+          return res.status(404).json({error: 'user not found'});
+        } 
+        res.json(chats);
+    }).sort(rule);
+});
+
 module.exports = router;

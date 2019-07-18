@@ -1,5 +1,17 @@
 <template>
-  <div class="about">
-    <h1>This is an Code</h1>
+  <div>
+    <v-content>
+      <router-view></router-view>
+    </v-content>
   </div>
 </template>
+
+<script>
+export default {
+  data(){
+    return {
+
+    }
+  }
+};
+</script>
