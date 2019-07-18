@@ -82,8 +82,6 @@ import 'firebase/auth'
           } else {
             alert(errorMessage);
           }
-          console.log(error);
-          alert("가입 성공!");
         });
       },async loginUser(email, password){
         return  firebase.auth().signInWithEmailAndPassword(email, password).then(function(user){
