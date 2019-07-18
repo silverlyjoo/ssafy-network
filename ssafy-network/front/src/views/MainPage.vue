@@ -4,7 +4,7 @@
 
     <div class="mainsection">
       <Header></Header>
-      <router-view></router-view>
+      <div class="routingbody"><router-view></router-view></div>
       <Footer></Footer>
     </div>
   </v-layout>
@@ -31,6 +31,6 @@ export default {
 
 <style>
 .mainsection {
-  width: calc(100vw - 200px);
+  width: 100%;
 }
 </style>
