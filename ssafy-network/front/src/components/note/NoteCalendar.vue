@@ -1,6 +1,7 @@
 <template>
     <v-layout column>
-      <v-flex align-self-center class="mt-4" row wrap d-flex style="width:80%;">
+      
+      <!-- <v-flex align-self-center class="mt-4" row wrap d-flex style="width:80%;">
         <v-flex align-self-center>
           <h2 style="color:blue;">{{this.focusYear}}년</h2>
         </v-flex>
@@ -18,15 +19,12 @@
             <v-icon small>arrow_forward_ios</v-icon>
           </v-btn>
         </v-flex>
-      </v-flex>
-      <v-flex align-center >
+      </v-flex> -->
+      <v-flex align-center class="ma-3">
         <Calendar :events="events"></Calendar>
       </v-flex>
-      <v-flex>
-         <v-btn fab text small>
-            <v-icon small class="primary" @click="addBtn=true">add</v-icon>
-          </v-btn>
-        <CalendarForm :today="today" v-if="addBtn"></CalendarForm>
+      <v-flex align-center width="100%" >
+        <CalendarForm :today="today" ></CalendarForm>
       </v-flex>
     </v-layout>
 </template>
@@ -38,7 +36,8 @@ import CalendarForm from '@/components/note/CalendarForm.vue';
 export default {
   name:'NoteCalendar',
   components:{
-    Calendar
+    Calendar,
+    CalendarForm
   },
   data() {
     return {
@@ -47,8 +46,17 @@ export default {
       focus: "",
       focusMonth: "",
       focusYear: "",
-      events:[],
-      addBtn:false
+      events:[{
+            title     : 'event1',
+            start     : '2019-07-09',
+            cssClass  : 'blue'
+          },
+          {
+            title     : 'event2',
+            start     : '2019-07-08',
+            end       : '2019-07-13',
+            cssClass  : 'red'
+          }]
     };
   },
   computed: {

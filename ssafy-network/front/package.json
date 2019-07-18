@@ -8,6 +8,7 @@
   },
   "dependencies": {
     "@toast-ui/vue-editor": "^1.1.1",
+    "color-picker": "0.0.1",
     "core-js": "^2.6.5",
     "node-sass": "^4.12.0",
     "register-service-worker": "^1.6.2",

@@ -1,8 +1,10 @@
 <template>
-  <v-layout row justify-center>
+  <v-layout row justify-end class="mr-3 mb-3">
     <v-dialog v-model="dialog" persistent max-width="600px">
       <template v-slot:activator="{ on }">
-        <v-btn color="primary" dark v-on="on">Open Dialog</v-btn>
+        <v-btn fab text small class="primary" v-on="on">
+          <v-icon small @click="addBtn=true">add</v-icon>
+        </v-btn>
       </template>
       <v-card>
         <v-card-title>
@@ -10,9 +12,9 @@
         </v-card-title>
         <v-card-text>
           <v-container grid-list-md>
-            <v-layout wrap>
+            <v-layout wrap column>
               <v-flex xs12 sm6 md4>
-                <v-text-field label="할일 제목" required></v-text-field>
+                <v-text-field label="할일 제목" v-model="event.title" required></v-text-field>
               </v-flex>
               <v-flex xs12 sm6 md4>
                 <v-menu
@@ -27,14 +29,14 @@
                 >
                   <template v-slot:activator="{ on }">
                     <v-text-field
-                      v-model="startDate"
+                      v-model="event.startDate"
                       label="시작 날짜"
                       prepend-icon="event"
                       readonly
                       v-on="on"
                     ></v-text-field>
                   </template>
-                  <v-date-picker v-model="startDate" @input="startDatePick = false"></v-date-picker>
+                  <v-date-picker v-model="event.startDate" @input="startDatePick = false"></v-date-picker>
                 </v-menu>
               </v-flex>
               <v-flex xs12 sm6 md4>
@@ -50,18 +52,18 @@
                 >
                   <template v-slot:activator="{ on }">
                     <v-text-field
-                      v-model="endDate"
+                      v-model="event.endDate"
                       label="시작 날짜"
                       prepend-icon="event"
                       readonly
                       v-on="on"
                     ></v-text-field>
                   </template>
-                  <v-date-picker v-model="endDate" @input="endDatePick = false"></v-date-picker>
+                  <v-date-picker v-model="event.endDate" @input="endDatePick = false"></v-date-picker>
                 </v-menu>
               </v-flex>
               <v-flex xs12 sm6 md4>
-                <v-textarea label="할일 내용"></v-textarea>
+                <v-textarea label="할일 내용" v-model="event.desc"></v-textarea>
               </v-flex>
             </v-layout>
           </v-container>
@@ -77,19 +79,33 @@
 </template>
 
 <script>
+
 export default {
+  name: "CalendarForm",
   props: {
-    today: this.focus
+    today: ""
   },
   data() {
     return {
       dialog: false,
       focus: "",
-      startDate: "",
-      endDate: "",
       startDatePick: false,
-      endDatePick: false
+      endDatePick: false,
+      event: {
+        title: "",
+        desc: "",
+        startDate: "",
+        endDate: ""
+      }
     };
+  },
+  mounted() {
+    this.focus = this.today;
   }
 };
 </script>
+<style>
+.events-day{
+    min-height: 100px!important;
+}
+</style>
