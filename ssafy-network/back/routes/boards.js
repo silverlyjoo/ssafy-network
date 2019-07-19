@@ -2,7 +2,17 @@ var express = require('express');
 var router = express.Router();
 var Board = require('../models/board');
 
-//모든 게시글 리스트를 반환
+/**
+ * @swagger
+ *  /boards/all:
+ *    get:
+ *      tags:
+ *      - Board
+ *      description: 모든 게시글 반환
+ *      responses:
+ *       200:
+ *        description: 게시글 정보를 json 리스트에 담음
+ */
 router.get('/all', function(req,res){
     var sort = {createdAt: -1};
     Board.find(function(err, boards){
@@ -13,7 +23,36 @@ router.get('/all', function(req,res){
     }).sort(sort);
 });
 
-//게시글을 추가한다.
+/**
+ * @swagger
+ *  /boards:
+ *    post:
+ *      tags:
+ *      - Board
+ *      description: 게시글 추가
+ *      parameters:
+ *      - in: body
+ *        name: addBoard
+ *        description: "게시글 추가"
+ *        schema:
+ *          type: object
+ *          properties:
+ *            code:
+ *              type: string
+ *            writer:
+ *              type: string
+ *              required: true
+ *            title:
+ *              type: string
+ *              required: true
+ *            content:
+ *              type: string
+ *            hit:
+ *              type: integer
+ *      responses:
+ *       200:
+ *        description: "result = 1 일 경우 정상적으로 작동"
+ */
 router.post('/', function(req, res){
     var board = new Board();
     board.code = req.body.code;
@@ -35,7 +74,38 @@ router.post('/', function(req, res){
     });
 });
 
-//게시글을 업데이트한다.
+/**
+ * @swagger
+ *  /boards/_id:
+ *    put:
+ *      tags:
+ *      - Board
+ *      description: 게시글 업데이트
+ *      parameters:
+ *      - in: body
+ *        name: updateBoard
+ *        description: "게시글 정보 업데이트"
+ *        schema:
+ *          type: object
+ *          properties:
+ *            _id:
+ *              type: string
+ *            code:
+ *              type: string
+ *            writer:
+ *              type: string
+ *              required: true
+ *            title:
+ *              type: string
+ *              required: true
+ *            content:
+ *              type: string
+ *            hit:
+ *              type: integer
+ *      responses:
+ *       200:
+ *        description: result = 1 일 경우 정상적으로 작동
+ */
 router.put('/_id', function(req, res){
     Board.update({ _id: req.body._id }, { $set: req.body }, function(err, output){
         if(err){
@@ -49,7 +119,23 @@ router.put('/_id', function(req, res){
     })
 });
 
-//조회수를 업데이트한다.
+/**
+ * @swagger
+ *  /boards/{_id}:
+ *    put:
+ *      tags:
+ *      - Board
+ *      description: 게시글 조회수 업데이트
+ *      parameters:
+ *      - name: _id
+ *        in: path
+ *        description: "오브젝트 아이디"
+ *        required: true
+ *        type: string
+ *      responses:
+ *       200:
+ *        description: 조회수 +1
+ */
 router.put('/:_id', function(req, res){
     Board.findOne({_id: req.params._id}, function(err,board){
         Board.update({ _id: req.params._id }, { $set: { hit: board.hit + 1 }}, function(err, output){

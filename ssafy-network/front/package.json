@@ -8,6 +8,7 @@
   },
   "dependencies": {
     "@toast-ui/vue-editor": "^1.1.1",
+    "color-picker": "0.0.1",
     "core-js": "^2.6.5",
     "node-sass": "^4.12.0",
     "register-service-worker": "^1.6.2",
@@ -15,7 +16,9 @@
     "vee-validate": "^2.2.13",
     "vue": "^2.6.10",
     "vue-codemirror": "^4.0.6",
+    "vue-fullcalendar": "^1.0.9",
     "vue-router": "^3.0.3",
+    "vue-session": "^1.0.0",
     "vuetify": "^1.5.16",
     "vuex": "^3.0.1"
   },

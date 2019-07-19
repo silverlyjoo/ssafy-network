@@ -12,7 +12,7 @@
             <v-card-title primary-title>
               <h2>SIGN IN</h2>
             </v-card-title>
-            <v-form >
+            <v-form>
               <v-text-field prepend-icon="person" name="Username" label="Username"></v-text-field>
               <v-text-field prepend-icon="lock" name="Password" label="Password" type="password"></v-text-field>
               <v-card-actions>
@@ -31,13 +31,42 @@ export default {
   data() {
     return {
       show1: false,
-      password: "",
-      rules: {
-        required: value => !!value || "Required.",
-        min: v => v.length >= 8 || "Min 8 characters",
-        emailMatch: () => "The email and password you entered don't match"
-      }
+      id: "",
+      pwd: ""
     };
+  },
+  methods: {
+    login() {
+      fetch(this.$store.state.dbserver + "/users/login", {
+        method: "POST",
+        headers: {
+          "Access-Control-Allow-Origin": "*",
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          id: this.id,
+          pwd: this.pwd
+        })
+      })
+        .then(res => res.json())
+        .then(data => {
+          if (data.result) {
+            this.$store.state.login = true;
+            this.$session.set("user", this.id);
+            this.id = "";
+            this.pwd = "";
+            console.log("로그인 성공!!!");
+            this.$router.push("/index");
+          } else {
+            alert("로그인 실패...");
+            this.id = "";
+            this.pwd = "";
+            this.$refs.id.focus();
+          }
+        })
+        .catch(error => console.log(error))
+        .finally();
+    }
   }
 };
 </script> 
