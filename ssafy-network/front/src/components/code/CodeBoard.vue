@@ -10,7 +10,6 @@
       :headers="headers"
       :items="articles"
       :search="search"
-      hide-actions
       :pagination.sync="pagination"
       class="elevation-1"
     >
