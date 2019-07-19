@@ -2,14 +2,10 @@
   <div>
     <v-toolbar flat color="white">
       <v-toolbar-title>Code Review 게시판</v-toolbar-title>
-      <v-divider
-        class="mx-2"
-        inset
-        vertical
-      ></v-divider>
+
       <v-spacer></v-spacer>
-      <v-dialog v-model="dialog" max-width="800px">
-        <template v-slot:aactivator="{ on }">
+      <v-dialog v-model="dialog" max-width="800px" max-height="800px">
+        <template v-slot:activator="{ on }">
           <v-btn v-on="on" class="info write-btn">글 쓰기</v-btn><br><br><br>
         </template>
         <v-card>
@@ -33,7 +29,7 @@
           <v-card-actions>
             <v-spacer></v-spacer>
             <v-btn class="info" flat @click.native="close">취소</v-btn>
-            <v-btn class="info" flat @click.native="save">글쓰기</v-btn>
+            <v-btn class="info" flat @click.native="save">확인</v-btn>
           </v-card-actions>
         </v-card>
       </v-dialog>
@@ -49,7 +45,7 @@
       <template v-slot:items="props">
         <td>{{ props.item.title }}</td>
         <td class="text-xs-center">{{ props.item.content }}</td>
-        <td class="justify-center layout px-0">
+        <td class="justify-center text-xs-center layout px-0">{{ props.item.editorremove }}
           <v-icon
             small
             class="mr-2"
@@ -87,7 +83,8 @@
           sortable: false,
           value: 'title'
         },
-        { text: 'Content', value: 'content' }
+        { text: 'Content', value: 'content', sortable: false },
+        { text: 'Edit/Delete', value: 'editorremove', sortable: false },
       ],
       articles: [],
       editedIndex: -1,
