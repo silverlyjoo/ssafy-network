@@ -13,7 +13,7 @@
               <h2>SIGN IN</h2>
             </v-card-title>
             <v-form>
-              <v-text-field prepend-icon="person" name="Username" label="Username" v-model ="id"></v-text-field>
+              <v-text-field prepend-icon="person" name="Username" label="Username" v-model ="id" ref="id"></v-text-field>
               <v-text-field prepend-icon="lock" name="Password" label="Password" type="password" v-model="pwd"></v-text-field>
               <v-card-actions>
                 <v-btn primary large block @click="login">Login</v-btn>
@@ -49,14 +49,14 @@ export default {
       })
         .then(res => res.json())
         .then(data => {
-          if (data.result == false) {
+          if (data == false) {
            alert("로그인 실패...");
             this.id = "";
             this.pwd = "";
             this.$refs.id.focus();
           } else {
             this.$store.state.login = true;
-            this.$session.set("token" , data.result);
+            this.$session.set("token" , data);
             this.id = "";
             this.pwd = "";
             console.log("로그인 성공!!!");
