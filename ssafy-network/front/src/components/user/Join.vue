@@ -146,7 +146,7 @@ export default {
         })
           .then(res => res.json())
           .then(data => {
-            if (data.result) {
+            if (data == false) {
               this.$refs.form.reset();
               this.$validator.reset();
               alert("회원가입 성공!!");

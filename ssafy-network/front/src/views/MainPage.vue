@@ -33,4 +33,7 @@ export default {
 .mainsection {
   width: 100%;
 }
+.routingbody {
+  min-height: calc(100vh - 165px);
+}
 </style>
