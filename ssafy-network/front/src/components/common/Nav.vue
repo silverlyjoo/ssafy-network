@@ -30,13 +30,12 @@
                 item-key="name"
                 open-on-click
                 v-if="click"
-                light=true
+               style="overflow:hidden!important; text-overflow: ellipsis; "
               >
-                <template v-slot:label="{ item, open,selected }">
-                  <v-btn flat @contextmenu="show">
+                <template v-slot:prepend="{ item, open,selected }"  >
+                  <v-btn flat @contextmenu="show" class="ma-0 pa-0" style="min-width:30px!important;">
                     <v-icon v-if="!item.file">{{ open ? 'mdi-folder-open' : 'mdi-folder' }}</v-icon>
                     <v-icon v-else>{{ files[item.file] }}</v-icon>
-                    {{item.name}}
                   </v-btn>
                 </template>
               </v-treeview>
@@ -101,30 +100,30 @@ export default {
       tree: [],
       items: [
         {
-          name: ".git"
+          name: "SSAFY"
         },
         {
-          name: "node_modules"
+          name: "알고리즘"
         },
         {
-          name: "public",
+          name: "자바",
           children: [
             {
-              name: "static",
+              name: "자습",
               children: [
                 {
-                  name: "logo.png",
-                  file: "png"
+                  name: "정리1",
+                  file: "txt"
                 }
               ]
             },
             {
-              name: "favicon.ico",
-              file: "png"
+              name: "정리2",
+              file: "txt"
             },
             {
-              name: "index.html",
-              file: "html"
+              name: "정리3",
+              file: "txt"
             }
           ]
         }
