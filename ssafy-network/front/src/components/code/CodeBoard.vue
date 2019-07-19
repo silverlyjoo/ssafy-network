@@ -1,7 +1,7 @@
 <template>
   <div>
-    <v-toolbar flat>
-      <v-toolbar-title class="board-title">Code Review 게시판</v-toolbar-title>
+    <v-toolbar flat color="white">
+      <v-toolbar-title>Code Review 게시판</v-toolbar-title>
       <v-divider
         class="mx-2"
         inset
@@ -42,11 +42,12 @@
     <v-data-table
       :headers="headers"
       :items="articles"
+      :search="search"
+      :pagination.sync="pagination"
       class="elevation-1"
     >
       <template v-slot:items="props">
         <td>{{ props.item.title }}</td>
-        <td class="text-xs-center">{{ props.item.title }}</td>
         <td class="text-xs-center">{{ props.item.content }}</td>
         <td class="justify-center layout px-0">
           <v-icon
@@ -103,13 +104,6 @@
       formTitle () {
         return this.editedIndex === -1 ? 'New Article' : 'Edit Article'
       }
-    },
-      pages () {
-        if (this.pagination.rowsPerPage == null ||
-          this.pagination.totalItems == null
-        ) return 0
-
-        return Math.ceil(this.pagination.totalItems / this.pagination.rowsPerPage)
     },
     watch: {
       dialog (val) {
