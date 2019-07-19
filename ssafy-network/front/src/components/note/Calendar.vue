@@ -50,7 +50,7 @@
                   <template v-slot:activator="{ on }">
                     <v-text-field
                       v-model="event.endDate"
-                      label="시작 날짜"
+                      label="종료 날짜"
                       prepend-icon="event"
                       readonly
                       v-on="on"

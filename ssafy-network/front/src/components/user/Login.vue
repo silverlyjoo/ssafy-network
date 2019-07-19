@@ -13,10 +13,10 @@
               <h2>SIGN IN</h2>
             </v-card-title>
             <v-form>
-              <v-text-field prepend-icon="person" name="Username" label="Username"></v-text-field>
-              <v-text-field prepend-icon="lock" name="Password" label="Password" type="password"></v-text-field>
+              <v-text-field prepend-icon="person" name="Username" label="Username" v-model ="id"></v-text-field>
+              <v-text-field prepend-icon="lock" name="Password" label="Password" type="password" v-model="pwd"></v-text-field>
               <v-card-actions>
-                <v-btn primary large block>Login</v-btn>
+                <v-btn primary large block @click="login">Login</v-btn>
               </v-card-actions>
             </v-form>
           </v-card>
@@ -30,7 +30,6 @@ export default {
   name: "Login",
   data() {
     return {
-      show1: false,
       id: "",
       pwd: ""
     };
