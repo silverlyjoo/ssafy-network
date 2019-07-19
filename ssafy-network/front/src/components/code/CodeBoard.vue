@@ -16,7 +16,7 @@
     >
       <template v-slot:items="props">
         <td>{{ props.item.index }}</td>
-        <td class="text-xs-left title"><router-link to="/code/detail">{{ props.item.title }}</router-link></td>
+        <td class="text-xs-left title"><router-link to="/code/detail" style="text-decoration: none !important; color: black;">{{ props.item.title }}</router-link></td>
         <td class="text-xs-center writer">{{ props.item.writer }}</td>
         <td class="text-xs-center hit">{{ props.item.hit }}</td>
       
