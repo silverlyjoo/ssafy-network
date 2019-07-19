@@ -29,8 +29,10 @@
 
 <script>
   export default {
+    name: "CodeBoard",
     data () {
       return {
+        code_articles: [],
         search: '',
         pagination: {},
         selected: [],
@@ -132,6 +134,9 @@
 
         return Math.ceil(this.pagination.totalItems / this.pagination.rowsPerPage)
       }
+    },
+    methods: {
+      
     }
   }
 </script>
