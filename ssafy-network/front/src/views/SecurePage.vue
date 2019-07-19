@@ -20,9 +20,6 @@
           <router-view></router-view>
         </v-flex>
       </div>
-
-
-
     </v-layout>
   </v-content>
 </template>

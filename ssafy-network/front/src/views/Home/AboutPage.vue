@@ -1,6 +1,6 @@
 <template>
 
-  <v-container  xs10 sm8 class="my-5">
+  <v-container justify-center xs10 sm8 class="my-5">
     
     <v-timeline>
       <v-timeline-item color="red lighten-2" large>
