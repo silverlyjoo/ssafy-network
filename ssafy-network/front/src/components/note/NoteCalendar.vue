@@ -20,7 +20,7 @@
         </v-flex>
     </v-flex>-->
     <v-flex align-center class="ma-3">
-      <Calendar :events="events" @eventClick="eventClick" @dateClick="dateClick">
+      <Calendar :events="events" >
       </Calendar>
     </v-flex>
     <v-flex align-center width="100%">
@@ -50,24 +50,33 @@ export default {
         {
           title: "event1",
           start: "2019-07-09",
-          cssClass: "blue"
+          cssClass: "blue",
+          desc:"event 1 입니다."
+        },
+        {
+          title: "event3",
+          start: "2019-07-09",
+          cssClass: "yellow",
+          desc:"event 3 입니다."
+        },
+        {
+          title: "event4",
+          start: "2019-07-09",
+          cssClass: "orange",
+          desc:"event 4 입니다."
         },
         {
           title: "event2",
           start: "2019-07-08",
           end: "2019-07-13",
-          cssClass: "red"
+          cssClass: "red",
+          desc:"event 2 입니다."
         }
       ]
     };
   },
   methods: {
-    dateClick(arg){
-      alert(arg.date);
-    },
-    eventClick(event, jsEvent, pos) {
-      console.log("eventClick", event, jsEvent, pos);
-    },
+    
     open(event) {
       alert(event.title);
     },
