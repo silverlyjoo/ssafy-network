@@ -51,7 +51,7 @@ router.get('/all', function(req,res){
  *              type: integer
  *      responses:
  *       200:
- *        description: "result = 1 일 경우 정상적으로 작동"
+ *        description: "result = true 일 경우 정상적으로 작동"
  */
 router.post('/', function(req, res){
     var board = new Board();
@@ -70,7 +70,7 @@ router.post('/', function(req, res){
             return;
         }
   
-        res.json({result: 1});
+        res.json({result: true});
     });
 });
 
@@ -104,7 +104,7 @@ router.post('/', function(req, res){
  *              type: integer
  *      responses:
  *       200:
- *        description: result = 1 일 경우 정상적으로 작동
+ *        description: "result = true 일 경우 정상적으로 작동"
  */
 router.put('/_id', function(req, res){
     Board.update({ _id: req.body._id }, { $set: req.body }, function(err, output){
@@ -115,7 +115,7 @@ router.put('/_id', function(req, res){
         if(!output.n){
           return res.status(404).json({ error: 'board not found' });
         } 
-        res.json({result: 1});
+        res.json({result: true});
     })
 });
 
@@ -146,7 +146,7 @@ router.put('/:_id', function(req, res){
             if(!output.n){
               return res.status(404).json({ error: 'board not found' });
             } 
-            res.json({result: 1});
+            res.json({result: true});
         })
     });
 });
