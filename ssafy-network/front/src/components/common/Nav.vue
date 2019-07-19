@@ -146,7 +146,7 @@ export default {
 .navLayout {
   position: fixed;
   height: 100vh;
-  background: rgb(24, 41, 80);
+  background: rgb(128, 149, 202);
   z-index: 100;
 }
 .navBg {
