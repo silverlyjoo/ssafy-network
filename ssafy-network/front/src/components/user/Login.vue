@@ -13,10 +13,10 @@
               <h2>SIGN IN</h2>
             </v-card-title>
             <v-form>
-              <v-text-field prepend-icon="person" name="Username" label="Username"></v-text-field>
-              <v-text-field prepend-icon="lock" name="Password" label="Password" type="password"></v-text-field>
+              <v-text-field prepend-icon="person" name="Username" label="Username" v-model ="id" ref="id"></v-text-field>
+              <v-text-field prepend-icon="lock" name="Password" label="Password" type="password" v-model="pwd"></v-text-field>
               <v-card-actions>
-                <v-btn primary large block>Login</v-btn>
+                <v-btn primary large block @click="login">Login</v-btn>
               </v-card-actions>
             </v-form>
           </v-card>
@@ -30,14 +30,13 @@ export default {
   name: "Login",
   data() {
     return {
-      show1: false,
       id: "",
       pwd: ""
     };
   },
   methods: {
     login() {
-      fetch(this.$store.state.dbserver + "/users/login", {
+      fetch(this.$store.state.dbserver + "/login", {
         method: "POST",
         headers: {
           "Access-Control-Allow-Origin": "*",
@@ -50,18 +49,18 @@ export default {
       })
         .then(res => res.json())
         .then(data => {
-          if (data.result) {
+          if (data == false) {
+           alert("로그인 실패...");
+            this.id = "";
+            this.pwd = "";
+            this.$refs.id.focus();
+          } else {
             this.$store.state.login = true;
-            this.$session.set("user", this.id);
+            this.$session.set("token" , data);
             this.id = "";
             this.pwd = "";
             console.log("로그인 성공!!!");
             this.$router.push("/index");
-          } else {
-            alert("로그인 실패...");
-            this.id = "";
-            this.pwd = "";
-            this.$refs.id.focus();
           }
         })
         .catch(error => console.log(error))

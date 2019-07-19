@@ -13,7 +13,7 @@ export default {
     return {};
   },
   mounted(){
-    if (this.$session.get("user")!=null) {
+    if (this.$session.get("token")!=null) {
       this.$store.state.login = true;
       this.$router.push('index');
     }else{

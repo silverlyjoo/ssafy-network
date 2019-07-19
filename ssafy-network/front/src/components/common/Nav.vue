@@ -17,11 +17,11 @@
             <v-divider class="mb-3" style="border-color: rgb(218, 234, 248);"></v-divider>
 
             <div class="navBtn">
-                <v-layout align-center class="pa-2 mb-3" @click="goNote()">
-                  <v-flex xs7 text-xs-center>
-                    <span class="navtext navtcolor">NOTE</span>
-                  </v-flex>
-                </v-layout>
+              <v-layout align-center class="pa-2 mb-3" @click="goNote()">
+                <v-flex xs7 text-xs-center>
+                  <span class="navtext navtcolor">NOTE</span>
+                </v-flex>
+              </v-layout>
               <v-treeview
                 v-model="tree"
                 :open="open"
@@ -30,12 +30,23 @@
                 item-key="name"
                 open-on-click
                 v-if="click"
+                light=true
               >
-                <template v-slot:prepend="{ item, open }">
-                  <v-icon v-if="!item.file">{{ open ? 'mdi-folder-open' : 'mdi-folder' }}</v-icon>
-                  <v-icon v-else>{{ files[item.file] }}</v-icon>
+                <template v-slot:label="{ item, open,selected }">
+                  <v-btn flat @contextmenu="show">
+                    <v-icon v-if="!item.file">{{ open ? 'mdi-folder-open' : 'mdi-folder' }}</v-icon>
+                    <v-icon v-else>{{ files[item.file] }}</v-icon>
+                    {{item.name}}
+                  </v-btn>
                 </template>
               </v-treeview>
+              <v-menu v-model="showMenu" :position-x="x" :position-y="y" absolute offset-y>
+                <v-list>
+                  <v-list-tile v-for="menuItem in menuItems" :key="menuItem" @click="clickAction">
+                    <v-list-tile-title>{{menuItem}}</v-list-tile-title>
+                  </v-list-tile>
+                </v-list>
+              </v-menu>
             </div>
 
             <div class="navBtn">
@@ -70,44 +81,50 @@ export default {
   name: "Nav",
   data() {
     return {
+      showMenu: false,
+      x: 0,
+      y: 0,
+      menuItems: ["파일 추가", "폴더 추가"],
       foldflag: this.$store.state.navFoldFlag,
-      click : false,
+      click: false,
       open: [],
       files: {
-        html: 'mdi-language-html5',
-        js: 'mdi-nodejs',
-        json: 'mdi-json',
-        md: 'mdi-markdown',
-        pdf: 'mdi-file-pdf',
-        png: 'mdi-file-image',
-        txt: 'mdi-file-document-outline',
-        xls: 'mdi-file-excel'
+        html: "mdi-language-html5",
+        js: "mdi-nodejs",
+        json: "mdi-json",
+        md: "mdi-markdown",
+        pdf: "mdi-file-pdf",
+        png: "mdi-file-image",
+        txt: "mdi-file-document-outline",
+        xls: "mdi-file-excel"
       },
       tree: [],
       items: [
         {
-          name: '.git'
+          name: ".git"
         },
         {
-          name: 'node_modules'
+          name: "node_modules"
         },
         {
-          name: 'public',
+          name: "public",
           children: [
             {
-              name: 'static',
-              children: [{
-                name: 'logo.png',
-                file: 'png'
-              }]
+              name: "static",
+              children: [
+                {
+                  name: "logo.png",
+                  file: "png"
+                }
+              ]
             },
             {
-              name: 'favicon.ico',
-              file: 'png'
+              name: "favicon.ico",
+              file: "png"
             },
             {
-              name: 'index.html',
-              file: 'html'
+              name: "index.html",
+              file: "html"
             }
           ]
         }
@@ -115,10 +132,21 @@ export default {
     };
   },
   methods: {
-    goNote(){
-      this.$router.push('/note/calendar');
+    goNote() {
+      this.$router.push("/note/calendar");
       this.click = !this.click;
     },
+    show(e) {
+      e.preventDefault();
+      this.showMenu = false;
+      this.x = e.clientX;
+      this.y = e.clientY;
+      this.$nextTick(() => {
+        this.showMenu = true;
+      });
+    },clickAction(e){
+      alert(e);
+    }
   }
 };
 </script>
@@ -146,7 +174,7 @@ export default {
 .navLayout {
   position: fixed;
   height: 100vh;
-  background: rgb(24, 41, 80);
+  background: rgb(128, 149, 202);
   z-index: 100;
 }
 .navBg {
