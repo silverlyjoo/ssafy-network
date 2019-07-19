@@ -146,6 +146,7 @@ export default {
         })
           .then(res => res.json())
           .then(data => {
+            console.log(data);
             if (data == false) {
               this.$refs.form.reset();
               this.$validator.reset();

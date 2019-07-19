@@ -36,7 +36,7 @@ export default {
   },
   methods: {
     login() {
-      fetch(this.$store.state.dbserver + "/login/"+this.id+"/"+this.pwd, {
+      fetch(this.$store.state.dbserver + "/users/login/"+this.id+"/"+this.pwd, {
         method: "GET",
         headers: {
           "Access-Control-Allow-Origin": "*",
