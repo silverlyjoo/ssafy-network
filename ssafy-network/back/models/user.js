@@ -13,7 +13,8 @@ const userSchema = new mongoose.Schema({
     nickname :  String,
     region : String,
     year : Number,
-    membership :  Boolean,
+    membership :  Number,
+    
 });
 
 module.exports = mongoose.model('User',userSchema);
