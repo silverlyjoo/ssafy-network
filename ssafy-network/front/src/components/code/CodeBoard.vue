@@ -1,6 +1,13 @@
 <template>
-  <div class="pa-5 board">
-    <h2 class="board-title">Code Review 게시판</h2>
+  <div>
+    <v-toolbar flat>
+      <v-toolbar-title class="board-title">Code Review 게시판</v-toolbar-title>
+      <v-divider
+        class="mx-2"
+        inset
+        vertical
+      ></v-divider>
+      <v-spacer></v-spacer>
       <v-dialog v-model="dialog" max-width="800px">
         <template v-slot:aactivator="{ on }">
           <v-btn v-on="on" class="info write-btn">글 쓰기</v-btn><br><br><br>
@@ -30,12 +37,11 @@
           </v-card-actions>
         </v-card>
       </v-dialog>
+    </v-toolbar>
 
     <v-data-table
       :headers="headers"
       :items="articles"
-      :search="search"
-      :pagination.sync="pagination"
       class="elevation-1"
     >
       <template v-slot:items="props">
@@ -66,9 +72,6 @@
         </v-alert>
       </template>
     </v-data-table>
-    <div class="text-xs-center pt-2">
-      <v-pagination v-model="pagination.page" :length="pages"></v-pagination>
-    </div>
   </div>
 </template>
 
