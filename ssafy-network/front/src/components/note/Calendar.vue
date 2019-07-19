@@ -5,7 +5,7 @@
     <v-dialog v-model="dialog" persistent max-width="600px">
       <v-card>
         <v-card-title>
-          <span class="headline">ToDo List 추가</span>
+          <span class="headline">ToDo List 수정</span>
         </v-card-title>
         <v-card-text>
           <v-container grid-list-md>
