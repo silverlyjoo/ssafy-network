@@ -51,17 +51,18 @@
                 required
               ></v-text-field>
               <v-flex d-inline-flex align-center>
-              <v-text-field class="mr-5"
-              ref="NickName"
-                v-model="nickname"
-                label="NickName"
-                data-vv-name="NickName"
-                v-validate="'required|min:2'"
-                :error-messages="errors.collect('NickName')"
-                required
-              ></v-text-field>
-              <v-btn @click="userNickNameCheck" ref="NickNameCheckBtn" class="mr-5">중복체크</v-btn>
-              <span v-if="NickNameCheck" style="color:blue;">중복체크 완료</span>
+                <v-text-field
+                  class="mr-5"
+                  ref="NickName"
+                  v-model="nickname"
+                  label="NickName"
+                  data-vv-name="NickName"
+                  v-validate="'required|min:2'"
+                  :error-messages="errors.collect('NickName')"
+                  required
+                ></v-text-field>
+                <v-btn @click="userNickNameCheck" ref="NickNameCheckBtn" class="mr-5">중복체크</v-btn>
+                <span v-if="NickNameCheck" style="color:blue;">중복체크 완료</span>
               </v-flex>
               <v-select
                 v-model="region"
@@ -112,7 +113,7 @@ export default {
       regions: ["서울", "대전", "구미", "광주"],
       years: [1, 2],
       IDCheck: false,
-      NickNameCheck : false
+      NickNameCheck: false
     };
   },
   methods: {
@@ -140,14 +141,24 @@ export default {
             nickname: this.nickname,
             region: this.region,
             year: this.year,
-            membership: false
+            membership: 0
           })
         })
           .then(res => res.json())
-          .then(data => console.log(data))
+          .then(data => {
+            if (data.result) {
+              this.$refs.form.reset();
+              this.$validator.reset();
+              alert("회원가입 성공!!");
+              this.$router.push("/login");
+            } else {
+              alert("회원가입 실패...");
+              this.$refs.form.reset();
+              this.$validator.reset();
+            }
+          })
           .catch(error => console.log(error))
-          .finally(this.$refs.form.reset(),
-          this.$validator.reset(), alert("회원가입 성공!!") , this.$router.push('/login') );
+          .finally();
       });
     },
     clear() {
@@ -162,7 +173,7 @@ export default {
         this.IDCheck = false;
         return;
       }
-      fetch(this.$store.state.dbserver + "/users/"+this.id+"/icheck", {
+      fetch(this.$store.state.dbserver + "/users/" + this.id + "/icheck", {
         method: "GET",
         headers: {
           "Access-Control-Allow-Origin": "*",
@@ -184,20 +195,23 @@ export default {
         .catch(error => console.log(error))
         .finally();
     },
-    userNickNameCheck(){
+    userNickNameCheck() {
       if (this.nickname.length < 2) {
         alert("NickName의 최소길이는 2입니다.");
         this.$refs.NickName.focus();
         this.NickNameCheck = false;
         return;
       }
-      fetch(this.$store.state.dbserver + "/users/"+this.nickname+"/ncheck", {
-        method: "GET",
-        headers: {
-          "Access-Control-Allow-Origin": "*",
-          "Content-Type": "application/json"
+      fetch(
+        this.$store.state.dbserver + "/users/" + this.nickname + "/ncheck",
+        {
+          method: "GET",
+          headers: {
+            "Access-Control-Allow-Origin": "*",
+            "Content-Type": "application/json"
+          }
         }
-      })
+      )
         .then(res => res.json())
         .then(data => {
           if (data.result) {
@@ -223,11 +237,11 @@ export default {
       }
     });
   },
-  watch:{
-    'id' (to,from){
+  watch: {
+    id(to, from) {
       this.IDCheck = false;
     },
-    'nickname'(to,from){
+    nickname(to, from) {
       this.NickNameCheck = false;
     }
   }
