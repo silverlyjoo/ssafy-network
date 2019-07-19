@@ -1,4 +1,5 @@
 var express = require('express');
+var jwt = require('jsonwebtoken');
 var router = express.Router();
 var User = require('../models/user');
 
@@ -122,7 +123,7 @@ router.get('/:nickname/ncheck', function(req, res){
  *        in: path
  *        description: "회원/비회원"
  *        required: true
- *        type: string
+ *        type: integer
  *      responses:
  *       200:
  *        description: 회원인지 비회원인지 판단
@@ -168,10 +169,10 @@ router.get('/:membership', function(req, res){
  *            year:
  *              type: integer
  *            membership:
- *              type: boolean
+ *              type: integer
  *      responses:
  *       200:
- *        description: "result = 1 일 경우 정상적으로 작동"
+ *        description: "result = true 일 경우 정상적으로 작동"
  */
 router.post('/', function(req, res){
   var user = new User();
@@ -188,11 +189,11 @@ router.post('/', function(req, res){
   user.save(function(err){
       if(err){
           console.error(err);
-          res.json({result: 0});
+          res.json({result: false});
           return;
       }
 
-      res.json({result: 1});
+      res.json({result: true});
   });
 });
 
@@ -225,10 +226,10 @@ router.post('/', function(req, res){
  *            year:
  *              type: integer
  *            membership:
- *              type: boolean
+ *              type: integer
  *      responses:
  *       200:
- *        description: result = 1 일 경우 정상적으로 작동
+ *        description: "result = true 일 경우 정상적으로 작동"
  */
 router.put('/id', function(req, res){
   User.update({ id: req.body.id }, { $set: req.body }, function(err, output){
@@ -237,9 +238,9 @@ router.put('/id', function(req, res){
       }
       console.log(output);
       if(!output.n){
-        return res.status(404).json({ error: 'user not found' });
+        return res.json({ result: false });
       } 
-      res.json({result: 1});
+      res.json({result: true});
   })
 });
 
@@ -265,7 +266,7 @@ router.delete('/:id', function(req, res){
       if(err){
         return res.status(500).json({ error: "database failure" });
       } 
-      res.json({result: 1});
+      res.json({result: true});
   })
 });
 
@@ -291,7 +292,7 @@ router.delete('/:id', function(req, res){
  *              required: true
  *      responses:
  *       200:
- *        description: 성공시 result = true
+ *        description: "토큰 발행시 정상적으로 작동"
  */
 router.post('/login', function(req, res){
   User.findOne({id: req.body.id, pwd: req.body.pwd}, function(err, user){
@@ -301,8 +302,53 @@ router.post('/login', function(req, res){
     if(!user){
       return res.json({result: false});
     } 
-    res.json({result: true});
+    var token = jwt.sign({
+      name : user.name,
+      id : user.id,
+      nickname : user.nickname
+    },
+    "PsjPsmHmwKktMhi",
+    {
+      expiresIn: '60m'
+    });
+    console.log(token);
+    res.json(token);
   });
 });
+
+/**
+ * @swagger
+ *  /users/token:
+ *    post:
+ *      tags:
+ *      - User
+ *      description: 해싱
+ *      parameters:
+ *      - in: body
+ *        name: verify
+ *        description: "해싱"
+ *        schema:
+ *          type: object
+ *          properties:
+ *            token:
+ *              type: string
+ *              required: true
+ *      responses:
+ *       200:
+ *        description: "json {info} 반환"
+ */
+router.post('/token', function(req, res){
+  try{
+    var info = jwt.verify(req.body.token,"PsjPsmHmwKktMhi");
+    if(info){
+      console.log(info);
+      res.json(info);
+    }
+  }
+  catch (err){
+    res.json({result: false});
+  }
+});
+
 
 module.exports = router;
