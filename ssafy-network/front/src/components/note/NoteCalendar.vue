@@ -20,7 +20,7 @@
         </v-flex>
     </v-flex>-->
     <v-flex align-center class="ma-3">
-      <Calendar :events="events" @eventClick="eventClick">
+      <Calendar :events="events" @eventClick="eventClick" @dateClick="dateClick">
       </Calendar>
     </v-flex>
     <v-flex align-center width="100%">
@@ -62,6 +62,9 @@ export default {
     };
   },
   methods: {
+    dateClick(arg){
+      alert(arg.date);
+    },
     eventClick(event, jsEvent, pos) {
       console.log("eventClick", event, jsEvent, pos);
     },

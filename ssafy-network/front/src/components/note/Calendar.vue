@@ -1,5 +1,5 @@
 <template>
-  <full-calendar :events="events"></full-calendar>
+  <full-calendar :events="events" @eventClick="eventClick" @dateClick="dateClick"></full-calendar>
 </template>
 <script>
 import FullCalendar from "vue-fullcalendar";
@@ -9,6 +9,14 @@ export default {
   props: ["events"],
   components: {
     FullCalendar
+  },
+  methods:{
+    dateClick(arg){
+      alert(arg.date);
+    },
+    eventClick(event, jsEvent, pos) {
+      console.log(event.start); console.log(event.end);
+    }
   }
 };
 </script>
