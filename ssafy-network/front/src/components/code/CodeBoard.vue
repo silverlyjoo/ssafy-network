@@ -1,10 +1,11 @@
 <template>
   <div>
-    <v-toolbar flat color="white">
+    <br>
+    <v-toolbar flat color="grey lighten-5" style="width:80%; margin-left:auto; margin-right:auto;">
       <v-toolbar-title>Code Review 게시판</v-toolbar-title>
 
       <v-spacer></v-spacer>
-      <v-dialog v-model="dialog" max-width="800px" max-height="800px">
+      <v-dialog v-model="dialog" max-width="800px" max-height="1000px">
         <template v-slot:activator="{ on }">
           <v-btn v-on="on" class="info write-btn">글 쓰기</v-btn><br><br><br>
         </template>
@@ -20,7 +21,7 @@
                   <v-text-field v-model="editedItem.title" label="Title"></v-text-field>
                 </v-flex>
                 <v-flex xs12>
-                  <v-text-field v-model="editedItem.content" label="Content"></v-text-field>
+                  <v-textarea box label="Content" v-model="editedItem.content" auto-grow value></v-textarea>
                 </v-flex>
               </v-layout>
             </v-container>
@@ -35,12 +36,15 @@
       </v-dialog>
     </v-toolbar>
 
+    <br>
+
     <v-data-table
       :headers="headers"
       :items="articles"
       :search="search"
       :pagination.sync="pagination"
       class="elevation-1"
+      style="width:80%; margin-left:auto; margin-right:auto;"
     >
       <template v-slot:items="props">
         <td>{{ props.item.title }}</td>
@@ -76,15 +80,25 @@
   export default {
     data: () => ({
       dialog: false,
-      headers: [
+      headers: [        
         {
           text: 'Title',
           align: 'center',
           sortable: false,
           value: 'title'
         },
-        { text: 'Content', value: 'content', sortable: false },
-        { text: 'Edit/Delete', value: 'editorremove', sortable: false },
+        {
+          text: 'Content',
+          align: 'center',
+          sortable: false,
+          value: 'content',
+        },
+        {
+          text: 'Edit/Delete',
+          align: 'center',
+          sortable: false,
+          value: 'editorremove',
+        },
       ],
       articles: [],
       editedIndex: -1,
@@ -165,7 +179,7 @@
 
       deleteItem (item) {
         const index = this.articles.indexOf(item)
-        confirm('삭제하시겠습니까?') && this.desserts.splice(index, 1)
+        confirm('삭제하시겠습니까?') && this.articles.splice(index, 1)
       },
       close() {
         this.dialog = false
