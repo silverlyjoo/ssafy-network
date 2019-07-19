@@ -54,18 +54,19 @@ export default {
       })
         .then(res => res.json())
         .then(data => {
-          if (data.result) {
+          console.log(data.result);
+          if (data.result == false) {
+           alert("로그인 실패...");
+            this.id = "";
+            this.pwd = "";
+            this.$refs.id.focus();
+          } else {
             this.$store.state.login = true;
-            this.$session.set("user" , this.id);
+            this.$session.set("token" , data.result);
             this.id = "";
             this.pwd = "";
             console.log("로그인 성공!!!");
             this.$router.push("/index");
-          } else {
-            alert("로그인 실패...");
-            this.id = "";
-            this.pwd = "";
-            this.$refs.id.focus();
           }
         })
         .catch(error => console.log(error))
