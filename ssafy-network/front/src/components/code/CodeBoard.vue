@@ -1,11 +1,32 @@
 <template>
   <div class="pa-5 board">
     <h2 class="board-title">Code Review 게시판</h2>
-    <div>
-      <router-link to="/code/write">
-        <v-btn class="info write-btn">글 쓰기</v-btn><br><br><br>
-      </router-link>
-    </div>
+      <v-dialog v-model="dialog" max-width="800px">
+        <v-btn slot="activator" class="info write-btn">글 쓰기</v-btn><br><br><br>
+        <v-card>
+          <v-card-title>
+            <span class="headline">{{ formTitle }}</span>
+          </v-card-title>
+          <v-card-text>
+            <v-container grid-list-md>
+              <v-layout wrap>
+                <v-flex xs12>
+                  <v-text-field v-model="editedItem.title" label="Title"></v-text-field>
+                </v-flex>
+                <v-flex xs12>
+                  <v-text-field v-model="editedItem.content" label="Content"></v-text-field>
+                </v-flex>
+              </v-layout>
+            </v-container>
+          </v-card-text>
+          <v-card-actions>
+            <v-spacer></v-spacer>
+            <v-btn flat @click.native="close">취소</v-btn>
+            <v-btn flat @click.native="save">글쓰기</v-btn>
+          </v-card-actions>
+        </v-card>
+      </v-dialog>
+
     <v-data-table
       :headers="headers"
       :items="articles"
@@ -13,13 +34,21 @@
       :pagination.sync="pagination"
       class="elevation-1"
     >
-      <template v-slot:items="props">
-        <td>{{ props.item.index }}</td>
+      <template slot="items" slot-scope="props">
+        <td>{{ props.item.title }}</td>
         <td class="text-xs-left title"><router-link to="/code/detail" style="text-decoration: none !important; color: black;">{{ props.item.title }}</router-link></td>
         <td class="text-xs-center writer">{{ props.item.writer }}</td>
         <td class="text-xs-center hit">{{ props.item.hit }}</td>
-      
+        <td class="justify-center layout px-0">
+          <v-btn icon class="mx-0" @click="editItem(props.item)">
+            <v-icon color="teal">edit</v-icon>
+          </v-btn>
+          <v-btn icon class="mx-0" @click="deleteItem(props.item)">
+            <v-icon color="pink">delete</v-icon>
+          </v-btn>
+        </td>
       </template>
+
     </v-data-table>
     <div class="text-xs-center pt-2">
       <v-pagination v-model="pagination.page" :length="pages"></v-pagination>
