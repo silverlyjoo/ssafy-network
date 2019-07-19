@@ -3,7 +3,7 @@
     <v-dialog v-model="dialog" persistent max-width="600px">
       <template v-slot:activator="{ on }">
         <v-btn fab text small class="primary" v-on="on">
-          <v-icon small @click="addBtn=true">add</v-icon>
+          <v-icon small>add</v-icon>
         </v-btn>
       </template>
       <v-card>
