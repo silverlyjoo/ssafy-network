@@ -53,7 +53,7 @@ export default {
 </script>
 <style>
 .mains {
-  /* height: 100vh; */
+  min-height: 100vh;
   background: rgb(236, 236, 236);
 }
 .flex1 {
