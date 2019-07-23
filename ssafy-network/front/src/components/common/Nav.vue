@@ -45,7 +45,7 @@
                       <v-btn
                         flat
                         v-on="on"
-                        @click="showAddPage('note')"
+                        @click="showNote = true"
                         v-if="item.file != 'txt'"
                         small
                         class="ma-0 pa-0"
@@ -61,7 +61,7 @@
                       <v-btn
                         v-on="on"
                         flat
-                        @click="showAddPage('folder')"
+                        @click="showFolder = true"
                         v-if="item.file != 'txt'"
                         small
                         class="ma-0 pa-0"
@@ -74,6 +74,7 @@
                   </v-tooltip>
                 </template>
               </v-treeview>
+
             </div>
 
             <div class="navBtn">
@@ -104,6 +105,8 @@
 </template>
 
 <script>
+import {mapState} from "vuex";
+
 export default {
   name: "Nav",
   data() {
@@ -128,34 +131,7 @@ export default {
       },
       tree: [],
       items: [
-        {
-          name: "SSAFY"
-        },
-        {
-          name: "알고리즘"
-        },
-        {
-          name: "자바",
-          children: [
-            {
-              name: "자습",
-              children: [
-                {
-                  name: "정리1",
-                  file: "txt"
-                }
-              ]
-            },
-            {
-              name: "정리2",
-              file: "txt"
-            },
-            {
-              name: "정리3",
-              file: "txt"
-            }
-          ]
-        }
+
       ]
     };
   },
@@ -176,10 +152,14 @@ export default {
     addFolder(item) {
 
     },
-    showAddPage(){
+    getItems(){
 
     }
-  }
+  },mounted(){
+
+  },
+  computed:mapState(['NoteCheck']),
+
 };
 </script>
 <style>
@@ -214,6 +194,6 @@ export default {
 
 }
 .navBg {
-  min-width: 200px;
+  min-width: 250px;
 }
 </style>
