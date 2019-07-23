@@ -48,10 +48,11 @@ export default {
     this.socket = io.connect(this.chatserver);
   },
   computed: {
-    // getsocket()
   },
   mounted() {
     this.sendMsg;
+    this.getsocket;
+    console.log(this.chatdata)
   },
   methods: {
     async sendMsg() {
@@ -60,7 +61,7 @@ export default {
     },
     getsocket() {
       this.socket.on("chat", data => {
-        console.log(data);
+        this.chatdata.push(data)
       });
     }
   }
