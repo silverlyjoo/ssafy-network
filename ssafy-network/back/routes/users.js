@@ -6,7 +6,7 @@ var decode = require('../decode');
 
 /**
  * @swagger
- *  /users/all/{token}:
+ *  /users/{token}:
  *    get:
  *      tags:
  *      - User
@@ -21,25 +21,25 @@ var decode = require('../decode');
  *       200:
  *        description: 유저 정보를 json 리스트에 담음
  */
-router.get('/all/:token', function(req,res){
+router.get('/:token', function (req, res) {
   var info = decode(req.params.token);
-  if(info.membership == 9102){
-    User.find(function(err, users){
-        if(err) {
-          return res.status(500).send({error: 'database failure'});
-        }
-        res.json(users);
-    }).sort({name: 1});
+  if (info.membership == 9102) {
+    User.find(function (err, users) {
+      if (err) {
+        return res.status(500).send({ error: 'database failure' });
+      }
+      res.json(users);
+    }).sort({ name: 1 });
   }
-  else{
+  else {
     console.log(info);
-    res.json({result: false});
+    res.json({ result: false });
   }
 });
 
 /**
  * @swagger
- *  /users/{id}:
+ *  /users/{id}/{token}:
  *    get:
  *      tags:
  *      - User
@@ -54,15 +54,15 @@ router.get('/all/:token', function(req,res){
  *       200:
  *        description: 유저 정보를 json에 담음
  */
-router.get('/:id', function(req, res){
-  User.findOne({id: req.params.id}, function(err, user){
-      if(err){
-        return res.status(500).json({error: err});
-      } 
-      if(!user){
-        return res.status(404).json({error: 'user not found'});
-      } 
-      res.json(user);
+router.get('/:id/:token', function (req, res) {
+  User.findOne({ id: req.params.id }, function (err, user) {
+    if (err) {
+      return res.status(500).json({ error: err });
+    }
+    if (!user) {
+      return res.status(404).json({ error: 'user not found' });
+    }
+    res.json(user);
   })
 });
 
@@ -83,15 +83,15 @@ router.get('/:id', function(req, res){
  *       200:
  *        description: true 일 경우 중복
  */
-router.get('/:id/icheck', function(req, res){
-  User.findOne({id: req.params.id}, function(err, user){
-      if(err){
-        return res.status(500).json({error: err});
-      } 
-      if(!user){
-        return res.json({result:false});
-      } 
-      res.json({result:true});
+router.get('/:id/icheck', function (req, res) {
+  User.findOne({ id: req.params.id }, function (err, user) {
+    if (err) {
+      return res.status(500).json({ error: err });
+    }
+    if (!user) {
+      return res.json({ result: false });
+    }
+    res.json({ result: true });
   })
 });
 
@@ -112,46 +112,18 @@ router.get('/:id/icheck', function(req, res){
  *       200:
  *        description: true 일 경우 중복
  */
-router.get('/:nickname/ncheck', function(req, res){
-  User.findOne({nickname: req.params.nickname}, function(err, user){
-      if(err){
-        return res.status(500).json({error: err});
-      } 
-      if(!user){
-        return res.json({result:false});
-      } 
-      res.json({result:true});
+router.get('/:nickname/ncheck', function (req, res) {
+  User.findOne({ nickname: req.params.nickname }, function (err, user) {
+    if (err) {
+      return res.status(500).json({ error: err });
+    }
+    if (!user) {
+      return res.json({ result: false });
+    }
+    res.json({ result: true });
   })
 });
 
-/**
- * @swagger
- *  /users/{membership}:
- *    get:
- *      tags:
- *      - User
- *      description: 멤버쉽으로 유저 정보 반환.
- *      parameters:
- *      - name: membership
- *        in: path
- *        description: "회원/비회원"
- *        required: true
- *        type: integer
- *      responses:
- *       200:
- *        description: 회원인지 비회원인지 판단
- */
-router.get('/:membership', function(req, res){
-  User.find({membership: req.params.membership}, function(err, users){
-      if(err){
-        return res.status(500).json({error: err});
-      } 
-      if(!users){
-        return res.status(404).json({error: 'user not found'});
-      } 
-      res.json(users);
-  })
-});
 
 /**
  * @swagger
@@ -187,7 +159,7 @@ router.get('/:membership', function(req, res){
  *       200:
  *        description: "result = true 일 경우 정상적으로 작동"
  */
-router.post('/', function(req, res){
+router.post('/', function (req, res) {
   var user = new User();
   user.name = req.body.name;
   user.id = req.body.id;
@@ -199,14 +171,14 @@ router.post('/', function(req, res){
 
   console.log(req.body);
 
-  user.save(function(err){
-      if(err){
-          console.error(err);
-          res.json({result: false});
-          return;
-      }
+  user.save(function (err) {
+    if (err) {
+      console.error(err);
+      res.json({ result: false });
+      return;
+    }
 
-      res.json({result: true});
+    res.json({ result: true });
   });
 });
 
@@ -244,16 +216,16 @@ router.post('/', function(req, res){
  *       200:
  *        description: "result = true 일 경우 정상적으로 작동"
  */
-router.put('/id', function(req, res){
-  User.update({ id: req.body.id }, { $set: req.body }, function(err, output){
-      if(err){
-        res.status(500).json({ error: 'database failure' });
-      }
-      console.log(output);
-      if(!output.n){
-        return res.json({ result: false });
-      } 
-      res.json({result: true});
+router.put('/id', function (req, res) {
+  User.update({ id: req.body.id }, { $set: req.body }, function (err, output) {
+    if (err) {
+      res.status(500).json({ error: 'database failure' });
+    }
+    console.log(output);
+    if (!output.n) {
+      return res.json({ result: false });
+    }
+    res.json({ result: true });
   })
 });
 
@@ -274,12 +246,12 @@ router.put('/id', function(req, res){
  *       200:
  *        description: 아이디를 통해 유저 삭제
  */
-router.delete('/:id', function(req, res){
-  User.remove({ id: req.params.id }, function(err, output){
-      if(err){
-        return res.status(500).json({ error: "database failure" });
-      } 
-      res.json({result: true});
+router.delete('/:id', function (req, res) {
+  User.remove({ id: req.params.id }, function (err, output) {
+    if (err) {
+      return res.status(500).json({ error: "database failure" });
+    }
+    res.json({ result: true });
   })
 });
 
@@ -305,14 +277,14 @@ router.delete('/:id', function(req, res){
  *       200:
  *        description: 로그인
  */
-router.get('/login/:id/:pwd', function(req, res){
-  User.findOne({id: req.params.id, pwd: req.params.pwd}, function(err, user){
-    if(err){
-      return res.status(500).json({error: err});
-    } 
-    if(!user){
+router.get('/login/:id/:pwd', function (req, res) {
+  User.findOne({ id: req.params.id, pwd: req.params.pwd }, function (err, user) {
+    if (err) {
+      return res.status(500).json({ error: err });
+    }
+    if (!user) {
       return res.json(false);
-    } 
+    }
     var token = encode(user);
     console.log(token);
     res.json(token);

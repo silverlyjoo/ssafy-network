@@ -10,7 +10,7 @@ var usersRouter = require('./routes/users');
 var roomsRouter = require('./routes/rooms');
 var chatsRouter = require('./routes/chats');
 var boardsRouter = require('./routes/boards');
-
+var calendarsRouter = require('./routes/calendars');
 
 var app = express();
 var db = require('./db');
@@ -36,6 +36,6 @@ app.use('/users', usersRouter);
 app.use('/rooms', roomsRouter);
 app.use('/chats', chatsRouter);
 app.use('/boards', boardsRouter);
-
+app.use('/calendars', calendarsRouter);
 
 module.exports = app;
