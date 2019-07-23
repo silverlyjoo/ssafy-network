@@ -4,6 +4,7 @@
       <h1>Chatroom</h1>
       <v-card class="chatwindow">
         <v-container>
+          <v-btn @click="connect">연결</v-btn>
           <div v-for="chat in chatdata" :key="chat.id">
             <div>
               <span class="title">{{ chat.id }} |</span>
@@ -44,24 +45,17 @@ export default {
       socket: ""
     };
   },
-  created() {
-    this.socket = io.connect(this.chatserver);
-  },
-  computed: {
-    // getsocket()
-  },
-  mounted() {
-    this.sendMsg;
-  },
   methods: {
+    connect(){
+      this.socket = io.connect(this.chatserver);
+      this.socket.on("chat", data => {
+        console.log(data);
+        this.chatdata.push(data);
+      });
+    },
     async sendMsg() {
       let message = { name: this.nickname, msg: this.chatText };
       await this.socket.emit("chat", message);
-    },
-    getsocket() {
-      this.socket.on("chat", data => {
-        console.log(data);
-      });
     }
   }
 };
