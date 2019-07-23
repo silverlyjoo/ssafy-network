@@ -2,7 +2,7 @@
   <div>
     <div class="navLayout">
       <div class="navBg">
-        <v-container>
+        <v-container class="navcon">
           <aside>
             <div class="navBtn">
               <router-link to="/index" style="text-decoration: none !important">
@@ -32,20 +32,21 @@
                 v-if="click"
                style="overflow:hidden!important; text-overflow: ellipsis; "
               >
-                <template v-slot:prepend="{ item, open,selected }"  >
-                  <v-btn flat @contextmenu="show" class="ma-0 pa-0" style="min-width:30px!important;">
+                <template v-slot:prepend="{item, open,selected}" >
+                  <v-btn flat class="ma-0 pa-0" style="min-width:30px!important;">
                     <v-icon v-if="!item.file">{{ open ? 'mdi-folder-open' : 'mdi-folder' }}</v-icon>
                     <v-icon v-else>{{ files[item.file] }}</v-icon>
                   </v-btn>
                 </template>
+                <template slot="append" slot-scope="{item}">
+                  <v-btn flat @click="addChild(item)" v-if="item.file != 'txt'" small class="ma-0 pa-0" style="min-width:10px!important;">
+                    <v-icon small>note_add</v-icon>
+                  </v-btn>
+                  <v-btn flat @click="addChild(item)" v-if="item.file != 'txt'" small class="ma-0 pa-0" style="min-width:10px!important;">
+                    <v-icon small>add_box</v-icon>
+                  </v-btn>
+                </template>
               </v-treeview>
-              <v-menu v-model="showMenu" :position-x="x" :position-y="y" absolute offset-y>
-                <v-list>
-                  <v-list-tile v-for="menuItem in menuItems" :key="menuItem" @click="clickAction">
-                    <v-list-tile-title>{{menuItem}}</v-list-tile-title>
-                  </v-list-tile>
-                </v-list>
-              </v-menu>
             </div>
 
             <div class="navBtn">
@@ -135,23 +136,18 @@ export default {
       this.$router.push("/note/calendar");
       this.click = !this.click;
     },
-    show(e) {
-      e.preventDefault();
-      this.showMenu = false;
-      this.x = e.clientX;
-      this.y = e.clientY;
-      this.$nextTick(() => {
-        this.showMenu = true;
-      });
-    },clickAction(e){
-      alert(e);
+    addChild(item){
+      alert(item);
     }
   }
 };
 </script>
 <style>
+.navcon {
+  padding: 15px;
+}
 .navBtn:hover {
-  background: rgba(173, 173, 173, 0.212);
+  background: rgba(212, 212, 212, 0.212);
   border-radius: 10px;
 }
 .navtext {
@@ -160,7 +156,7 @@ export default {
   font-size: 16px;
 }
 .navtcolor {
-  color: rgb(218, 234, 248);
+  color: rgba(233, 233, 233, 0.932);
 }
 .fold {
   display: flex;
@@ -175,8 +171,9 @@ export default {
   height: 100vh;
   background: rgb(128, 149, 202);
   z-index: 100;
+
 }
 .navBg {
-  width: 200px;
+  min-width: 200px;
 }
 </style>

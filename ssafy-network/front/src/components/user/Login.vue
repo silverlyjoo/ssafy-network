@@ -14,7 +14,7 @@
             </v-card-title>
             <v-form>
               <v-text-field prepend-icon="person" name="Username" label="Username" v-model ="id" ref="id"></v-text-field>
-              <v-text-field prepend-icon="lock" name="Password" label="Password" type="password" v-model="pwd"></v-text-field>
+              <v-text-field prepend-icon="lock" name="Password" label="Password" type="password" v-model="pwd" @keyup.enter="login"></v-text-field>
               <v-card-actions>
                 <v-btn primary large block @click="login">Login</v-btn>
               </v-card-actions>
@@ -53,6 +53,7 @@ export default {
           } else {
             this.$store.state.login = true;
             this.$session.set("token" , data);
+            this.$session.set("id" , this.id);
             this.id = "";
             this.pwd = "";
             console.log("로그인 성공!!!");
