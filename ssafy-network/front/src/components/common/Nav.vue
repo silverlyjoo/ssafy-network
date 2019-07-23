@@ -30,21 +30,48 @@
                 item-key="name"
                 open-on-click
                 v-if="click"
-               style="overflow:hidden!important; text-overflow: ellipsis; "
+                style="overflow:hidden!important; text-overflow: ellipsis; "
               >
-                <template v-slot:prepend="{item, open,selected}" >
+                <template v-slot:prepend="{item, open,selected}">
                   <v-btn flat class="ma-0 pa-0" style="min-width:30px!important;">
                     <v-icon v-if="!item.file">{{ open ? 'mdi-folder-open' : 'mdi-folder' }}</v-icon>
                     <v-icon v-else>{{ files[item.file] }}</v-icon>
                   </v-btn>
                 </template>
+
                 <template slot="append" slot-scope="{item}">
-                  <v-btn flat @click="addChild(item)" v-if="item.file != 'txt'" small class="ma-0 pa-0" style="min-width:10px!important;">
-                    <v-icon small>note_add</v-icon>
-                  </v-btn>
-                  <v-btn flat @click="addChild(item)" v-if="item.file != 'txt'" small class="ma-0 pa-0" style="min-width:10px!important;">
-                    <v-icon small>add_box</v-icon>
-                  </v-btn>
+                  <v-tooltip bottom>
+                    <template v-slot:activator="{ on }">
+                      <v-btn
+                        flat
+                        v-on="on"
+                        @click="showAddPage('note')"
+                        v-if="item.file != 'txt'"
+                        small
+                        class="ma-0 pa-0"
+                        style="min-width:10px!important;"
+                      >
+                        <v-icon small>note_add</v-icon>
+                      </v-btn>
+                    </template>
+                    <span>파일 추가</span>
+                  </v-tooltip>
+                  <v-tooltip bottom>
+                    <template v-slot:activator="{ on }">
+                      <v-btn
+                        v-on="on"
+                        flat
+                        @click="showAddPage('folder')"
+                        v-if="item.file != 'txt'"
+                        small
+                        class="ma-0 pa-0"
+                        style="min-width:10px!important;"
+                      >
+                        <v-icon small>add_box</v-icon>
+                      </v-btn>
+                    </template>
+                    <span>폴더 추가</span>
+                  </v-tooltip>
                 </template>
               </v-treeview>
             </div>
@@ -81,7 +108,8 @@ export default {
   name: "Nav",
   data() {
     return {
-      showMenu: false,
+      showNote: false,
+      showFolder: false,
       x: 0,
       y: 0,
       menuItems: ["파일 추가", "폴더 추가"],
@@ -136,8 +164,20 @@ export default {
       this.$router.push("/note/calendar");
       this.click = !this.click;
     },
-    addChild(item){
-      alert(item);
+    addFile(item) {
+      if (!item.children) {
+        this.$set(item, "children", []);
+      }
+
+      item.children.push({
+        name
+      });
+    },
+    addFolder(item) {
+
+    },
+    showAddPage(){
+
     }
   }
 };
@@ -170,6 +210,6 @@ export default {
   z-index: 100;
 }
 .navBg {
-  width: 200px;
+  min-width: 200px;
 }
 </style>
