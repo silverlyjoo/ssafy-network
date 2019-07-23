@@ -97,8 +97,18 @@
           <v-card-actions>
             <v-spacer></v-spacer>
             <v-btn color="blue darken-1" flat @click="dialog = false">취소</v-btn>
-            <v-btn color="blue darken-1" flat @click="dialog = false">수정</v-btn>
-            <v-btn color="blue darken-1" flat @click="dialog = false">삭제</v-btn>
+            <v-btn color="blue darken-1" flat @click="updateCalendar()">수정</v-btn>
+            <v-btn color="blue darken-1" flat @click="deleteDialog = true">삭제</v-btn>
+            <v-dialog v-model="deleteDialog" max-width="290">
+              <v-card>
+                <v-card-title class="headline">삭제 하시겠습니까?</v-card-title>
+                <v-card-actions>
+                  <v-spacer></v-spacer>
+                  <v-btn color="green darken-1" flat="flat" @click="deleteDialog = false">아니오</v-btn>
+                  <v-btn color="green darken-1" flat="flat" @click="deleteCalendar()">예</v-btn>
+                </v-card-actions>
+              </v-card>
+            </v-dialog>
           </v-card-actions>
         </v-card>
       </v-dialog>
@@ -109,6 +119,9 @@
 import FullCalendar from "vue-fullcalendar";
 
 export default {
+  $_veeValidate: {
+    validator: "new"
+  },
   name: "Calendar",
   props: ["events"],
   components: {
@@ -116,10 +129,12 @@ export default {
   },
   data() {
     return {
+      deleteDialog: false,
       dialog: false,
       startDatePick: false,
       endDatePick: false,
       event: {
+        _id: "",
         title: "",
         desc: "",
         startDate: "",
@@ -141,11 +156,78 @@ export default {
     },
     eventClick(event, jsEvent, pos) {
       this.dialog = true;
+      this.event._id = event._id;
       this.event.title = event.title;
       this.event.desc = event.desc;
       this.event.startDate = event.start;
       this.event.cssClass = event.cssClass;
       this.event.endDate = event.end;
+    },
+    deleteCalendar() {
+      fetch(this.$store.state.dbserver + "/calendars", {
+        method: "DELETE",
+        headers: {
+          "Access-Control-Allow-Origin": "*",
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          _id: this.event._id,
+          token: this.$session.get("token")
+        })
+      })
+        .then(res => res.json())
+        .then(data => {
+          if (data.result == true) {
+            alert("삭제 성공!!!");
+            this.$store.state.CalendarCheck = true;
+          } else {
+            alert("성공 실패...");
+          }
+          this.event._id = "";
+          this.event.title = "";
+          this.event.desc ="";
+          this.event.startDate = "";
+          this.event.cssClass = "";
+          this.event.endDate = "";
+          this.deleteDialog = false;
+          this.dialog = false;
+        });
+    },
+    updateCalendar() {
+      this.$validator.validateAll().then(res => {
+        if (!res) {
+          alert("값이 유효한지 체크해주세요.");
+          return;
+        } else {
+          fetch(this.$store.state.dbserver + "/calendars", {
+            method: "PUT",
+            headers: {
+              "Access-Control-Allow-Origin": "*",
+              "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+              _id: this.event._id,
+              token: this.$session.get("token"),
+              id: this.$session.get("id"),
+              title: this.event.title,
+              start: this.event.startDate,
+              end: this.event.endDate,
+              cssClass: this.event.cssClass,
+              desc: this.event.desc
+            })
+          })
+            .then(res => res.json())
+            .then(data => {
+              if (data.result == true) {
+                alert("수정 성공!!!");
+                this.$store.state.CalendarCheck = true;
+              } else {
+                alert("수정 실패...");
+              }
+              this.dialog = false;
+            });
+        }
+      });
     }
   }
 };

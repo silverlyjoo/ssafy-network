@@ -147,7 +147,9 @@ export default {
       this.event.title = "";
       this.event.desc = "";
       this.event.startDate = "";
+      this.event.cssClass = "";
       this.event.endDate = "";
+       this.$validator.reset();
     },
     addCalendar() {
       this.$validator.validateAll().then(res => {
@@ -174,12 +176,11 @@ export default {
         .then(data => {
           if(data.result == true){
             alert("추가 성공!!!");
-            this.$store.state.addCalendarCheck = true;
-            this.dialog = false;
+            this.$store.state.CalendarCheck = true;
           }else{
             alert("추가 실패...");
-            this.dialog = false;
           }
+          this.close();
         });
          
         }

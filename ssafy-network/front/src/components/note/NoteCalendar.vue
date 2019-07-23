@@ -63,6 +63,7 @@ export default {
         }
       }).then(res => res.json())
       .then(data => {
+        console.log(data);
         this.events = data;
       })
     }
@@ -70,11 +71,11 @@ export default {
   mounted() {
     this.getDay();
     this.getCalendar();
-  },computed: mapState(['addCalendarCheck']),
+  },computed: mapState(['CalendarCheck']),
   watch: {
-    addCalendarCheck(to,from){
+    CalendarCheck(to,from){
       if(from == false && to == true){
-        this.$store.state.addCalendarCheck = false;
+        this.$store.state.CalendarCheck = false;
         this.getCalendar();
       }
     }
