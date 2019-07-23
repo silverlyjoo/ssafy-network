@@ -1,7 +1,8 @@
 var express = require('express');
-var Room = require('../models/room');
-
 var router = express.Router();
+var Room = require('../models/room');
+var encode = require('../encode');
+var decode = require('../decode');
 
 //render 의 형태는 views 에 있는 pug와 연동되는 것으로 전부 고쳐야함
 router.get('/', async(req, res, next) =>{

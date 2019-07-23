@@ -1,6 +1,8 @@
 var express = require('express');
 var router = express.Router();
 var Board = require('../models/board');
+var encode = require('../encode');
+var decode = require('../decode');
 
 /**
  * @swagger
@@ -121,7 +123,7 @@ router.put('/_id', function(req, res){
 
 /**
  * @swagger
- *  /boards/{_id}:
+ *  /boards/{_id}/hit:
  *    put:
  *      tags:
  *      - Board
@@ -136,7 +138,7 @@ router.put('/_id', function(req, res){
  *       200:
  *        description: 조회수 +1
  */
-router.put('/:_id', function(req, res){
+router.put('/:_id/hit', function(req, res){
     Board.findOne({_id: req.params._id}, function(err,board){
         Board.update({ _id: req.params._id }, { $set: { hit: board.hit + 1 }}, function(err, output){
             if(err){
@@ -149,6 +151,32 @@ router.put('/:_id', function(req, res){
             res.json({result: true});
         })
     });
+});
+
+/**
+ * @swagger
+ *  /boards/{_id}:
+ *    delete:
+ *      tags:
+ *      - Board
+ *      description: 게시글 삭제
+ *      parameters:
+ *      - name: _id
+ *        in: path
+ *        description: "오브젝트 아이디"
+ *        required: true
+ *        type: string
+ *      responses:
+ *       200:
+ *        description: 게시글 삭제
+ */
+router.delete('/:_id', function(req, res){
+  Board.remove({ _id: req.params._id }, function(err, output){
+      if(err){
+        return res.status(500).json({ error: "database failure" });
+      } 
+      res.json({result: true});
+  })
 });
 
 module.exports = router;
