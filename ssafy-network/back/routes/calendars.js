@@ -102,7 +102,7 @@ router.post('/', function (req, res) {
 
 /**
  * @swagger
- *  /calendars/_id:
+ *  /calendars:
  *    put:
  *      tags:
  *      - Calendar
@@ -139,7 +139,7 @@ router.post('/', function (req, res) {
  *       200:
  *        description: "result = true 일 경우 정상적으로 작동"
  */
-router.put('/_id', function (req, res) {
+router.put('/', function (req, res) {
     var info = decode(req.body.token);
     if (!info) {
         return res.json({ result: false });
@@ -151,15 +151,53 @@ router.put('/_id', function (req, res) {
             cssClass: req.body.cssClass,
             desc: req.body.desc
         }}, function (err, output) {
-      if (err) {
-        res.status(500).json({ error: 'database failure' });
-      }
-      console.log(output);
-      if (!output.n) {
-        return res.json({ result: false });
-      }
-      res.json({ result: true });
+        if (err) {
+            res.status(500).json({ error: 'database failure' });
+        }
+        console.log(output);
+        if (!output.n) {
+            return res.json({ result: false });
+        }
+        res.json({ result: true });
     })
-  });
+});
+
+/**
+ * @swagger
+ *  /calendars:
+ *    delete:
+ *      tags:
+ *      - Calendar
+ *      description: 캘린더 정보 삭제
+ *      parameters:
+ *      - in: body
+ *        name: updateCalendar
+ *        description: "캘린더 정보 업데이트"
+ *        schema:
+ *          type: object
+ *          properties:
+ *            _id:
+ *              type: string
+ *              required: true
+ *            token:
+ *              type: string
+ *              required: true
+ *      responses:
+ *       200:
+ *        description: "result = true 일 경우 정상적으로 작동"
+ */
+router.delete('/',function(req,res){
+    var info = decode(req.body.token);
+    if (!info) {
+        return res.json({ result: false });
+    }
+    Calendar.remove({ _id: req.body._id }, function (err, output) {
+        if (err) {
+          return res.status(500).json({ error: "database failure" });
+        }
+        console.log(output);
+        res.json({ result: true });
+      })
+});
 
 module.exports = router;
