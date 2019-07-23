@@ -1,27 +1,40 @@
 var express = require('express');
-var jwt = require('jsonwebtoken');
 var router = express.Router();
 var User = require('../models/user');
+var encode = require('../encode');
+var decode = require('../decode');
 
 /**
  * @swagger
- *  /users/all:
+ *  /users/all/{token}:
  *    get:
  *      tags:
  *      - User
  *      description: 모든 유저 리스트를 반환
+ *      parameters:
+ *      - name: token
+ *        in: path
+ *        description: "토큰"
+ *        required: true
+ *        type: string
  *      responses:
  *       200:
  *        description: 유저 정보를 json 리스트에 담음
  */
-router.get('/all', function(req,res){
-  var rule = {name: 1};
-  User.find(function(err, users){
-      if(err) {
-        return res.status(500).send({error: 'database failure'});
-      }
-      res.json(users);
-  }).sort(rule);
+router.get('/all/:token', function(req,res){
+  var info = decode(req.params.token);
+  if(info.membership == 9102){
+    User.find(function(err, users){
+        if(err) {
+          return res.status(500).send({error: 'database failure'});
+        }
+        res.json(users);
+    }).sort({name: 1});
+  }
+  else{
+    console.log(info);
+    res.json({result: false});
+  }
 });
 
 /**
@@ -272,83 +285,38 @@ router.delete('/:id', function(req, res){
 
 /**
  * @swagger
- *  /users/login:
- *    post:
+ *  /users/login/{id}/{pwd}:
+ *    get:
  *      tags:
  *      - User
  *      description: 로그인
  *      parameters:
- *      - in: body
- *        name: login
- *        description: "로그인"
- *        schema:
- *          type: object
- *          properties:
- *            id:
- *              type: string
- *              required: true
- *            pwd:
- *              type: string
- *              required: true
+ *      - name: id
+ *        in: path
+ *        description: "아이디"
+ *        required: true
+ *        type: string
+ *      - name: pwd
+ *        in: path
+ *        description: "비밀번호"
+ *        required: true
+ *        type: string
  *      responses:
  *       200:
- *        description: "토큰 발행시 정상적으로 작동"
+ *        description: 로그인
  */
-router.post('/login', function(req, res){
-  User.findOne({id: req.body.id, pwd: req.body.pwd}, function(err, user){
+router.get('/login/:id/:pwd', function(req, res){
+  User.findOne({id: req.params.id, pwd: req.params.pwd}, function(err, user){
     if(err){
       return res.status(500).json({error: err});
     } 
     if(!user){
-      return res.json({result: false});
+      return res.json(false);
     } 
-    var token = jwt.sign({
-      name : user.name,
-      id : user.id,
-      nickname : user.nickname
-    },
-    "PsjPsmHmwKktMhi",
-    {
-      expiresIn: '60m'
-    });
+    var token = encode(user);
     console.log(token);
     res.json(token);
   });
 });
-
-/**
- * @swagger
- *  /users/token:
- *    post:
- *      tags:
- *      - User
- *      description: 해싱
- *      parameters:
- *      - in: body
- *        name: verify
- *        description: "해싱"
- *        schema:
- *          type: object
- *          properties:
- *            token:
- *              type: string
- *              required: true
- *      responses:
- *       200:
- *        description: "json {info} 반환"
- */
-router.post('/token', function(req, res){
-  try{
-    var info = jwt.verify(req.body.token,"PsjPsmHmwKktMhi");
-    if(info){
-      console.log(info);
-      res.json(info);
-    }
-  }
-  catch (err){
-    res.json({result: false});
-  }
-});
-
 
 module.exports = router;

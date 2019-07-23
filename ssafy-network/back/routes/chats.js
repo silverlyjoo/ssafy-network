@@ -1,7 +1,8 @@
 var express = require('express');
-var Chat = require('../models/chat');
-
 var router = express.Router();
+var Chat = require('../models/chat');
+var encode = require('../encode');
+var decode = require('../decode');
 
 //어떤 방에서 어떤 유저가 채팅을 날리면 DB에 저장하고 다시 반송(date가 추가됨)
 router.post('/', function(req,res){

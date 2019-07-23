@@ -9,7 +9,7 @@ const options = {
     swaggerDefinition: {
         info: {
             title: 'SSAFY Network API',
-            version: '1.0.0',
+            version: '3.0.0',
             description: 'SSAFY Network API with express',
         },
         host: '192.168.31.55:3000',
