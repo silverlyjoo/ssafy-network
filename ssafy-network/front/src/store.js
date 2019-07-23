@@ -8,6 +8,7 @@ export default new Vuex.Store({
     login: false,
     navFoldFlag : true,
     dbserver : 'http://192.168.31.55:3000',
+    chatserver : 'http://192.168.31.55:3000',
     CalendarCheck: false
   },
   mutations: {
