@@ -53,6 +53,7 @@ export default {
           } else {
             this.$store.state.login = true;
             this.$session.set("token" , data);
+            this.$session.set("id" , this.id);
             this.id = "";
             this.pwd = "";
             console.log("로그인 성공!!!");

@@ -11,6 +11,9 @@ import 'tui-editor/dist/tui-editor-contents.css'
 import VueCodemirror from 'vue-codemirror'
 import 'codemirror/lib/codemirror.css' // CodeMirror 사용!
 import VueSession from 'vue-session'
+import io from 'socket.io-client'
+
+
 
 import {
   Editor,
@@ -19,6 +22,7 @@ import {
 
 
 Vue.use(VueCodemirror)
+// Vue.use(io)
 Vue.component('editor', Editor)
 Vue.component('viewer', Viewer)
 Vue.use(VueSession)

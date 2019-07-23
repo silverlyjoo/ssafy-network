@@ -8,9 +8,9 @@ var cors = require('cors');
 var authRouter = require('./routes/auth');
 var usersRouter = require('./routes/users');
 var roomsRouter = require('./routes/rooms');
-var chatsRouter = require('./routes/chats');
 var boardsRouter = require('./routes/boards');
-
+var calendarsRouter = require('./routes/calendars');
+var treesRouter = require('.//routes/trees');
 
 var app = express();
 var db = require('./db');
@@ -34,8 +34,8 @@ app.use(swagger);
 app.use('/', authRouter);
 app.use('/users', usersRouter);
 app.use('/rooms', roomsRouter);
-app.use('/chats', chatsRouter);
 app.use('/boards', boardsRouter);
-
+app.use('/calendars', calendarsRouter);
+app.use('/trees', treesRouter);
 
 module.exports = app;

@@ -1,24 +1,5 @@
 <template>
   <v-layout column>
-    <!-- <v-flex align-self-center class="mt-4" row wrap d-flex style="width:80%;">
-        <v-flex align-self-center>
-          <h2 style="color:blue;">{{this.focusYear}}년</h2>
-        </v-flex>
-        <v-flex align-self-center class="pa-2">
-          <v-btn fab text small @click="prevMonth">
-            &nbsp;
-            <v-icon small>arrow_back_ios</v-icon>
-          </v-btn>
-        </v-flex>
-        <v-flex align-self-center class="pa-2">
-          <h1>{{this.focusMonth}}월</h1>
-        </v-flex>
-        <v-flex align-self-center class="pa-2">
-          <v-btn fab text small @click="nextMonth">
-            <v-icon small>arrow_forward_ios</v-icon>
-          </v-btn>
-        </v-flex>
-    </v-flex>-->
     <v-flex align-center class="ma-3">
       <Calendar :events="events" >
       </Calendar>
@@ -32,6 +13,7 @@
 <script>
 import Calendar from "@/components/note/Calendar.vue";
 import CalendarForm from "@/components/note/CalendarForm.vue";
+import {mapState} from "vuex";
 
 export default {
   name: "NoteCalendar",
@@ -43,36 +25,7 @@ export default {
     return {
       today: "",
       month: "",
-      focus: "",
-      focusMonth: "",
-      focusYear: "",
-      events: [
-        {
-          title: "event1",
-          start: "2019-07-09",
-          cssClass: "blue",
-          desc:"event 1 입니다."
-        },
-        {
-          title: "event3",
-          start: "2019-07-09",
-          cssClass: "yellow",
-          desc:"event 3 입니다."
-        },
-        {
-          title: "event4",
-          start: "2019-07-09",
-          cssClass: "orange",
-          desc:"event 4 입니다."
-        },
-        {
-          title: "event2",
-          start: "2019-07-08",
-          end: "2019-07-13",
-          cssClass: "red",
-          desc:"event 2 입니다."
-        }
-      ]
+      events: []
     };
   },
   methods: {
@@ -88,31 +41,44 @@ export default {
       if (dd < 10) {
         dd = "0" + dd;
       }
-      this.focusYear = yyyy;
       this.month = mm;
-      this.focusMonth = this.month;
       if (mm < 10) {
         mm = "0" + mm;
       }
       this.today = yyyy + "-" + mm + "-" + dd;
-      this.focus = this.today;
     },
     prevMonth() {
       this.$refs.calendar.prev();
     },
     nextMonth() {
       this.$refs.calendar.next();
+    },
+    getCalendar(){
+      // 값 가져오기
+      fetch(this.$store.state.dbserver + "/calendars/"+this.$session.get("id")+"/"+this.$session.get("token"),{
+        method: "GET",
+        headers: {
+          "Access-Control-Allow-Origin": "*",
+          "Content-Type": "application/json"
+        }
+      }).then(res => res.json())
+      .then(data => {
+        this.events = data;
+      })
     }
   },
   mounted() {
     this.getDay();
-  },
+    this.getCalendar();
+  },computed: mapState(['CalendarCheck']),
   watch: {
-    focus(to, from) {
-      var day = new Date(this.focus);
-      this.focusMonth = day.getMonth() + 1;
-      this.focusYear = day.getFullYear();
+    CalendarCheck(to,from){
+      if(from == false && to == true){
+        this.$store.state.CalendarCheck = false;
+        this.getCalendar();
+      }
     }
+
   }
 };
 </script>

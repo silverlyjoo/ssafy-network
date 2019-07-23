@@ -4,6 +4,7 @@
       <h1>Chatroom</h1>
       <v-card class="chatwindow">
         <v-container>
+          <v-btn @click="connect">연결</v-btn>
           <div v-for="chat in chatdata" :key="chat.id">
             <div>
               <span class="title">{{ chat.id }} |</span>
@@ -21,7 +22,7 @@
                 <v-text-field v-model="chatText" required></v-text-field>
               </v-flex>
               <v-flex xs2>
-                <v-btn @click="submit">Submit</v-btn>
+                <v-btn @click="sendMsg">Submit</v-btn>
               </v-flex>
             </v-layout>
           </v-form>
@@ -32,62 +33,29 @@
 </template>
 
 <script>
+import io from "socket.io-client";
 export default {
   name: "SocialRoom",
   data() {
     return {
-      nickname:"",
+      chatserver: this.$store.state.dbserver,
+      nickname: "",
       chatText: null,
-      chatdata: [
-        { id: "seongjoo", text: "hello" },
-        { id: "kyungtae", text: "hi" }
-      ]
+      chatdata: [],
+      socket: ""
     };
   },
-  mounted(){
-    this.chatting();
-  },
   methods: {
-    chatting(){
-      this.$validator.validateAll().then(res => {
-        fetch(this.$store.state.dbserver + "/chats/room", {
-          method: "POST",
-          headers: {
-            "Access-Control-Allow-Origin": "*",
-            "Content-Type": "application/json"
-          },
-          body: JSON.stringify({
-            room:"SSAFY room",
-          })
-        })
-          .then(res => res.json())
-          .then(data => console.log(data))
-          .catch(error => console.log(error))
-          .finally(this.$refs.form.reset(),
-          this.$validator.reset());
+    connect(){
+      this.socket = io.connect(this.chatserver);
+      this.socket.on("chat", data => {
+        console.log(data);
+        this.chatdata.push(data);
       });
     },
-    submit() {
-      this.$validator.validateAll().then(res => {
-        fetch(this.$store.state.dbserver + "/chats", {
-          method: "POST",
-          headers: {
-            "Access-Control-Allow-Origin": "*",
-            "Content-Type": "application/json"
-          },
-          body: JSON.stringify({
-            room:"SSAFY room",
-	          user:this.nickname,
-	          chat:this.chatText
-          })
-        })
-          .then(res => res.json())
-          .then(data => console.log(data))
-          .catch(error => console.log(error))
-          .finally(this.$refs.form.reset(),
-          this.$validator.reset() );
-      });
-      this.chatting();
+    async sendMsg() {
+      let message = { name: this.nickname, msg: this.chatText };
+      await this.socket.emit("chat", message);
     }
   }
 };
