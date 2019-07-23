@@ -1,12 +1,11 @@
 var express = require('express');
 var router = express.Router();
 var Board = require('../models/board');
-var encode = require('../encode');
 var decode = require('../decode');
 
 /**
  * @swagger
- *  /boards/all:
+ *  /boards:
  *    get:
  *      tags:
  *      - Board
@@ -15,7 +14,7 @@ var decode = require('../decode');
  *       200:
  *        description: 게시글 정보를 json 리스트에 담음
  */
-router.get('/all', function(req,res){
+router.get('/', function(req,res){
     var sort = {createdAt: -1};
     Board.find(function(err, boards){
         if(err) {
@@ -78,7 +77,7 @@ router.post('/', function(req, res){
 
 /**
  * @swagger
- *  /boards/_id:
+ *  /boards:
  *    put:
  *      tags:
  *      - Board
@@ -108,7 +107,7 @@ router.post('/', function(req, res){
  *       200:
  *        description: "result = true 일 경우 정상적으로 작동"
  */
-router.put('/_id', function(req, res){
+router.put('/', function(req, res){
     Board.update({ _id: req.body._id }, { $set: req.body }, function(err, output){
         if(err){
           res.status(500).json({ error: 'database failure' });
@@ -123,55 +122,26 @@ router.put('/_id', function(req, res){
 
 /**
  * @swagger
- *  /boards/{_id}/hit:
- *    put:
- *      tags:
- *      - Board
- *      description: 게시글 조회수 업데이트
- *      parameters:
- *      - name: _id
- *        in: path
- *        description: "오브젝트 아이디"
- *        required: true
- *        type: string
- *      responses:
- *       200:
- *        description: 조회수 +1
- */
-router.put('/:_id/hit', function(req, res){
-    Board.findOne({_id: req.params._id}, function(err,board){
-        Board.update({ _id: req.params._id }, { $set: { hit: board.hit + 1 }}, function(err, output){
-            if(err){
-              res.status(500).json({ error: 'database failure' });
-            }
-            console.log(output);
-            if(!output.n){
-              return res.status(404).json({ error: 'board not found' });
-            } 
-            res.json({result: true});
-        })
-    });
-});
-
-/**
- * @swagger
- *  /boards/{_id}:
+ *  /boards:
  *    delete:
  *      tags:
  *      - Board
  *      description: 게시글 삭제
  *      parameters:
- *      - name: _id
- *        in: path
- *        description: "오브젝트 아이디"
- *        required: true
- *        type: string
+ *      - in: body
+ *        name: updateBoard
+ *        description: "게시글 정보 업데이트"
+ *        schema:
+ *          type: object
+ *          properties:
+ *            _id:
+ *              type: string
  *      responses:
  *       200:
  *        description: 게시글 삭제
  */
-router.delete('/:_id', function(req, res){
-  Board.remove({ _id: req.params._id }, function(err, output){
+router.delete('/', function(req, res){
+  Board.remove({ _id: req.body._id }, function(err, output){
       if(err){
         return res.status(500).json({ error: "database failure" });
       } 
