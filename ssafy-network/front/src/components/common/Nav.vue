@@ -2,7 +2,7 @@
   <div>
     <div class="navLayout">
       <div class="navBg">
-        <v-container>
+        <v-container class="navcon">
           <aside>
             <div class="navBtn">
               <router-link to="/index" style="text-decoration: none !important">
@@ -183,8 +183,11 @@ export default {
 };
 </script>
 <style>
+.navcon {
+  padding: 15px;
+}
 .navBtn:hover {
-  background: rgba(173, 173, 173, 0.212);
+  background: rgba(212, 212, 212, 0.212);
   border-radius: 10px;
 }
 .navtext {
@@ -193,7 +196,7 @@ export default {
   font-size: 16px;
 }
 .navtcolor {
-  color: rgb(218, 234, 248);
+  color: rgba(233, 233, 233, 0.932);
 }
 .fold {
   display: flex;
@@ -208,6 +211,7 @@ export default {
   height: 100vh;
   background: rgb(128, 149, 202);
   z-index: 100;
+
 }
 .navBg {
   min-width: 200px;
