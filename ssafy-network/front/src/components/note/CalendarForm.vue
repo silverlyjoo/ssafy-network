@@ -14,7 +14,13 @@
           <v-container grid-list-md>
             <v-layout wrap column>
               <v-flex xs12 sm6 md4>
-                <v-text-field label="할일 제목" v-model="event.title" required></v-text-field>
+                <v-text-field
+                  label="할일 제목"
+                  v-model="event.title"
+                  v-validate="'required'"
+                  data-vv-name="title"
+                  :error-messages="errors.collect('title')"
+                ></v-text-field>
               </v-flex>
               <v-flex xs12 sm6 md4>
                 <v-menu
@@ -34,6 +40,9 @@
                       prepend-icon="event"
                       readonly
                       v-on="on"
+                      v-validate="'required'"
+                      :error-messages="errors.collect('startDate')"
+                      data-vv-name="startDate"
                     ></v-text-field>
                   </template>
                   <v-date-picker v-model="event.startDate" @input="startDatePick = false"></v-date-picker>
@@ -57,21 +66,41 @@
                       prepend-icon="event"
                       readonly
                       v-on="on"
+                      v-validate="'required'"
+                      :error-messages="errors.collect('endDate')"
+                      data-vv-name="endDate"
                     ></v-text-field>
                   </template>
                   <v-date-picker v-model="event.endDate" @input="endDatePick = false"></v-date-picker>
                 </v-menu>
               </v-flex>
               <v-flex xs12 sm6 md4>
-                <v-textarea label="할일 내용" v-model="event.desc"></v-textarea>
+                <v-textarea
+                  label="할일 내용"
+                  v-model="event.desc"
+                  v-validate="'required'"
+                  :error-messages="errors.collect('desc')"
+                  data-vv-name="desc"
+                ></v-textarea>
+              </v-flex>
+              <v-flex xs12 sm6 md4>
+                <v-select
+                  :items="colors"
+                  v-model="event.cssClass"
+                  label="Select"
+                  single-line
+                  v-validate="'required'"
+                  data-vv-name="cssClass"
+                  :error-messages="errors.collect('cssClass')"
+                ></v-select>
               </v-flex>
             </v-layout>
           </v-container>
         </v-card-text>
         <v-card-actions>
           <v-spacer></v-spacer>
-          <v-btn color="blue darken-1" flat @click="dialog = false">취소</v-btn>
-          <v-btn color="blue darken-1" flat @click="dialog = false">추가</v-btn>
+          <v-btn color="blue darken-1" flat @click="close()">취소</v-btn>
+          <v-btn color="blue darken-1" flat @click="addCalendar()">추가</v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>
@@ -79,8 +108,10 @@
 </template>
 
 <script>
-
 export default {
+  $_veeValidate: {
+    validator: "new"
+  },
   name: "CalendarForm",
   props: {
     today: ""
@@ -94,18 +125,72 @@ export default {
       event: {
         title: "",
         desc: "",
+        cssClass: "",
         startDate: "",
         endDate: ""
-      }
+      },
+      colors: [
+        { text: "red" },
+        { text: "yellow" },
+        { text: "blue" },
+        { text: "orange" },
+        { text: "pink" }
+      ]
     };
   },
   mounted() {
     this.focus = this.today;
+  },
+  methods: {
+    close() {
+      this.dialog = false;
+      this.event.title = "";
+      this.event.desc = "";
+      this.event.startDate = "";
+      this.event.endDate = "";
+    },
+    addCalendar() {
+      this.$validator.validateAll().then(res => {
+        if (!res) {
+          alert("값이 유효한지 체크해주세요.");
+          return;
+        }else{
+          //추가 
+          fetch(this.$store.state.dbserver + "/calendars",{method: "POST",
+          headers: {
+            "Access-Control-Allow-Origin": "*",
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({
+            token: this.$session.get("token"),
+            id:  this.$session.get("id"),
+            title: this.event.title,
+            start: this.event.startDate,
+            end: this.event.endDate,
+            cssClass: this.event.cssClass,
+            desc: this.event.desc
+          })
+          }).then(res => res.json())
+        .then(data => {
+          if(data.result == true){
+            alert("추가 성공!!!");
+            this.$store.state.addCalendarCheck = true;
+            this.dialog = false;
+          }else{
+            alert("추가 실패...");
+            this.dialog = false;
+          }
+        });
+         
+        }
+      });
+      
+    }
   }
 };
 </script>
 <style>
-.events-day{
-    min-height: 100px!important;
+.events-day {
+  min-height: 100px !important;
 }
 </style>

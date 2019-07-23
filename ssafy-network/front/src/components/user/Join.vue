@@ -12,7 +12,7 @@
                 <v-text-field
                   v-model="id"
                   label="ID"
-                  v-validate="'required|min:4'"
+                  v-validate="'required|min:5'"
                   data-vv-name="ID"
                   :error-messages="errors.collect('ID')"
                   ref="IDText"

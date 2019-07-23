@@ -17,7 +17,6 @@ import {
 } from '@toast-ui/vue-editor'
 
 
-
 Vue.component('editor', Editor)
 Vue.component('viewer', Viewer)
 Vue.use(VueSession)

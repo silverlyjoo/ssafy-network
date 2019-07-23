@@ -7,7 +7,8 @@ export default new Vuex.Store({
   state: {
     login: false,
     navFoldFlag : true,
-    dbserver : 'http://192.168.31.55:3000'
+    dbserver : 'http://192.168.31.55:3000',
+    addCalendarCheck: false
   },
   mutations: {
 
