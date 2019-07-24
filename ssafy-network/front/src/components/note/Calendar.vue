@@ -225,6 +225,7 @@ export default {
                 alert("수정 실패...");
               }
               this.dialog = false;
+              this.$validator.reset();
             });
         }
       });

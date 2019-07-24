@@ -1,6 +1,6 @@
 <template>
   <v-layout column>
-    <v-flex align-center class="ma-3">
+    <v-flex align-center class="ma-3 pt-3">
       <Calendar :events="events" >
       </Calendar>
     </v-flex>
