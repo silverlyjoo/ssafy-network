@@ -3,7 +3,7 @@
     <v-card-text>
       <v-layout row style="width:80%; margin-left:auto; margin-right:auto;">
         <v-flex xs8 sm4>
-          <v-text-field label="검색" v-model="search"><v-icon>fas fa-search</v-icon></v-text-field>
+          <v-text-field label="검색" v-model="search"></v-text-field>
         </v-flex>
       </v-layout>
     </v-card-text>
@@ -39,7 +39,7 @@
                   <v-textarea box label="내용" v-model="editedItem.content" id = "codemirror" auto-grow value></v-textarea>
                 </v-flex>
                 <v-flex xs12>
-                  <codemirror v-model="sourcecode" :options="cmOptions">{{ sourcecode }}</codemirror>
+                  <codemirror v-model="editedItem.sourcecode" :options="cmOptions">{{ sourcecode }}</codemirror>
                   <!-- <v-textarea id="editor" box label="Code" v-model="editedItem.code" auto-grow value></v-textarea> -->
                 </v-flex>
               </v-layout>
@@ -169,19 +169,19 @@ export default {
       articles: [],
       editedIndex: -1,
       editedItem: {
-        index: "",
+        index: 0,
         title: "",
         sourcecode: "",
         content: "",
-        hit: "",
+        hit: 0,
         writer: ""
       },
       defaultItem: {
-        index: "",
+        index: 0,
         title: "",
         sourcecode: "",
         content: "",
-        hit: "",
+        hit: 0,
         writer: ""
       }
     }
