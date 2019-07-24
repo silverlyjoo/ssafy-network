@@ -1,9 +1,9 @@
 <template>
-  <div>
+  <div class="pb-5">
     <v-card-text>
       <v-layout row style="width:80%; margin-left:auto; margin-right:auto;">
         <v-flex xs8 sm4>
-          <v-text-field label="검색" v-model="search"></v-text-field>
+          <v-text-field label="검색" v-model="search"><v-icon>fas fa-search</v-icon></v-text-field>
         </v-flex>
       </v-layout>
     </v-card-text>
@@ -33,13 +33,13 @@
               <v-layout wrap>
 
                 <v-flex xs12>
-                  <v-text-field v-model="editedItem.title" label="Title"></v-text-field>
+                  <v-text-field v-model="editedItem.title" label="제목"></v-text-field>
                 </v-flex>
                 <v-flex xs12>
-                  <v-textarea box label="Content" v-model="editedItem.content" id = "codemirror" auto-grow value></v-textarea>
+                  <v-textarea box label="내용" v-model="editedItem.content" id = "codemirror" auto-grow value></v-textarea>
                 </v-flex>
                 <v-flex xs12>
-                  <codemirror v-model="code" :options="cmOptions"></codemirror>
+                  <codemirror v-model="sourcecode" :options="cmOptions">{{ sourcecode }}</codemirror>
                   <!-- <v-textarea id="editor" box label="Code" v-model="editedItem.code" auto-grow value></v-textarea> -->
                 </v-flex>
               </v-layout>
@@ -55,7 +55,6 @@
       :headers="headers"
       :items="articles"
       :search="search"
-      :pagination.sync="pagination"
       class="elevation-1"
       style="width:80%; margin-left:auto; margin-right:auto;"
     >
@@ -83,100 +82,137 @@
 import 'codemirror/mode/javascript/javascript.js'
 import 'codemirror/theme/base16-dark.css'
 import CodeMirror from 'codemirror'
+import'codemirror/addon/edit/matchbrackets.js'
 
 export default {
-  data: () => ({
-    code: '// 여기에 코드 작성해주세요',
-    cmOptions: {
-      tabSize: 4,
-      mode: 'text/javascript',
-      theme: 'base16-dark',
-      lineNumbers: true,
-      line: true,
-    },
-    editor:"",
-    dialog: false,
-    headers: [
-      {
-        text: "No",
-        align: "center",
-        sortable: true,
-        value: "index"
+  data () {
+    return {
+      search:"",
+      sourcecode: '// 여기에 코드 작성해주세요',
+      cmOptions: {
+        tabSize: 4,
+        styleActiveLine: false,
+        lineNumbers: true,
+        styleSelectedText: false,
+        line: true,
+        foldGutter: true,
+        gutters: ["CodeMirror-linenumbers", "CodeMirror-foldgutter"],
+        highlightSelectionMatches: { showToken: /\w/, annotateScrollbar: true },
+        mode: 'text/javascript',
+        // hint.js options
+        hintOptions:{
+          // 当匹配只有一项的时候是否自动补全
+          completeSingle: false
+        },
+        //快捷键 可提供三种模式 sublime、emacs、vim
+        keyMap: "sublime",
+        matchBrackets: true,
+        showCursorWhenSelecting: true,
+        theme: "monokai",
+        extraKeys: { "Ctrl": "autocomplete" }
       },
-      {
-        text: "Title",
-        align: "center",
-        sortable: false,
-        value: "title"
+      // cmOption: {
+      //   tabSize: 4,
+      //   styleActiveLine: true,
+      //   lineNumbers: true,
+      //   line: true,
+      //   mode: 'text/javascript',
+      //   lineWrapping: true,
+      //   theme: 'Ambiance'
+      // },
+      editor: "",
+      dialog: false,
+      headers: [
+        {
+          text: "글 번호",
+          align: "center",
+          sortable: true,
+          value: "index"
+        },
+        {
+          text: "제목",
+          align: "center",
+          sortable: false,
+          value: "title"
+        },
+        {
+          text: "코드",
+          align: "center",
+          sortable: false,
+          value: "sourcecode"
+        },
+        {
+          text: "내용",
+          align: "center",
+          sortable: false,
+          value: "content"
+        },
+        {
+          text: "조회수",
+          align: "center",
+          sortable: true,
+          value: "hit"
+        },
+        {
+          text: "작성자",
+          align: "center",
+          sortable: false,
+          value: "writer"
+        },
+        {
+          text: "수정/삭제",
+          align: "center",
+          sortable: false,
+          value: "editorremove"
+        }
+      ],
+      articles: [],
+      editedIndex: -1,
+      editedItem: {
+        index: "",
+        title: "",
+        sourcecode: "",
+        content: "",
+        hit: "",
+        writer: ""
       },
-      {
-        text: "Code",
-        align: "center",
-        sortable: false,
-        value: "sourcecode"
-      },
-      {
-        text: "Content",
-        align: "center",
-        sortable: false,
-        value: "content"
-      },
-      {
-        text: "Hit",
-        align: "center",
-        sortable: true,
-        value: "hit"
-      },
-      {
-        text: "Writer",
-        align: "center",
-        sortable: false,
-        value: "writer"
-      },
-      {
-        text: "Edit/Delete",
-        align: "center",
-        sortable: false,
-        value: "editorremove"
+      defaultItem: {
+        index: "",
+        title: "",
+        sourcecode: "",
+        content: "",
+        hit: "",
+        writer: ""
       }
-    ],
-    articles: [],
-    editedIndex: -1,
-    editedItem: {
-      index: "",
-      title: "",
-      sourcecode: "",
-      content: "",
-      hit: "",
-      writer: ""
-    },
-    defaultItem: {
-      index: "",
-      title: "",
-      sourcecode: "",
-      content: "",
-      hit: "",
-      writer: ""
     }
-  }),
+  },
   computed: {
     formTitle() {
-      return this.editedIndex === -1 ? "New Article" : "Edit Article";
+      return this.editedIndex === -1 ? "새 글 작성하기" : "글 수정하기";
     }
   },
-  mounted() {
-    // console.log('this is current codemirror object', this.codemirror)
+  
+  // mounted() {
+  //   setTimeout(() => {
+  //     this.styleSelectedText =  true,
+  //     this.cmOption.styleActiveLine = true
+  //   }, 1800)
+  // },
 
-    this.editor = CodeMirror.fromTextArea(document.getElementById('codemirror'), {
-      mode:  "htmlmixed",
-      extraKeys: {"Ctrl-Space": "autocomplete"},
-      lineNumbers: true,
-      autoCloseTags: true,
-      theme: 'monokai'
-    });
+  // mounted() {
+  //   // console.log('this is current codemirror object', this.codemirror)
+
+  //   this.editor = CodeMirror.fromTextArea(document.getElementById('codemirror'), {
+  //     mode:  "htmlmixed",
+  //     extraKeys: {"Ctrl-Space": "autocomplete"},
+  //     lineNumbers: true,
+  //     autoCloseTags: true,
+  //     theme: 'monokai'
+  //   });
     
-    this.autoFormat();
-  },
+  //   this.autoFormat();
+  // },
+
   watch: {
     dialog(val) {
       val || this.close();
@@ -186,16 +222,9 @@ export default {
   created() {
     this.initialize();
   },
+
   methods: {
-    selectAll: function() {
-      CodeMirror.commands["selectAll"](editor);
-    },
-    autoFormat: function() {
-      editor.setCursor(0,0);
-      this.selectAll();
-      editor.autoFormatRange(editor.getCursor(true), editor.getCursor(false));
-      editor.setCursor(0,0);
-    },
+    
     initialize() {
       this.articles = [
         {
@@ -298,6 +327,7 @@ export default {
       const index = this.articles.indexOf(item);
       confirm("삭제하시겠습니까?") && this.articles.splice(index, 1);
     },
+
     close() {
       this.dialog = false;
       setTimeout(() => {
@@ -305,6 +335,7 @@ export default {
         this.editedIndex = -1;
       }, 300);
     },
+
     save() {
       if (this.editedIndex > -1) {
         Object.assign(this.articles[this.editedIndex], this.editedItem);
@@ -313,18 +344,8 @@ export default {
       }
       this.close();
     },
-    onCmReady(cm) {
-      console.log('the editor is readied!', cm)
-    },
-    onCmFocus(cm) {
-      console.log('the editor is focus!', cm)
-    },
-    onCmCodeChange(newCode) {
-      console.log('this is new code', newCode)
-      this.code = newCode
-    }
-  }
-};
+  },
+}
 </script>
 
 <style>
