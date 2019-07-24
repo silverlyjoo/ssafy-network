@@ -1,217 +1,365 @@
 <template>
-  <div>
-    <br>
+  <div class="pb-5">
+    <v-card-text>
+      <v-layout row style="width:80%; margin-left:auto; margin-right:auto;">
+        <v-flex xs8 sm4>
+          <v-text-field label="검색" v-model="search"><v-icon>fas fa-search</v-icon></v-text-field>
+        </v-flex>
+      </v-layout>
+    </v-card-text>
     <v-toolbar flat color="grey lighten-5" style="width:80%; margin-left:auto; margin-right:auto;">
       <v-toolbar-title>Code Review 게시판</v-toolbar-title>
-
       <v-spacer></v-spacer>
-      <v-dialog v-model="dialog" max-width="800px" max-height="1000px">
+      <v-dialog v-model="dialog" fullscreen hide-overlay transition="dialog-bottom-transition">
         <template v-slot:activator="{ on }">
-          <v-btn v-on="on" class="info write-btn">글 쓰기</v-btn><br><br><br>
+          <v-btn v-on="on" class="info write-btn">글 쓰기</v-btn>
+          <br/><br/><br/>
         </template>
         <v-card>
-          <v-card-title>
-            <span class="headline">{{ formTitle }}</span>
-          </v-card-title>
+          <v-toolbar class="v-toolbar theme--light indigo lighten-1">
+            <v-btn icon dark @click="dialog = false">
+              <v-icon>close</v-icon>
+            </v-btn>
+            <v-toolbar-title style="color:white;">{{ formTitle }}</v-toolbar-title>
+            <v-spacer></v-spacer>
+            <v-toolbar-items>
+              <v-btn dark flat @click="dialog = false">등록</v-btn>
+              <v-btn dark flat @click="dialog = false">취소</v-btn>
+            </v-toolbar-items>
+          </v-toolbar>
 
           <v-card-text>
-            <v-container grid-list-md>
+            <v-container grid-list-md style="width:80%; padding:100px;">
               <v-layout wrap>
+
                 <v-flex xs12>
-                  <v-text-field v-model="editedItem.title" label="Title"></v-text-field>
+                  <v-text-field v-model="editedItem.title" label="제목"></v-text-field>
                 </v-flex>
                 <v-flex xs12>
-                  <v-textarea box label="Content" v-model="editedItem.content" auto-grow value></v-textarea>
+                  <v-textarea box label="내용" v-model="editedItem.content" id = "codemirror" auto-grow value></v-textarea>
+                </v-flex>
+                <v-flex xs12>
+                  <codemirror v-model="sourcecode" :options="cmOptions">{{ sourcecode }}</codemirror>
+                  <!-- <v-textarea id="editor" box label="Code" v-model="editedItem.code" auto-grow value></v-textarea> -->
                 </v-flex>
               </v-layout>
             </v-container>
           </v-card-text>
-
-          <v-card-actions>
-            <v-spacer></v-spacer>
-            <v-btn class="info" flat @click.native="close">취소</v-btn>
-            <v-btn class="info" flat @click.native="save">확인</v-btn>
-          </v-card-actions>
         </v-card>
       </v-dialog>
     </v-toolbar>
 
-    <br>
+    <br />
 
     <v-data-table
       :headers="headers"
       :items="articles"
       :search="search"
-      :pagination.sync="pagination"
       class="elevation-1"
       style="width:80%; margin-left:auto; margin-right:auto;"
     >
       <template v-slot:items="props">
+        <td>{{ props.item.index }}</td>
         <td>{{ props.item.title }}</td>
-        <td class="text-xs-center">{{ props.item.content }}</td>
-        <td class="justify-center text-xs-center layout px-0">{{ props.item.editorremove }}
-          <v-icon
-            small
-            class="mr-2"
-            color="teal"
-            @click="editItem(props.item)"
-          >
-            edit
-          </v-icon>
-          <v-icon
-            small
-            color="pink"
-            @click="deleteItem(props.item)"
-          >
-            delete
-          </v-icon>
+        <td>{{ props.item.sourcecode }}</td>
+        <td>{{ props.item.content }}</td>
+        <td class="text-xs-center">{{ props.item.hit }}</td>
+        <td class="text-xs-center">{{ props.item.writer }}</td>
+        <td class="justify-center text-xs-center layout px-0">
+          {{ props.item.editorremove }}
+          <v-icon small class="mr-2" color="teal" @click="editItem(props.item)">edit</v-icon>
+          <v-icon small color="pink" @click="deleteItem(props.item)">delete</v-icon>
         </td>
       </template>
       <template slot="no-data">
-        <v-alert :value="true" color="info" icon="info">
-          게시글이 하나도 없습니다
-        </v-alert>
+        <v-alert :value="true" color="info" icon="info">게시글이 하나도 없습니다</v-alert>
       </template>
     </v-data-table>
   </div>
 </template>
 
 <script>
-  export default {
-    data: () => ({
+import 'codemirror/mode/javascript/javascript.js'
+import 'codemirror/theme/base16-dark.css'
+import CodeMirror from 'codemirror'
+import'codemirror/addon/edit/matchbrackets.js'
+
+export default {
+  data () {
+    return {
+      search:"",
+      sourcecode: '// 여기에 코드 작성해주세요',
+      cmOptions: {
+        tabSize: 4,
+        styleActiveLine: false,
+        lineNumbers: true,
+        styleSelectedText: false,
+        line: true,
+        foldGutter: true,
+        gutters: ["CodeMirror-linenumbers", "CodeMirror-foldgutter"],
+        highlightSelectionMatches: { showToken: /\w/, annotateScrollbar: true },
+        mode: 'text/javascript',
+        // hint.js options
+        hintOptions:{
+          // 当匹配只有一项的时候是否自动补全
+          completeSingle: false
+        },
+        //快捷键 可提供三种模式 sublime、emacs、vim
+        keyMap: "sublime",
+        matchBrackets: true,
+        showCursorWhenSelecting: true,
+        theme: "monokai",
+        extraKeys: { "Ctrl": "autocomplete" }
+      },
+      // cmOption: {
+      //   tabSize: 4,
+      //   styleActiveLine: true,
+      //   lineNumbers: true,
+      //   line: true,
+      //   mode: 'text/javascript',
+      //   lineWrapping: true,
+      //   theme: 'Ambiance'
+      // },
+      editor: "",
       dialog: false,
-      headers: [        
+      headers: [
         {
-          text: 'Title',
-          align: 'center',
-          sortable: false,
-          value: 'title'
+          text: "글 번호",
+          align: "center",
+          sortable: true,
+          value: "index"
         },
         {
-          text: 'Content',
-          align: 'center',
+          text: "제목",
+          align: "center",
           sortable: false,
-          value: 'content',
+          value: "title"
         },
         {
-          text: 'Edit/Delete',
-          align: 'center',
+          text: "코드",
+          align: "center",
           sortable: false,
-          value: 'editorremove',
+          value: "sourcecode"
         },
+        {
+          text: "내용",
+          align: "center",
+          sortable: false,
+          value: "content"
+        },
+        {
+          text: "조회수",
+          align: "center",
+          sortable: true,
+          value: "hit"
+        },
+        {
+          text: "작성자",
+          align: "center",
+          sortable: false,
+          value: "writer"
+        },
+        {
+          text: "수정/삭제",
+          align: "center",
+          sortable: false,
+          value: "editorremove"
+        }
       ],
       articles: [],
       editedIndex: -1,
       editedItem: {
-        title: '',
-        content: '',
+        index: "",
+        title: "",
+        sourcecode: "",
+        content: "",
+        hit: "",
+        writer: ""
       },
       defaultItem: {
-        title: '',
-        content: '',
-      }
-    }),
-    computed: {
-      formTitle () {
-        return this.editedIndex === -1 ? 'New Article' : 'Edit Article'
-      }
-    },
-    watch: {
-      dialog (val) {
-        val || this.close()
-      }
-    },
-
-      created () {
-        this.initialize()
-    },
-    methods: {
-      initialize () {
-        this.articles = [
-          {
-            title: 'I have a question about python',
-            content: 'In python, how can I define function?',
-          },
-          {
-            title: 'Vue, 꼭 해야하나요?',
-            content: '다른 사람들 다 앵귤러나 리액트하는데 왜 뷰 해야하는지 모르겠네요',
-          },
-          {
-            title: '알고리즘 시험 대비해서 링크드 리스트 만들 때, 더 쉽게 외우는 방법 없나요?',
-            content: '이미 외웠긴 했는데, 더 쉽게 외울 수 있는 방법이 있나 궁금하네요',
-          },
-          {
-            title: '자바 스프링 다 까먹었는데 큰 일이네요 ㅠㅠ',
-            content: '다른 분들은 어떠신가요??',
-          },
-          {
-            title: '자소서 한 번도 안 써봤는데 7월 절반이 지나갔네요 ㅠㅠ',
-            content: '이번에 안랩하고 인바디 떴던데 이참에 한 번 쓸까봐요',
-          },
-          {
-            title: '면접볼 때 PT 면접 있잖아요, 어떻게 해요? ㅠㅠ',
-            content: '제가 발표를 한 번도 해 본 적이 없는데 슬슬 걱정이네요... 다들 발표 잘 하시나요?',
-          },
-          {
-            title: '오늘 조퇴하고 싶네요',
-            content: '물론 다음 주 월요일 팀빌딩도 조퇴, 아니 결석하고 싶어요',
-          },
-          {
-            title: '지금 편성된 조에 적응을 잘 못하겠어요ㅠㅠ',
-            content: '다음 주 월요일 팀빌딩으로 친해지는 시간 있다는데, 제가 소극적이라서... 친해질 수 있을지 걱정이에요... ㅠㅠ',
-          },
-          {
-            title: 'IT에서 돈 많이 벌려면 뭘 준비해야 할까요',
-            content: '역시 실력을 키우는 걸까요? 아니면 로또가 답일까요? 결국엔 치킨집 차릴텐데 휴...',
-          },
-          {
-            title: '삼성 오딧세이 좋네요 하나 사려는데 최저가 아시는 분?',
-            content: '소위 말하는 "앱등이"입니다. 오딧세이 사용해보니 좋네요. 오딧세이 올해 최신판으로 사볼까 하는데 조언 부탁드려요',
-          },
-        ]
-      },
-
-      editItem (item) {
-        this.editedIndex = this.articles.indexOf(item)
-        this.editedItem = Object.assign({}, item)
-        this.dialog = true
-      },
-
-      deleteItem (item) {
-        const index = this.articles.indexOf(item)
-        confirm('삭제하시겠습니까?') && this.articles.splice(index, 1)
-      },
-      close() {
-        this.dialog = false
-        setTimeout( () =>  {
-          this.editedItem = Object.assign({}, this.defaultItem)
-          this.editedIndex = -1
-        }, 300)
-      },
-      save () {
-        if (this.editedIndex > -1) {
-          Object.assign(this.articles[this.editedIndex], this.editedItem)
-        } else {
-          this.articles.push(this.editedItem)
-        }
-        this.close()
+        index: "",
+        title: "",
+        sourcecode: "",
+        content: "",
+        hit: "",
+        writer: ""
       }
     }
-  }
+  },
+  computed: {
+    formTitle() {
+      return this.editedIndex === -1 ? "새 글 작성하기" : "글 수정하기";
+    }
+  },
+  
+  // mounted() {
+  //   setTimeout(() => {
+  //     this.styleSelectedText =  true,
+  //     this.cmOption.styleActiveLine = true
+  //   }, 1800)
+  // },
+
+  // mounted() {
+  //   // console.log('this is current codemirror object', this.codemirror)
+
+  //   this.editor = CodeMirror.fromTextArea(document.getElementById('codemirror'), {
+  //     mode:  "htmlmixed",
+  //     extraKeys: {"Ctrl-Space": "autocomplete"},
+  //     lineNumbers: true,
+  //     autoCloseTags: true,
+  //     theme: 'monokai'
+  //   });
+    
+  //   this.autoFormat();
+  // },
+
+  watch: {
+    dialog(val) {
+      val || this.close();
+    }
+  },
+
+  created() {
+    this.initialize();
+  },
+
+  methods: {
+    
+    initialize() {
+      this.articles = [
+        {
+          index: 1,
+          title: "I have a question about python",
+          sourcecode: "",
+          content: "In python, how can I define function?",
+          hit: 5,
+          writer: "Maestro_Of_Python"
+        },
+        {
+          index: 2,
+          title: "Vue, 꼭 해야하나요?",
+          sourcecode: "",
+          content:
+            "다른 사람들 다 앵귤러나 리액트하는데 왜 뷰 해야하는지 모르겠네요",
+          hit: 87,
+          writer: "앵귤러리액트"
+        },
+        {
+          index: 3,
+          title:
+            "알고리즘 시험 대비해서 링크드 리스트 만들 때, 더 쉽게 외우는 방법 없나요?",
+          sourcecode: "",
+          content:
+            "이미 외웠긴 했는데, 더 쉽게 외울 수 있는 방법이 있나 궁금하네요",
+          hit: 25,
+          writer: "SW_Expert"
+        },
+        {
+          index: 4,
+          title: "자바 스프링 다 까먹었는데 큰 일이네요 ㅠㅠ",
+          sourcecode: "",
+          content: "다른 분들은 어떠신가요??",
+          hit: 29,
+          writer: "JavaMaster"
+        },
+        {
+          index: 5,
+          title: "자소서 한 번도 안 써봤는데 7월 절반이 지나갔네요 ㅠㅠ",
+          sourcecode: "",
+          content: "이번에 안랩하고 인바디 떴던데 이참에 한 번 쓸까봐요",
+          hit: 15,
+          writer: "경력3년차"
+        },
+        {
+          index: 6,
+          title: "면접볼 때 PT 면접 있잖아요, 어떻게 해요? ㅠㅠ",
+          sourcecode: "",
+          content:
+            "제가 발표를 한 번도 해 본 적이 없는데 슬슬 걱정이네요... 다들 발표 잘 하시나요?",
+          hit: 15,
+          writer: "PT의신"
+        },
+        {
+          index: 7,
+          title: "오늘 조퇴하고 싶네요",
+          sourcecode: "",
+          content: "물론 다음 주 월요일 팀빌딩도 조퇴, 아니 결석하고 싶어요",
+          hit: 111,
+          writer: "출석률100%"
+        },
+        {
+          index: 8,
+          title: "지금 편성된 조에 적응을 잘 못하겠어요ㅠㅠ",
+          sourcecode: "",
+          content:
+            "다음 주 월요일 팀빌딩으로 친해지는 시간 있다는데, 제가 소극적이라서... 친해질 수 있을지 걱정이에요... ㅠㅠ",
+          hit: 45,
+          writer: "핵인싸"
+        },
+        {
+          index: 9,
+          title: "IT에서 돈 많이 벌려면 뭘 준비해야 할까요",
+          sourcecode: "",
+          content:
+            "역시 실력을 키우는 걸까요? 아니면 로또가 답일까요? 결국엔 치킨집 차릴텐데 휴...",
+          hit: 22,
+          writer: "IT개발자-연봉1억"
+        },
+        {
+          index: 10,
+          title: "삼성 오딧세이 좋네요 하나 사려는데 최저가 아시는 분?",
+          sourcecode: "",
+          content:
+            '소위 말하는 "앱등이"입니다. 오딧세이 사용해보니 좋네요. 오딧세이 올해 최신판으로 사볼까 하는데 조언 부탁드려요',
+          hit: 19,
+          writer: "앱등이"
+        }
+      ];
+    },
+
+    editItem(item) {
+      this.editedIndex = this.articles.indexOf(item);
+      this.editedItem = Object.assign({}, item);
+      this.dialog = true;
+    },
+
+    deleteItem(item) {
+      const index = this.articles.indexOf(item);
+      confirm("삭제하시겠습니까?") && this.articles.splice(index, 1);
+    },
+
+    close() {
+      this.dialog = false;
+      setTimeout(() => {
+        this.editedItem = Object.assign({}, this.defaultItem);
+        this.editedIndex = -1;
+      }, 300);
+    },
+
+    save() {
+      if (this.editedIndex > -1) {
+        Object.assign(this.articles[this.editedIndex], this.editedItem);
+      } else {
+        this.articles.push(this.editedItem);
+      }
+      this.close();
+    },
+  },
+}
 </script>
 
 <style>
-  .board-title {
-    color: grey
-  }
-  .board {
-    height: 100%;
-    width: 80%;
-    margin-left:auto;
-    margin-right:auto;
-  }
-  .write-btn {
-    float: right;
-    /* padding-right: 100px; */
-  }
+.board-title {
+  color: grey;
+}
+.board {
+  height: 100%;
+  width: 80%;
+  margin-left: auto;
+  margin-right: auto;
+}
+.write-btn {
+  float: right;
+  /* padding-right: 100px; */
+}
 </style>
