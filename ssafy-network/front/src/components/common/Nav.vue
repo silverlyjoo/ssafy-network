@@ -327,8 +327,10 @@ export default {
         });
     },
     deleteItem() {
-      alert("삭제");
-    },
+      console.log(this.seleteItem.root);
+      this.showDelete =false;
+      this.closeForm();
+  },
     compare(a,b){
       if(a.children && b.children){
         a.children.sort(this.compare);
