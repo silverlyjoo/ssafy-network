@@ -146,8 +146,7 @@ export default {
         })
           .then(res => res.json())
           .then(data => {
-            console.log(data);
-            if (data == false) {
+            if (data.result == true) {
               this.$refs.form.reset();
               this.$validator.reset();
               alert("회원가입 성공!!");
@@ -174,7 +173,7 @@ export default {
         this.IDCheck = false;
         return;
       }
-      fetch(this.$store.state.dbserver + "/users/" + this.id + "/icheck", {
+      fetch(this.$store.state.dbserver + "/users/overlap/id/" + this.id, {
         method: "GET",
         headers: {
           "Access-Control-Allow-Origin": "*",
@@ -183,7 +182,7 @@ export default {
       })
         .then(res => res.json())
         .then(data => {
-          if (data.result) {
+          if (data.result == true) {
             alert("ID가 존재합니다.");
             this.$refs.IDText.focus();
             this.$refs.IDText.reset();
@@ -204,7 +203,7 @@ export default {
         return;
       }
       fetch(
-        this.$store.state.dbserver + "/users/" + this.nickname + "/ncheck",
+        this.$store.state.dbserver + "/users/overlap/nickname/" + this.nickname,
         {
           method: "GET",
           headers: {

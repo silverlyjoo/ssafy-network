@@ -34,14 +34,16 @@
               >
                 <template v-slot:prepend="{item, open,selected}">
                   <v-btn flat class="ma-0 pa-0" style="min-width:30px!important;">
-                    <v-icon v-if="!item.file">{{ open ? 'mdi-folder-open' : 'mdi-folder' }}</v-icon>
+                    <v-icon
+                      v-if="item.file == 'folder'"
+                    >{{ open ? 'mdi-folder-open' : 'mdi-folder' }}</v-icon>
                     <v-icon v-else>{{ files[item.file] }}</v-icon>
                   </v-btn>
                 </template>
 
                 <template slot="append" slot-scope="{item}">
                   <v-tooltip bottom>
-                    <template v-slot:activator="{ on }" >
+                    <template v-slot:activator="{ on }">
                       <v-btn
                         flat
                         v-on="on"
@@ -170,6 +172,16 @@
                 </v-layout>
               </router-link>
             </div>
+
+            <div class="navBtn">
+              <router-link to="/note/write" style="text-decoration: none !important">
+                <v-layout align-center class="pa-2 mb-3">
+                  <v-flex xs7 text-xs-center>
+                    <span class="navtext navtcolor">Note Write</span>
+                  </v-flex>
+                </v-layout>
+              </router-link>
+            </div>
           </aside>
         </v-container>
       </div>
@@ -191,7 +203,7 @@ export default {
       showNote: false,
       showFolder: false,
       showDelete: false,
-      seleteItem:"",
+      seleteItem: "",
       x: 0,
       y: 0,
       FolderTitle: "",
@@ -211,22 +223,22 @@ export default {
         xls: "mdi-file-excel"
       },
       tree: [],
-      _id:"",
+      _id: "",
       items: []
     };
   },
   methods: {
-    addNoteOpen(item){
+    addNoteOpen(item) {
       this.showNote = true;
       this.NoteTitle = "";
       this.seleteItem = item;
     },
-    addFolderOpen(item){
+    addFolderOpen(item) {
       this.showFolder = true;
       this.FolderTitle = "";
       this.seleteItem = item;
     },
-    DeleteOpen(item){
+    DeleteOpen(item) {
       this.showDelete = true;
       this.seleteItem = item;
     },
@@ -240,10 +252,10 @@ export default {
       this.FolderTitle = "";
       this.closeForm();
     },
-    closeForm(){
+    closeForm() {
       this.seleteItem = "";
       this.$validator.reset();
-      this.updateItems();
+      this.getItems();
     },
     goNote() {
       this.$router.push("/note/calendar");
@@ -251,35 +263,62 @@ export default {
     },
     addNote() {
       alert("파일 추가");
-      this.$validator.validateAll('NoteTitle').then(res => {
+      this.$validator.validateAll("NoteTitle").then(res => {
         if (!res) {
           alert("값이 유효한지 확인해 주세요.");
         } else {
-          if (!this.seleteItem.children) {
-            this.$set(this.seleteItem, "children", []);
-          }
-          this.seleteItem.children.push({
-            name : this.NoteTitle,
-            file : "txt"
-          });
-          this.sortItem();
+          fetch(this.$store.state.dbserver + "/trees/", {
+            method: "POST",
+            headers: {
+              "Access-Control-Allow-Origin": "*",
+              "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+          token: this.$session.get("token"),
+          parent_id : this.seleteItem._id,
+          name : this.NoteTitle,
+          file : 'txt'
+            })
+          })
+            .then(res => res.json())
+            .then(data => {
+              if(data.result == true){
+                alert("성공");
+              }else{
+                alert("실패");
+              }
+            });
           this.addNoteClose();
         }
       });
     },
     addFolder() {
-      this.$validator.validateAll('FolderTitle').then(res => {
+      this.$validator.validateAll("FolderTitle").then(res => {
         if (!res) {
           alert("값이 유효한지 확인해 주세요.");
         } else {
-           if (!this.seleteItem.children) {
-            this.$set(this.seleteItem, "children", []);
-          }
-          this.seleteItem.children.push({
-            name : this.FolderTitle,
-            children :[]
-          });
-          this.sortItem();
+          fetch(this.$store.state.dbserver + "/trees/", {
+            method: "POST",
+            headers: {
+              "Access-Control-Allow-Origin": "*",
+              "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+          token: this.$session.get("token"),
+          parent_id : this.seleteItem._id,
+          name : this.FolderTitle,
+          file : 'folder',
+          children:[]
+            })
+          })
+            .then(res => res.json())
+            .then(data => {
+              if(data.result == true){
+                alert("성공");
+              }else{
+                alert("실패");
+              }
+            });
           this.addFolderClose();
         }
       });
@@ -301,53 +340,73 @@ export default {
       )
         .then(res => res.json())
         .then(data => {
-          this._id = data[0]._id;
-          this.items = data[0].item;
+          this.items = data.item;
         });
     },
     updateItems() {
-      fetch(this.$store.state.dbserver + "/trees",{method: "PUT",
-          headers: {
-            "Access-Control-Allow-Origin": "*",
-            "Content-Type": "application/json"
-          },
-          body: JSON.stringify({
-            _id : this._id,
-            token: this.$session.get("token"),
-            id:  this.$session.get("id"),
-            item: this.items
-          })
-          }).then(res => res.json())
-          .then(data => {
-          if(data.result == true){
+      fetch(this.$store.state.dbserver + "/trees", {
+        method: "PUT",
+        headers: {
+          "Access-Control-Allow-Origin": "*",
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          _id: this._id,
+          token: this.$session.get("token"),
+          id: this.$session.get("id"),
+          item: this.items
+        })
+      })
+        .then(res => res.json())
+        .then(data => {
+          if (data.result == true) {
             console.log("업데이트 성공");
-          }else{
+          } else {
             console.log("업데이트 실패");
           }
         });
     },
     deleteItem() {
-      console.log(this.seleteItem.root);
-      this.showDelete =false;
+      console.log(this.seleteItem._id);
+      fetch(this.$store.state.dbserver + "/trees/", {
+            method: "DELETE",
+            headers: {
+              "Access-Control-Allow-Origin": "*",
+              "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+              _id : this.seleteItem._id,
+          token: this.$session.get("token")
+            })
+          })
+            .then(res => res.json())
+            .then(data => {
+              if(data.result == true){
+                alert("성공");
+              }else{
+                alert("실패");
+              }
+            });
+      this.showDelete = false;
       this.closeForm();
-  },
-    compare(a,b){
-      if(a.children && b.children){
+    },
+    compare(a, b) {
+      if (a.children && b.children) {
         a.children.sort(this.compare);
         b.children.sort(this.compare);
         return 0;
-      }else if(a.children && !b.children){
-         a.children.sort(this.compare);
+      } else if (a.children && !b.children) {
+        a.children.sort(this.compare);
         return -1;
-      }else if(!a.children && b.children){
+      } else if (!a.children && b.children) {
         b.children.sort(this.compare);
         return 1;
-      }else{
+      } else {
         return 0;
       }
     },
-    sortItem(){
-     this.items.sort(this.compare);
+    sortItem() {
+      this.items.sort(this.compare);
     }
   },
   mounted() {
