@@ -8,8 +8,7 @@ import VeeValidate from 'vee-validate'
 import ko from 'vee-validate/dist/locale/ko.js'
 import 'tui-editor/dist/tui-editor.css'
 import 'tui-editor/dist/tui-editor-contents.css'
-import VueCodemirror from 'vue-codemirror'
-import 'codemirror/lib/codemirror.css' // CodeMirror 사용!
+import 'codemirror/lib/codemirror.css'
 import VueSession from 'vue-session'
 import io from 'socket.io-client'
 
@@ -20,8 +19,6 @@ import {
   Viewer
 } from '@toast-ui/vue-editor'
 
-
-Vue.use(VueCodemirror)
 // Vue.use(io)
 Vue.component('editor', Editor)
 Vue.component('viewer', Viewer)
