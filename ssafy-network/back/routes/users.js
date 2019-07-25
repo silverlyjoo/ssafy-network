@@ -50,11 +50,20 @@ router.get('/:token', function (req, res) {
  *        description: "아이디"
  *        required: true
  *        type: string
+ *      - name: token
+ *        in: path
+ *        description: "토큰"
+ *        required: true
+ *        type: string
  *      responses:
  *       200:
  *        description: 유저 정보를 json에 담음
  */
 router.get('/:id/:token', function (req, res) {
+  var info = decode(req.params.token);
+  if (!info) {
+    return res.json({ result: false });
+  }
   User.findOne({ id: req.params.id }, function (err, user) {
     if (err) {
       return res.status(500).json({ error: err });

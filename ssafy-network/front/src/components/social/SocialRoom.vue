@@ -7,8 +7,8 @@
           <v-btn @click="connect">연결</v-btn>
           <div v-for="chat in chatdata" :key="chat.id">
             <div>
-              <span class="title">{{ chat.from.name }} |</span>
-              <span class="subheading">{{ chat.msg }}</span>
+              <span class="title">{{ chat.id }} |</span>
+              <span class="subheading">{{ chat.text }}</span>
             </div>
           </div>
         </v-container>
@@ -44,9 +44,6 @@ export default {
       chatdata: [],
       socket: ""
     };
-  },
-  mounted () {
-    this.connect
   },
   methods: {
     connect(){
