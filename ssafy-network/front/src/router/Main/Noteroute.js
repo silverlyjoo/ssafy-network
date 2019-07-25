@@ -1,5 +1,5 @@
 import NotePage from '@/views/NotePage.vue'
-import NoteWriter from '@/components/note/NoteWriter.vue'
+import NoteWriter from '@/components/note/NoteWriter2.vue'
 import NoteDetail from '@/components/note/NoteDetail.vue'
 import NoteUpdate from '@/components/note/NoteUpdate.vue'
 import NoteCalendar from '@/components/note/NoteCalendar.vue'
