@@ -42,11 +42,13 @@
                     <codemirror
                       v-model="editedItem.sourcecode"
                       :options="cmOptions"
-                    >{{ sourcecode }}</codemirror>
+                    >{{ sourcecode }}
+                    </codemirror>
                   </div>
                   <!-- <codemirror v-model="sourcecode" :options="cmOptions">{{ sourcecode }}</codemirror> -->
                   <!-- <v-textarea id="editor" box label="Code" v-model="editedItem.code" auto-grow value></v-textarea> -->
-                </v-flex><br><br><br>
+                </v-flex>
+                <v-spacer></v-spacer>
                 <v-flex xs12>
                   <v-textarea box label="내용" v-model="editedItem.content" auto-grow value></v-textarea>
                 </v-flex>
@@ -96,8 +98,14 @@ import "codemirror/addon/edit/matchbrackets.js";
 
   // language
   import 'codemirror/mode/javascript/javascript.js'
+
   // theme css
   import 'codemirror/theme/monokai.css'
+  import 'codemirror/theme/base16-dark.css'
+  import 'codemirror/theme/paraiso-light.css'
+  import 'codemirror/theme/cobalt.css'
+  import 'codemirror/theme/rubyblue.css'
+
   // require active-line.js
   import'codemirror/addon/selection/active-line.js'
   // styleSelectedText
@@ -147,7 +155,7 @@ export default {
         line: true,
         foldGutter: true,
         gutters: ["CodeMirror-linenumbers", "CodeMirror-foldgutter"],
-        mode: 'Text/X-Python', // "text/x-vue" "Text/X-Python"
+        mode: 'text/javascript', // "text/x-vue" "Text/X-Python"
         // hint.js options
         hintOptions:{
           // 当匹配只有一项的时候是否自动补全
@@ -156,8 +164,8 @@ export default {
         //快捷键 可提供三种模式 sublime、emacs、vim
         keyMap: "sublime",
         matchBrackets: true,
-        showCursorWhenSelecting: false,
-        theme: "monokai", // "base16-dark"
+        showCursorWhenSelecting: true,
+        theme: "rubyblue", // "base16-dark"
         extraKeys: { "Ctrl": "autocomplete" },
 
 
