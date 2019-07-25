@@ -11,14 +11,18 @@ import 'tui-editor/dist/tui-editor-contents.css'
 import 'codemirror/lib/codemirror.css'
 import VueSession from 'vue-session'
 import io from 'socket.io-client'
-
-
+import svgSpriteLoader from './svg-sprite-loader'
 
 import {
   Editor,
   Viewer
 } from '@toast-ui/vue-editor'
 
+
+// const __svg__ = { path: './assets/svg/*.svg', name: 'assets/svg/[hash].sprite.svg' }
+// svgSpriteLoader(__svg__.filename)
+
+Vue.use(VueCodemirror)
 // Vue.use(io)
 Vue.component('editor', Editor)
 Vue.component('viewer', Viewer)

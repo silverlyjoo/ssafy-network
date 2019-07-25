@@ -4,7 +4,6 @@
       <h1>Chatroom</h1>
       <v-card class="chatwindow">
         <v-container>
-          <!-- <v-btn @click="connect">연결</v-btn> -->
           <div v-for="chat in chatdata" :key="chat.id">
             <div>
               <span class="title">{{ chat.from.name }} |</span>
