@@ -39,18 +39,18 @@
                 </v-flex>
                 <v-flex xs12>
                   <v-select
-                    :items="items"
+                    :items="languages"
                     :menu-props="{ top: false, offsetY: true }"
                     v-model="Language"
                     label="선택 언어"
                   ></v-select>
                 </v-flex>
                 <v-flex xs12>
-                    <codemirror
-                      v-model="editedItem.sourcecode"
-                      :options="option"
-                    >{{ sourcecode }}
-                    </codemirror>
+                  <codemirror
+                    v-model="editedItem.sourcecode"
+                    :options="option"
+                  >
+                  </codemirror>
                   <!-- <div v-else="items.JavaScript" class="codemirror">
                     <codemirror
                       v-if="items.Python"
@@ -110,6 +110,11 @@ import "codemirror/addon/edit/matchbrackets.js";
 // 코드미러 임폴트
 
   // language
+  // import 'codemirror/mode/c/c.js'
+  // import 'codemirror/mode/c++/c++.js'
+  import 'codemirror/mode/django/django.js'
+  // import 'codemirror/mode/html/html.js'
+  // import 'codemirror/mode/java.js'
   import 'codemirror/mode/javascript/javascript.js'
   import 'codemirror/mode/python/python.js'
   import 'codemirror/mode/vue/vue.js'
@@ -172,8 +177,7 @@ export default {
   data() {
     return {
       search: "",
-      sourcecode: "// 여기에 코드 작성해주세요",
-      items: ['JavaScript', 'Java', 'Python', 'C', 'C++', 'Html', 'Vue', 'Markdown'],
+      languages: ['JavaScript', 'Python', 'Vue',],
       Language :"",
       option:{},
       cmOptionsJs: {
@@ -327,15 +331,15 @@ export default {
     Language(to,from){
       if (to == 'JavaScript') {
         this.option = this.cmOptionsJs;
-        this.editedItem.language = 'JavaScript'
+        this.editedItem.language = this.languages[0];
 
       } else if (to == 'Python') {
         this.option = this.cmOptionsPy;
-        this.editedItem.language = 'Python'
+        this.editedItem.language = this.languages[2];
 
       } else if (to == 'Vue') {
         this.option = this.cmOptionsVue;
-        this.editedItem.language = 'Vue'
+        this.editedItem.language = this.languages[6];
 
       } else if (to == '') {
 
