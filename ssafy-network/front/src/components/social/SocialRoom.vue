@@ -5,9 +5,14 @@
       <v-card class="chatwindow">
         <v-container>
           <div v-for="chat in chatdata" :key="chat.id">
-            <div>
-              <span class="title">{{ chat.id }} |</span>
-              <span class="subheading">{{ chat.text }}</span>
+            <div v-if="chat.from.name == nickname" class='me'>
+              <span class="title"> {{ chat.msg }}</span>
+              <span class="body-3"> {{ chat.time }}</span>
+            </div>
+            <div v-else>
+              <span class="title">{{ chat.from.name }} :</span>
+              <span class="subheading"> {{ chat.msg }}</span>
+              <span class="body-3"> {{ chat.time }}</span>
             </div>
           </div>
         </v-container>
@@ -43,33 +48,28 @@ export default {
       socket: ""
     };
   },
-<<<<<<< HEAD
-  computed: {
-    ConnectSocket() {
-      this.socket = io(this.chatserver);
+  computed: {},
+  created() {
     },
-    
-  },
   mounted() {
-    this.ConnectSocket, this.GetMsg;
+    this.ConnectSocket();
   },
   destroyed() {
     // this.disconnect();
   },
-=======
->>>>>>> 91cd953e90a1e626747ac230fc28bdeaa0685dd4
   methods: {
-    SendMsg() {
-      let message = { name: this.nickname, msg: this.chatText };
-      this.socket.emit("chat", message);
-      this.chatText = "";
-      this.$refs.txt.focus();
-    },
-    GetMsg() {
+    ConnectSocket() {
+      this.socket = io(this.chatserver+"/room/asd");
       this.socket.on("broadcast", data => {
         this.chatdata.push(data);
-        console.log('데이터', data)
       });
+    },
+    SendMsg() {
+      let message = { 'name':this.nickname, 'msg': this.chatText };
+      // this.chatdata.push(message)
+      this.socket.emit("chat", message);
+      this.chatText = this.chatText + '+1';
+      this.$refs.txt.focus();
     }
   }
 };
@@ -83,5 +83,10 @@ export default {
 .chatwindow {
   width: 100%;
   height: 70vh;
+}
+.me {
+  color: blue;
+  display: flex;
+  justify-content: flex-end;
 }
 </style>
