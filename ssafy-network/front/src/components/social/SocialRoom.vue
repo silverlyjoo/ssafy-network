@@ -6,8 +6,8 @@
         <v-container>
           <div v-for="chat in chatdata" :key="chat.id">
             <div>
-              <span class="title">{{ chat.from.name }} |</span>
-              <span class="subheading">{{ chat.msg }}</span>
+              <span class="title">{{ chat.id }} |</span>
+              <span class="subheading">{{ chat.text }}</span>
             </div>
           </div>
         </v-container>
@@ -43,6 +43,7 @@ export default {
       socket: ""
     };
   },
+<<<<<<< HEAD
   computed: {
     ConnectSocket() {
       this.socket = io(this.chatserver);
@@ -55,6 +56,8 @@ export default {
   destroyed() {
     // this.disconnect();
   },
+=======
+>>>>>>> 91cd953e90a1e626747ac230fc28bdeaa0685dd4
   methods: {
     SendMsg() {
       let message = { name: this.nickname, msg: this.chatText };

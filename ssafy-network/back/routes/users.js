@@ -1,8 +1,10 @@
 var express = require('express');
 var router = express.Router();
 var User = require('../models/user');
+var Tree = require('../models/tree');
 var encode = require('../encode');
 var decode = require('../decode');
+ 
 
 /**
  * @swagger
@@ -50,11 +52,20 @@ router.get('/:token', function (req, res) {
  *        description: "아이디"
  *        required: true
  *        type: string
+ *      - name: token
+ *        in: path
+ *        description: "토큰"
+ *        required: true
+ *        type: string
  *      responses:
  *       200:
  *        description: 유저 정보를 json에 담음
  */
 router.get('/:id/:token', function (req, res) {
+  var info = decode(req.params.token);
+  if (!info) {
+    return res.json({ result: false });
+  }
   User.findOne({ id: req.params.id }, function (err, user) {
     if (err) {
       return res.status(500).json({ error: err });
@@ -68,7 +79,7 @@ router.get('/:id/:token', function (req, res) {
 
 /**
  * @swagger
- *  /users/{id}/icheck:
+ *  /users/overlap/id/{id}:
  *    get:
  *      tags:
  *      - User
@@ -83,7 +94,7 @@ router.get('/:id/:token', function (req, res) {
  *       200:
  *        description: true 일 경우 중복
  */
-router.get('/:id/icheck', function (req, res) {
+router.get('/overlap/id/:id', function (req, res) {
   User.findOne({ id: req.params.id }, function (err, user) {
     if (err) {
       return res.status(500).json({ error: err });
@@ -97,7 +108,7 @@ router.get('/:id/icheck', function (req, res) {
 
 /**
  * @swagger
- *  /users/{nickname}/ncheck:
+ *  /users/overlap/nickname/{nickname}:
  *    get:
  *      tags:
  *      - User
@@ -112,7 +123,7 @@ router.get('/:id/icheck', function (req, res) {
  *       200:
  *        description: true 일 경우 중복
  */
-router.get('/:nickname/ncheck', function (req, res) {
+router.get('/overlap/nickname/:nickname', function (req, res) {
   User.findOne({ nickname: req.params.nickname }, function (err, user) {
     if (err) {
       return res.status(500).json({ error: err });
@@ -178,8 +189,22 @@ router.post('/', function (req, res) {
       return;
     }
 
+    var super_tree = new Tree();
+    super_tree.id = req.body.id;
+    super_tree.item = [];
+  
+    super_tree.save(function (err) {
+      if(err){
+        console.log(err);
+        return;
+      }    
+    });
+
     res.json({ result: true });
   });
+
+  
+
 });
 
 
@@ -286,7 +311,7 @@ router.get('/login/:id/:pwd', function (req, res) {
       return res.json(false);
     }
     var token = encode(user);
-    console.log(token);
+    console.log(user,token);
     res.json(token);
   });
 });
