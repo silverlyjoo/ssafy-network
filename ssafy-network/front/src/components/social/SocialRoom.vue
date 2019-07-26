@@ -22,7 +22,7 @@
           <v-form>
             <v-layout fluid>
               <v-flex xs10 class="mr-5">
-                <v-text-field ref="txt" v-model="chatText" required></v-text-field>
+                <v-text-field ref="txt" v-model="chatText" @keypress.enter.prevent="SendMsg" required></v-text-field>
               </v-flex>
               <v-flex xs2>
                 <v-btn @click="SendMsg">Submit</v-btn>
@@ -43,7 +43,7 @@ export default {
     return {
       chatserver: this.$store.state.dbserver,
       nickname: this.$session.get("id"),
-      chatText: "testText",
+      chatText: "",
       chatdata: [],
       socket: ""
     };
@@ -59,7 +59,7 @@ export default {
   },
   methods: {
     ConnectSocket() {
-      this.socket = io(this.chatserver+"/room/asd");
+      this.socket = io(this.chatserver);
       this.socket.on("broadcast", data => {
         this.chatdata.push(data);
       });
@@ -68,7 +68,7 @@ export default {
       let message = { 'name':this.nickname, 'msg': this.chatText };
       // this.chatdata.push(message)
       this.socket.emit("chat", message);
-      this.chatText = this.chatText + '+1';
+      this.chatText = '';
       this.$refs.txt.focus();
     }
   }
