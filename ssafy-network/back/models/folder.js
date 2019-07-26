@@ -1,9 +1,9 @@
 const mongoose = require('mongoose');
 
-const treeSchema = new mongoose.Schema({
+const folderSchema = new mongoose.Schema({
     parent_id: String,
     name: String,
     children: Array,
     file: String
 });
-module.exports = mongoose.model('Tree',treeSchema);
+module.exports = mongoose.model('Folder',folderSchema);
