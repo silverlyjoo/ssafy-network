@@ -10,7 +10,8 @@ export default new Vuex.Store({
     dbserver : 'http://192.168.31.55:3000',
     chatserver : 'http://192.168.31.55:3000',
     CalendarCheck: false,
-    NoteCheck: false
+    NoteCheck: false,
+    chatmsg : [],
   },
   mutations: {
 
