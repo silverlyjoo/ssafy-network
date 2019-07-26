@@ -1,11 +1,11 @@
 var mongoose = require('mongoose');
 
 const chatSchema = new mongoose.Schema({
-    // room:{
-    //     type: String,
-    //     required: true,
-    //     ref: 'Room',
-    // },
+    room:{
+        type: String,
+        required: true,
+        ref: 'Room',
+    },
     name:{
         type: String,
         required: true,
