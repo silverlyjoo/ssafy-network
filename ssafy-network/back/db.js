@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+
 module.exports = () => {
   function connect() {
     mongoose.connect("mongodb://ssafy:network@localhost:27017", {
