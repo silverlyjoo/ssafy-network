@@ -17,11 +17,10 @@
           <v-form>
             <v-layout fluid>
               <v-flex xs10 class="mr-5">
-                <v-text-field ref="nic" v-model="nickname" required></v-text-field>
-                <v-text-field v-model="chatText" required></v-text-field>
+                <v-text-field ref="txt" v-model="chatText" required></v-text-field>
               </v-flex>
               <v-flex xs2>
-                <v-btn @click="sendMsg">Submit</v-btn>
+                <v-btn @click="SendMsg">Submit</v-btn>
               </v-flex>
             </v-layout>
           </v-form>
@@ -38,41 +37,36 @@ export default {
   data() {
     return {
       chatserver: this.$store.state.dbserver,
-      nickname: "",
-      chatText: "",
+      nickname: this.$session.get("id"),
+      chatText: "testText",
       chatdata: [],
       socket: ""
     };
   },
   computed: {
     ConnectSocket() {
-      let socket = io.connect(this.chatserver);
-      socket.on("chat", data => {
-        this.chatdata.push(data);
-      });
-      return socket;
-    }
+      this.socket = io(this.chatserver);
+    },
+    
   },
   mounted() {
-    (this.socket = this.ConnectSocket),
-      this.socket.on("chat", data => {
-        console.log(data);
-        this.chatdata.push(data);
-      });
+    this.ConnectSocket, this.GetMsg;
   },
   destroyed() {
-    this.disconnect();
+    // this.disconnect();
   },
   methods: {
-    sendMsg() {
+    SendMsg() {
       let message = { name: this.nickname, msg: this.chatText };
       this.socket.emit("chat", message);
-      this.nickname = "";
       this.chatText = "";
-      this.$refs.nic.focus();
+      this.$refs.txt.focus();
     },
-    disconnect() {
-      this.socket.on("disconnect");
+    GetMsg() {
+      this.socket.on("broadcast", data => {
+        this.chatdata.push(data);
+        console.log('데이터', data)
+      });
     }
   }
 };
