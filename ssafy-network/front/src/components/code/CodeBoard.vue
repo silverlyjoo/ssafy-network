@@ -36,19 +36,32 @@
               <v-layout wrap>
                 <v-flex xs12>
                   <v-text-field v-model="editedItem.title" label="제목"></v-text-field>
-                </v-flex><br>
+                </v-flex>
                 <v-flex xs12>
-                  <div class="codemirror">
+                  <v-select
+                    :items="items"
+                    :menu-props="{ top: false, offsetY: true }"
+                    v-model="Language"
+                    label="선택 언어"
+                  ></v-select>
+                </v-flex>
+                <v-flex xs12>
                     <codemirror
                       v-model="editedItem.sourcecode"
-                      :options="cmOptions"
+                      :options="option"
                     >{{ sourcecode }}
                     </codemirror>
-                  </div>
+                  <!-- <div v-else="items.JavaScript" class="codemirror">
+                    <codemirror
+                      v-if="items.Python"
+                      v-model="editedItem.sourcecode"
+                      :options="cmOptionsPy"
+                    >{{ sourcecode }}
+                    </codemirror>
+                  </div> -->
                   <!-- <codemirror v-model="sourcecode" :options="cmOptions">{{ sourcecode }}</codemirror> -->
                   <!-- <v-textarea id="editor" box label="Code" v-model="editedItem.code" auto-grow value></v-textarea> -->
                 </v-flex>
-                <v-spacer></v-spacer>
                 <v-flex xs12>
                   <v-textarea box label="내용" v-model="editedItem.content" auto-grow value></v-textarea>
                 </v-flex>
@@ -98,29 +111,40 @@ import "codemirror/addon/edit/matchbrackets.js";
 
   // language
   import 'codemirror/mode/javascript/javascript.js'
+  import 'codemirror/mode/python/python.js'
+  import 'codemirror/mode/vue/vue.js'
 
   // theme css
   import 'codemirror/theme/monokai.css'
   import 'codemirror/theme/base16-dark.css'
+  import 'codemirror/theme/base16-light.css'
   import 'codemirror/theme/paraiso-light.css'
   import 'codemirror/theme/cobalt.css'
   import 'codemirror/theme/rubyblue.css'
+  import 'codemirror/theme/mbo.css'
 
   // require active-line.js
   import'codemirror/addon/selection/active-line.js'
+
+  // closebrackets
+  import'codemirror/addon/edit/closebrackets.js'
+
   // styleSelectedText
   import'codemirror/addon/selection/mark-selection.js'
   import'codemirror/addon/search/searchcursor.js'
+
   // hint
   import'codemirror/addon/hint/show-hint.js'
   import'codemirror/addon/hint/show-hint.css'
   import'codemirror/addon/hint/javascript-hint.js'
   import'codemirror/addon/selection/active-line.js'
+
   // highlightSelectionMatches
   import'codemirror/addon/scroll/annotatescrollbar.js'
   import'codemirror/addon/search/matchesonscrollbar.js'
   import'codemirror/addon/search/searchcursor.js'
   import'codemirror/addon/search/match-highlighter.js'
+
   // keyMap
   import'codemirror/mode/clike/clike.js'
   import'codemirror/addon/edit/matchbrackets.js'
@@ -130,6 +154,8 @@ import "codemirror/addon/edit/matchbrackets.js";
   import'codemirror/addon/search/searchcursor.js'
   import'codemirror/addon/search/search.js'
   import'codemirror/keymap/sublime.js'
+  import'codemirror/keymap/emacs.js'
+
   // foldGutter
   import'codemirror/addon/fold/foldgutter.css'
   import'codemirror/addon/fold/brace-fold.js'
@@ -147,15 +173,18 @@ export default {
     return {
       search: "",
       sourcecode: "// 여기에 코드 작성해주세요",
-      cmOptions: {
+      items: ['JavaScript', 'Java', 'Python', 'C', 'C++', 'Html', 'Vue', 'Markdown'],
+      Language :"",
+      option:{},
+      cmOptionsJs: {
         tabSize: 4,
         styleActiveLine: false,
         lineNumbers: true,
-        styleSelectedText: false, //
+        styleSelectedText: false,
         line: true,
         foldGutter: true,
         gutters: ["CodeMirror-linenumbers", "CodeMirror-foldgutter"],
-        mode: 'text/javascript', // "text/x-vue" "Text/X-Python"
+        mode: 'text/javascript',
         // hint.js options
         hintOptions:{
           // 当匹配只有一项的时候是否自动补全
@@ -165,29 +194,36 @@ export default {
         keyMap: "sublime",
         matchBrackets: true,
         showCursorWhenSelecting: true,
-        theme: "rubyblue", // "base16-dark"
-        extraKeys: { "Ctrl": "autocomplete" },
-
-
-        // extraKeys: {
-        //   F11(cm) {
-        //     cm.setOption("fullScreen", !cm.getOption("fullScreen"));
-        //   },
-        //   Esc(cm) {
-        //     if (cm.getOption("fullScreen")) cm.setOption("fullScreen", false);
-        //   }
-        // }
-
+        theme: "monokai",
+        extraKeys: { "Ctrl": "autocomplete" }
       },
-      // cmOption: {
-      //   tabSize: 4,
-      //   styleActiveLine: true,
-      //   lineNumbers: true,
-      //   line: true,
-      //   mode: 'text/javascript',
-      //   lineWrapping: true,
-      //   theme: 'Ambiance'
-      // },
+      cmOptionsPy: {
+        autoCloseBrackets: true,
+        tabSize: 4,
+        styleActiveLine: true,
+        lineNumbers: true,
+        line: true,
+        mode: 'text/x-python',
+        theme: 'mbo',
+      },
+      cmOptionsVue: {
+        tabSize: 4,
+        foldGutter: true,
+        styleActiveLine: true,
+        lineNumbers: true,
+        line: true,
+        keyMap: "sublime",
+        mode: 'text/x-vue',
+        theme: 'base16-dark',
+        extraKeys: {
+          'F11'(cm) {
+            cm.setOption("fullScreen", !cm.getOption("fullScreen"))
+          },
+          'Esc'(cm) {
+            if (cm.getOption("fullScreen")) cm.setOption("fullScreen", false)
+          }
+        }
+      },
       editor: "",
       dialog: false,
       headers: [
@@ -237,16 +273,17 @@ export default {
       articles: [],
       editedIndex: -1,
       editedItem: {
-        No: "",
         title: "",
         sourcecode: "",
-        content: ""
+        content: "",
+        language: "",
       },
       defaultItem: {
-        No: "",
         title: "",
         sourcecode: "",
-        content: ""
+        content: "",
+        language: "",
+
       }
     };
   },
@@ -262,12 +299,12 @@ export default {
   //   }, 1800);
   // },
 
-  mounted() {
-    setTimeout(() => {
-      this.styleSelectedText =  true,
-      this.cmOption.styleActiveLine = true
-    }, 1800)
-  },
+  // mounted() {
+  //   setTimeout(() => {
+  //     this.styleSelectedText =  true,
+  //     this.cmOption.styleActiveLine = true
+  //   }, 1800)
+  // },
 
   // mounted() {
   //   // console.log('this is current codemirror object', this.codemirror)
@@ -286,6 +323,23 @@ export default {
   watch: {
     dialog(val) {
       val || this.close();
+    },
+    Language(to,from){
+      if (to == 'JavaScript') {
+        this.option = this.cmOptionsJs;
+        this.editedItem.language = 'JavaScript'
+
+      } else if (to == 'Python') {
+        this.option = this.cmOptionsPy;
+        this.editedItem.language = 'Python'
+
+      } else if (to == 'Vue') {
+        this.option = this.cmOptionsVue;
+        this.editedItem.language = 'Vue'
+
+      } else if (to == '') {
+
+      }
     }
   },
 
