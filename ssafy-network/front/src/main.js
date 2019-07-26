@@ -12,16 +12,11 @@ import VueCodemirror from 'vue-codemirror'
 import 'codemirror/lib/codemirror.css' // CodeMirror 사용!
 import VueSession from 'vue-session'
 import io from 'socket.io-client'
-import svgSpriteLoader from './svg-sprite-loader'
 
 import {
   Editor,
   Viewer
 } from '@toast-ui/vue-editor'
-
-
-// const __svg__ = { path: './assets/svg/*.svg', name: 'assets/svg/[hash].sprite.svg' }
-// svgSpriteLoader(__svg__.filename)
 
 Vue.use(VueCodemirror)
 // Vue.use(io)

@@ -52,8 +52,9 @@ export default {
             this.$refs.id.focus();
           } else {
             this.$store.state.login = true;
-            this.$session.set("token" , data);
+            this.$session.set("token" , data.token);
             this.$session.set("id" , this.id);
+            this.$session.set("nickname", data.nickname);
             this.id = "";
             this.pwd = "";
             console.log("로그인 성공!!!");

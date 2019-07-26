@@ -147,9 +147,9 @@ export default {
           .then(res => res.json())
           .then(data => {
             if (data.result == true) {
+              alert("회원가입 성공!!!");
               this.$refs.form.reset();
               this.$validator.reset();
-              alert("회원가입 성공!!");
               this.$router.push("/login");
             } else {
               alert("회원가입 실패...");
