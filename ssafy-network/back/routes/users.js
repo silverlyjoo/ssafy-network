@@ -204,51 +204,6 @@ router.post('/', function (req, res) {
   });
 });
 
-// /**
-//  * @swagger
-//  *  /users/folder:
-//  *    post:
-//  *      tags:
-//  *      - User
-//  *      description: 회원가입시 노트 트리에 사용될 최상위 폴더 추가
-//  *      parameters:
-//  *      - in: body
-//  *        name: addfolder
-//  *        description: "최상위 폴더 추가"
-//  *        schema:
-//  *          type: object
-//  *          properties:
-//  *            id:
-//  *              type: string
-//  *              required: true
-//  *      responses:
-//  *       200:
-//  *        description: "result = true 일 경우 정상적으로 작동"
-//  */
-// router.post('/folder', function (req, res) {
-//   Tree.findOne({id: req.body.id}, function(err, tree){
-//     if (err) {
-//       return res.status(500).json({ error: err });
-//     }
-//     if (!tree) {
-//       return res.json({ result: false });
-//     }
-//     var folder = new Tree();
-//     folder.parent_id = tree._id;
-//     folder.name = tree.id;
-//     folder.file = "folder";
-//     folder.children = [];
-
-//     folder.save(function (err) {
-//       if(err){
-//         console.log(err);
-//         return;
-//       } 
-//       res.json({ result: true });
-//     });
-//   });
-// });
-
 
 /**
  * @swagger
@@ -354,7 +309,10 @@ router.get('/login/:id/:pwd', function (req, res) {
     }
     var token = encode(user);
     console.log(user,token);
-    res.json(token);
+    res.json({
+      token: token,
+      nickname: user.nickname
+    });
   });
 });
 
