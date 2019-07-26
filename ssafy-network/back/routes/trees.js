@@ -1,5 +1,6 @@
 var express = require('express');
 var router = express.Router();
+var Supertree = require('../models/supertree');
 var Tree = require('../models/tree');
 var decode = require('../decode');
 
@@ -48,7 +49,7 @@ router.get('/:id/:token', function (req, res) {
         return res.json({ result: false });
     }
     var ItemTree = [];
-    Tree.findOne({id: req.params.id} ,async function(err, tree){
+    Supertree.findOne({id: req.params.id} ,async function(err, tree){
         if(err){
             res.json({result: false})
         }
