@@ -1,16 +1,5 @@
 const mongoose = require('mongoose');
 
-// const treeSchema = new mongoose.Schema({
-//     id : {
-//         type: String,
-//         required: true,
-//     },
-//     item : {
-//         type: Array,
-//         required: true,
-//     }
-// });
-
 const treeSchema = new mongoose.Schema({
     id: String,
     parent_id: String,

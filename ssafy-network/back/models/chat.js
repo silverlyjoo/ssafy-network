@@ -1,21 +1,18 @@
 var mongoose = require('mongoose');
 
 const chatSchema = new mongoose.Schema({
-    room:{
+    // room:{
+    //     type: String,
+    //     required: true,
+    //     ref: 'Room',
+    // },
+    name:{
         type: String,
         required: true,
-        ref: 'Room',
     },
-    user:{
-        type: String,
-        required: true,
-    },
-    chat: String,
+    msg: String,
     gif: String,
-    createdAt:{
-        type: Date,
-        default: Date.now,
-    },
+    time: String
 });
 
 module.exports = mongoose.model('Chat',chatSchema);
