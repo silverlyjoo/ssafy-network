@@ -13,7 +13,7 @@ const userSchema = new mongoose.Schema({
     nickname :  String,
     region : String,
     year : Number,
-    membership :  Number,
+    membership :  String,
     
 });
 

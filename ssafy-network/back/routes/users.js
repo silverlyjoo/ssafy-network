@@ -25,7 +25,7 @@ var decode = require('../decode');
  */
 router.get('/:token', function (req, res) {
   var info = decode(req.params.token);
-  if (info.membership == 9102) {
+  if (info.membership == "관리자") {
     User.find(function (err, users) {
       if (err) {
         return res.status(500).send({ error: 'database failure' });
@@ -251,31 +251,6 @@ router.put('/id', function (req, res) {
   })
 });
 
-/**
- * @swagger
- *  /users/{id}:
- *    delete:
- *      tags:
- *      - User
- *      description: 유저 삭제
- *      parameters:
- *      - name: id
- *        in: path
- *        description: "아이디"
- *        required: true
- *        type: string
- *      responses:
- *       200:
- *        description: 아이디를 통해 유저 삭제
- */
-router.delete('/:id', function (req, res) {
-  User.remove({ id: req.params.id }, function (err, output) {
-    if (err) {
-      return res.status(500).json({ error: "database failure" });
-    }
-    res.json({ result: true });
-  })
-});
 
 /**
  * @swagger
