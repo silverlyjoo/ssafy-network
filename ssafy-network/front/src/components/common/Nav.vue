@@ -28,15 +28,15 @@
                 :items="items"
                 activatable
                 item-key="name"
-                
                 v-if="click"
                 style="overflow:hidden!important; text-overflow: ellipsis; "
               >
                 <template v-slot:prepend="{item, open,selected}">
-                  <v-btn flat class="ma-0 pa-0" style="min-width:30px!important;" >
+                  <v-btn flat class="ma-0 pa-0" style="min-width:30px!important;">
                     <v-icon
                       v-if="item.file == 'folder'"
-                    open-on-click>{{ open ? 'mdi-folder-open' : 'mdi-folder' }}</v-icon>
+                      open-on-click
+                    >{{ open ? 'mdi-folder-open' : 'mdi-folder' }}</v-icon>
                     <v-icon v-else @click="NoteDetail(item._id)">{{ files[item.file] }}</v-icon>
                   </v-btn>
                 </template>
@@ -231,7 +231,7 @@ export default {
   },
   methods: {
     NoteDetail(id) {
-      this.$router.push({name:"notedetail",params:{_id:id}});
+      this.$router.push({ name: "notedetail", params: { _id: id } });
     },
     addNoteOpen(item) {
       this.showNote = true;
@@ -293,8 +293,7 @@ export default {
               } else {
                 alert("실패");
               }
-                this.addNoteClose();
-              
+              this.addNoteClose();
             });
         }
       });
