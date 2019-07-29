@@ -10,7 +10,7 @@ var usersRouter = require('./routes/users');
 var roomsRouter = require('./routes/rooms');
 var boardsRouter = require('./routes/boards');
 var calendarsRouter = require('./routes/calendars');
-var treesRouter = require('.//routes/trees');
+var treesRouter = require('./routes/trees');
 
 var app = express();
 var db = require('./db');
