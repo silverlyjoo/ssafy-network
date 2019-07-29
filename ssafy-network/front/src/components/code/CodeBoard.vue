@@ -41,16 +41,12 @@
                   <v-select
                     :items="languages"
                     :menu-props="{ top: false, offsetY: true }"
-                    v-model="Language"
+                    v-model="language"
                     label="선택 언어"
                   ></v-select>
                 </v-flex>
                 <v-flex xs12>
-                  <codemirror
-                    v-model="editedItem.sourcecode"
-                    :options="option"
-                  >
-                  </codemirror>
+                  <codemirror v-model="editedItem.sourcecode" :options="option"></codemirror>
                   <!-- <div v-else="items.JavaScript" class="codemirror">
                     <codemirror
                       v-if="items.Python"
@@ -58,7 +54,7 @@
                       :options="cmOptionsPy"
                     >{{ sourcecode }}
                     </codemirror>
-                  </div> -->
+                  </div>-->
                   <!-- <codemirror v-model="sourcecode" :options="cmOptions">{{ sourcecode }}</codemirror> -->
                   <!-- <v-textarea id="editor" box label="Code" v-model="editedItem.code" auto-grow value></v-textarea> -->
                 </v-flex>
@@ -82,24 +78,41 @@
       style="width:80%; margin-left:auto; margin-right:auto;"
     >
       <template v-slot:items="props">
-        <td>{{ props.item.index }}</td>
+        <td class="text-xs-center">{{ props.item.index }}</td>
         <td>{{ props.item.title }}</td>
-        <td>{{ props.item.sourcecode }}</td>
-        <td>{{ props.item.content }}</td>
+        <!-- <td>{{ props.item.sourcecode }}</td> -->
         <td class="text-xs-center">{{ props.item.hit }}</td>
-        <td class="text-xs-center">{{ props.item.writer }}</td>
-        <td class="justify-center text-xs-center layout px-0">
-          {{ props.item.editorremove }}
-          <v-icon small class="mr-2" color="teal" @click="editItem(props.item)">edit</v-icon>
-          <v-icon small color="pink" @click="deleteItem(props.item)">delete</v-icon>
+        <!-- <td class="text-xs-center">{{ props.item.writer }}</td> -->
+        <!-- <td class="justify-center text-xs-center layout px-0">{{ props.item.editorremove }}</td> -->
+        <td class="text-xs-center">
+          <!-- {{ props.item.content }} -->
+          <v-btn v-if="props.expanded" @click="props.expanded=false">
+            <v-icon>keyboard_arrow_up</v-icon>
+          </v-btn>
+          <v-btn v-else @click="read(props)">
+            <v-icon>keyboard_arrow_down</v-icon>
+          </v-btn>
+          <!-- {{ props.item.editorremove }} -->
+          <!-- <v-icon small class="mr-2" color="teal" @click="editItem(props.item)">edit</v-icon> -->
+          <!-- <v-icon small color="pink" @click="deleteItem(props.item)">delete</v-icon> -->
         </td>
       </template>
+      <template>
+        <v-expansion-panels focusable>
+          <v-expansion-panel v-for="(item,i) in 5" :key="i">
+            <v-expansion-panel-header>Item</v-expansion-panel-header>
+            <v-expansion-panel-content>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</v-expansion-panel-content>
+          </v-expansion-panel>
+        </v-expansion-panels>
+      </template>
+
       <template slot="no-data">
         <v-alert :value="true" color="info" icon="info">게시글이 하나도 없습니다</v-alert>
       </template>
     </v-data-table>
-  </div>
+  </div>  
 </template>
+
 
 <script>
 import "codemirror/mode/javascript/javascript.js";
@@ -109,67 +122,67 @@ import "codemirror/addon/edit/matchbrackets.js";
 
 // 코드미러 임폴트
 
-  // language
-  // import 'codemirror/mode/c/c.js'
-  // import 'codemirror/mode/c++/c++.js'
-  import 'codemirror/mode/django/django.js'
-  // import 'codemirror/mode/html/html.js'
-  // import 'codemirror/mode/java.js'
-  import 'codemirror/mode/javascript/javascript.js'
-  import 'codemirror/mode/python/python.js'
-  import 'codemirror/mode/vue/vue.js'
+// language
+// import 'codemirror/mode/c/c.js'
+// import 'codemirror/mode/c++/c++.js'
+import "codemirror/mode/django/django.js";
+// import 'codemirror/mode/html/html.js'
+// import 'codemirror/mode/java.js'
+import "codemirror/mode/javascript/javascript.js";
+import "codemirror/mode/python/python.js";
+import "codemirror/mode/vue/vue.js";
 
-  // theme css
-  import 'codemirror/theme/monokai.css'
-  import 'codemirror/theme/base16-dark.css'
-  import 'codemirror/theme/base16-light.css'
-  import 'codemirror/theme/paraiso-light.css'
-  import 'codemirror/theme/cobalt.css'
-  import 'codemirror/theme/rubyblue.css'
-  import 'codemirror/theme/mbo.css'
+// theme css
+import "codemirror/theme/monokai.css";
+import "codemirror/theme/base16-dark.css";
+import "codemirror/theme/base16-light.css";
+import "codemirror/theme/paraiso-light.css";
+import "codemirror/theme/cobalt.css";
+import "codemirror/theme/rubyblue.css";
+import "codemirror/theme/mbo.css";
 
-  // require active-line.js
-  import'codemirror/addon/selection/active-line.js'
+// require active-line.js
+import "codemirror/addon/selection/active-line.js";
 
-  // closebrackets
-  import'codemirror/addon/edit/closebrackets.js'
+// closebrackets
+import "codemirror/addon/edit/closebrackets.js";
 
-  // styleSelectedText
-  import'codemirror/addon/selection/mark-selection.js'
-  import'codemirror/addon/search/searchcursor.js'
+// styleSelectedText
+import "codemirror/addon/selection/mark-selection.js";
+import "codemirror/addon/search/searchcursor.js";
 
-  // hint
-  import'codemirror/addon/hint/show-hint.js'
-  import'codemirror/addon/hint/show-hint.css'
-  import'codemirror/addon/hint/javascript-hint.js'
-  import'codemirror/addon/selection/active-line.js'
+// hint
+import "codemirror/addon/hint/show-hint.js";
+import "codemirror/addon/hint/show-hint.css";
+import "codemirror/addon/hint/javascript-hint.js";
+import "codemirror/addon/selection/active-line.js";
 
-  // highlightSelectionMatches
-  import'codemirror/addon/scroll/annotatescrollbar.js'
-  import'codemirror/addon/search/matchesonscrollbar.js'
-  import'codemirror/addon/search/searchcursor.js'
-  import'codemirror/addon/search/match-highlighter.js'
+// highlightSelectionMatches
+import "codemirror/addon/scroll/annotatescrollbar.js";
+import "codemirror/addon/search/matchesonscrollbar.js";
+import "codemirror/addon/search/searchcursor.js";
+import "codemirror/addon/search/match-highlighter.js";
 
-  // keyMap
-  import'codemirror/mode/clike/clike.js'
-  import'codemirror/addon/edit/matchbrackets.js'
-  import'codemirror/addon/comment/comment.js'
-  import'codemirror/addon/dialog/dialog.js'
-  import'codemirror/addon/dialog/dialog.css'
-  import'codemirror/addon/search/searchcursor.js'
-  import'codemirror/addon/search/search.js'
-  import'codemirror/keymap/sublime.js'
-  import'codemirror/keymap/emacs.js'
+// keyMap
+import "codemirror/mode/clike/clike.js";
+import "codemirror/addon/edit/matchbrackets.js";
+import "codemirror/addon/comment/comment.js";
+import "codemirror/addon/dialog/dialog.js";
+import "codemirror/addon/dialog/dialog.css";
+import "codemirror/addon/search/searchcursor.js";
+import "codemirror/addon/search/search.js";
+import "codemirror/keymap/sublime.js";
+import "codemirror/keymap/emacs.js";
 
-  // foldGutter
-  import'codemirror/addon/fold/foldgutter.css'
-  import'codemirror/addon/fold/brace-fold.js'
-  import'codemirror/addon/fold/comment-fold.js'
-  import'codemirror/addon/fold/foldcode.js'
-  import'codemirror/addon/fold/foldgutter.js'
-  import'codemirror/addon/fold/indent-fold.js'
-  import'codemirror/addon/fold/markdown-fold.js'
-  import'codemirror/addon/fold/xml-fold.js'
+// foldGutter
+import "codemirror/addon/fold/foldgutter.css";
+import "codemirror/addon/fold/brace-fold.js";
+import "codemirror/addon/fold/comment-fold.js";
+import "codemirror/addon/fold/foldcode.js";
+import "codemirror/addon/fold/foldgutter.js";
+import "codemirror/addon/fold/indent-fold.js";
+import "codemirror/addon/fold/markdown-fold.js";
+import "codemirror/addon/fold/xml-fold.js";
 
 // 여기까지
 
@@ -177,10 +190,11 @@ export default {
   data() {
     return {
       search: "",
-      languages: ['JavaScript', 'Python', 'Vue',],
-      Language :"",
-      option:{},
+      languages: ["JavaScript", "Python", "Vue"],
+      language: "",
+      option: {},
       cmOptionsJs: {
+        autoCloseBrackets: true,
         tabSize: 4,
         styleActiveLine: false,
         lineNumbers: true,
@@ -188,9 +202,9 @@ export default {
         line: true,
         foldGutter: true,
         gutters: ["CodeMirror-linenumbers", "CodeMirror-foldgutter"],
-        mode: 'text/javascript',
+        mode: "text/javascript",
         // hint.js options
-        hintOptions:{
+        hintOptions: {
           // 当匹配只有一项的时候是否自动补全
           completeSingle: false
         },
@@ -199,7 +213,7 @@ export default {
         matchBrackets: true,
         showCursorWhenSelecting: true,
         theme: "monokai",
-        extraKeys: { "Ctrl": "autocomplete" }
+        extraKeys: { Ctrl: "autocomplete" }
       },
       cmOptionsPy: {
         autoCloseBrackets: true,
@@ -207,24 +221,25 @@ export default {
         styleActiveLine: true,
         lineNumbers: true,
         line: true,
-        mode: 'text/x-python',
-        theme: 'mbo',
+        mode: "text/x-python",
+        theme: "mbo"
       },
       cmOptionsVue: {
+        autoCloseBrackets: true,
         tabSize: 4,
         foldGutter: true,
         styleActiveLine: true,
         lineNumbers: true,
         line: true,
         keyMap: "sublime",
-        mode: 'text/x-vue',
-        theme: 'base16-dark',
+        mode: "text/x-vue",
+        theme: "base16-dark",
         extraKeys: {
-          'F11'(cm) {
-            cm.setOption("fullScreen", !cm.getOption("fullScreen"))
+          F11(cm) {
+            cm.setOption("fullScreen", !cm.getOption("fullScreen"));
           },
-          'Esc'(cm) {
-            if (cm.getOption("fullScreen")) cm.setOption("fullScreen", false)
+          Esc(cm) {
+            if (cm.getOption("fullScreen")) cm.setOption("fullScreen", false);
           }
         }
       },
@@ -243,18 +258,12 @@ export default {
           sortable: false,
           value: "title"
         },
-        {
-          text: "코드",
-          align: "center",
-          sortable: false,
-          value: "sourcecode"
-        },
-        {
-          text: "내용",
-          align: "center",
-          sortable: false,
-          value: "content"
-        },
+        // {
+        //   text: "코드",
+        //   align: "center",
+        //   sortable: false,
+        //   value: "sourcecode"
+        // },
         {
           text: "조회수",
           align: "center",
@@ -262,17 +271,23 @@ export default {
           value: "hit"
         },
         {
-          text: "작성자",
+          text: "내용",
           align: "center",
           sortable: false,
-          value: "writer"
-        },
-        {
-          text: "수정/삭제",
-          align: "center",
-          sortable: false,
-          value: "editorremove"
+          value: "content"
         }
+        // {
+        //   text: "작성자",
+        //   align: "center",
+        //   sortable: false,
+        //   value: "writer"
+        // },
+        // {
+        //   text: "수정/삭제",
+        //   align: "center",
+        //   sortable: false,
+        //   value: "editorremove"
+        // },
       ],
       articles: [],
       editedIndex: -1,
@@ -280,14 +295,13 @@ export default {
         title: "",
         sourcecode: "",
         content: "",
-        language: "",
+        languages: ""
       },
       defaultItem: {
         title: "",
         sourcecode: "",
         content: "",
-        language: "",
-
+        languages: ""
       }
     };
   },
@@ -296,7 +310,7 @@ export default {
       return this.editedIndex === -1 ? "새 글 작성하기" : "글 수정하기";
     }
   },
-  
+
   // mounted() {
   //   setTimeout(() => {
   //     (this.styleSelectedText = true), (this.cmOption.styleActiveLine = true);
@@ -328,21 +342,17 @@ export default {
     dialog(val) {
       val || this.close();
     },
-    Language(to,from){
-      if (to == 'JavaScript') {
+    language(to, from) {
+      if (to == "JavaScript") {
         this.option = this.cmOptionsJs;
         this.editedItem.language = this.languages[0];
-
-      } else if (to == 'Python') {
+      } else if (to == "Python") {
         this.option = this.cmOptionsPy;
-        this.editedItem.language = this.languages[2];
-
-      } else if (to == 'Vue') {
+        this.editedItem.language = this.languages[1];
+      } else if (to == "Vue") {
         this.option = this.cmOptionsVue;
-        this.editedItem.language = this.languages[6];
-
-      } else if (to == '') {
-
+        this.editedItem.language = this.languages[2];
+      } else if (to == "") {
       }
     }
   },
