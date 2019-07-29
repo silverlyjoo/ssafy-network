@@ -28,17 +28,21 @@
                 :items="items"
                 activatable
                 item-key="name"
-                open-on-click
+                
                 v-if="click"
                 style="overflow:hidden!important; text-overflow: ellipsis; "
               >
                 <template v-slot:prepend="{item, open,selected}">
-                  <v-btn flat class="ma-0 pa-0" style="min-width:30px!important;">
+                  <v-btn flat class="ma-0 pa-0" style="min-width:30px!important;" >
                     <v-icon
                       v-if="item.file == 'folder'"
-                    >{{ open ? 'mdi-folder-open' : 'mdi-folder' }}</v-icon>
-                    <v-icon v-else>{{ files[item.file] }}</v-icon>
+                    open-on-click>{{ open ? 'mdi-folder-open' : 'mdi-folder' }}</v-icon>
+                    <v-icon v-else @click="NoteDetail(item._id)">{{ files[item.file] }}</v-icon>
                   </v-btn>
+                </template>
+                <template slot="label" slot-scope="{ item }">
+                  <label v-if="item.file == 'folder'">{{ item.name }}</label>
+                  <label v-else @click="NoteDetail(item._id)">{{ item.name }}</label>
                 </template>
                 <template slot="append" slot-scope="{item}">
                   <v-tooltip bottom>
@@ -171,16 +175,6 @@
                 </v-layout>
               </router-link>
             </div>
-
-            <div class="navBtn">
-              <router-link to="/note/write" style="text-decoration: none !important">
-                <v-layout align-center class="pa-2 mb-3">
-                  <v-flex xs7 text-xs-center>
-                    <span class="navtext navtcolor">Note Write</span>
-                  </v-flex>
-                </v-layout>
-              </router-link>
-            </div>
             <div class="navBtn">
               <router-link to="/admin" style="text-decoration: none !important">
                 <v-layout align-center class="pa-2 mb-3">
@@ -236,6 +230,9 @@ export default {
     };
   },
   methods: {
+    NoteDetail(id) {
+      this.$router.push({name:"notedetail",params:{_id:id}});
+    },
     addNoteOpen(item) {
       this.showNote = true;
       this.NoteTitle = "";
@@ -267,10 +264,9 @@ export default {
     },
     goNote() {
       this.$router.push("/note/calendar");
-      this.click = !this.click;
+      this.click = true;
     },
     addNote() {
-      alert("파일 추가");
       this.$validator.validateAll("NoteTitle").then(res => {
         if (!res) {
           alert("값이 유효한지 확인해 주세요.");
@@ -282,20 +278,24 @@ export default {
               "Content-Type": "application/json"
             },
             body: JSON.stringify({
-          token: this.$session.get("token"),
-          parent_id : this.seleteItem._id,
-          name : this.NoteTitle,
+              token: this.$session.get("token"),
+              parent_id: this.seleteItem._id,
+              name: this.NoteTitle
             })
           })
             .then(res => res.json())
             .then(data => {
-              if(data.result == true){
-                alert("성공");
-              }else{
+              if (data.result == true) {
+                this.$router.push({
+                  name: "notewrite",
+                  params: { title: this.NoteTitle }
+                });
+              } else {
                 alert("실패");
               }
+                this.addNoteClose();
+              
             });
-          this.addNoteClose();
         }
       });
     },
@@ -311,20 +311,20 @@ export default {
               "Content-Type": "application/json"
             },
             body: JSON.stringify({
-          token: this.$session.get("token"),
-          parent_id : this.seleteItem._id,
-          name : this.FolderTitle
+              token: this.$session.get("token"),
+              parent_id: this.seleteItem._id,
+              name: this.FolderTitle
             })
           })
             .then(res => res.json())
             .then(data => {
-              if(data.result == true){
+              if (data.result == true) {
                 alert("성공");
-              }else{
+              } else {
                 alert("실패");
               }
+              this.addFolderClose();
             });
-          this.addFolderClose();
         }
       });
     },
@@ -374,27 +374,27 @@ export default {
     deleteItem() {
       console.log(this.seleteItem._id);
       fetch(this.$store.state.dbserver + "/trees/", {
-            method: "DELETE",
-            headers: {
-              "Access-Control-Allow-Origin": "*",
-              "Content-Type": "application/json"
-            },
-            body: JSON.stringify({
-              _id : this.seleteItem._id,
+        method: "DELETE",
+        headers: {
+          "Access-Control-Allow-Origin": "*",
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          _id: this.seleteItem._id,
           token: this.$session.get("token"),
           file: this.seleteItem.file
-            })
-          })
-            .then(res => res.json())
-            .then(data => {
-              if(data.result == true){
-                alert("성공");
-              }else{
-                alert("실패");
-              }
-            });
-      this.showDelete = false;
-      this.closeForm();
+        })
+      })
+        .then(res => res.json())
+        .then(data => {
+          if (data.result == true) {
+            alert("성공");
+          } else {
+            alert("실패");
+          }
+          this.showDelete = false;
+          this.closeForm();
+        });
     },
     compare(a, b) {
       if (a.children && b.children) {
@@ -417,13 +417,13 @@ export default {
   },
   mounted() {
     this.getItems();
-    this.sortItem();
   },
   computed: mapState(["NoteCheck"]),
   watch: {
     NoteCheck(to, from) {
       if (from == false && to == true) {
-        this.$store.state.NoteCheck = true;
+        this.getItems();
+        this.$store.state.NoteCheck = false;
       }
     }
   }
