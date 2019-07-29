@@ -3,16 +3,16 @@
     <v-content>
       <h1>Chatroom</h1>
       <v-card class="chatwindow">
-        <v-container>
-          <div v-for="chat in chatdata" :key="chat.id">
-            <div v-if="chat.from.name == nickname" class='me'>
-              <span class="title"> {{ chat.msg }}</span>
-              <span class="body-3"> {{ chat.time }}</span>
+        <v-container class="chats">
+          <div v-for="chat in chatdata" :key="chat.id" class="chat">
+            <div v-if="chat.from.name == nickname" class="me">
+              <span class="title">{{ chat.msg }}</span>
+              <span class="body-3">{{ chat.time }}</span>
             </div>
-            <div v-else>
+            <div v-else class="chat">
               <span class="title">{{ chat.from.name }} :</span>
-              <span class="subheading"> {{ chat.msg }}</span>
-              <span class="body-3"> {{ chat.time }}</span>
+              <span class="subheading">{{ chat.msg }}</span>
+              <span class="body-3">{{ chat.time }}</span>
             </div>
           </div>
         </v-container>
@@ -22,7 +22,12 @@
           <v-form>
             <v-layout fluid>
               <v-flex xs10 class="mr-5">
-                <v-text-field ref="txt" v-model="chatText" @keypress.enter.prevent="SendMsg" required></v-text-field>
+                <v-text-field
+                  ref="txt"
+                  v-model="chatText"
+                  @keypress.enter.prevent="SendMsg"
+                  required
+                ></v-text-field>
               </v-flex>
               <v-flex xs2>
                 <v-btn @click="SendMsg">Submit</v-btn>
@@ -49,8 +54,7 @@ export default {
     };
   },
   computed: {},
-  created() {
-    },
+  created() {},
   mounted() {
     this.ConnectSocket();
   },
@@ -65,10 +69,9 @@ export default {
       });
     },
     SendMsg() {
-      let message = { 'name':this.nickname, 'msg': this.chatText };
-      // this.chatdata.push(message)
+      let message = { name: this.nickname, msg: this.chatText };
       this.socket.emit("chat", message);
-      this.chatText = '';
+      this.chatText = "";
       this.$refs.txt.focus();
     }
   }
@@ -77,16 +80,26 @@ export default {
 
 <style>
 .chatInput {
-  /* height: 200px;
-  width: 500px; */
+  height: 100px;
+  /* width: 500px; */
 }
 .chatwindow {
   width: 100%;
-  height: 70vh;
+  height: 68vh;
 }
 .me {
   color: blue;
   display: flex;
   justify-content: flex-end;
+}
+.chats {
+  height: 65vh;
+  overflow-y: auto;
+  overflow-x: scroll;
+  overflow-anchor: none;
+}
+.chat {
+  overflow-anchor: auto;
+  height: 100px;
 }
 </style>
