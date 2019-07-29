@@ -5,11 +5,16 @@
         <v-card class="my-4 chatlistbox">
           <v-list subheader>
             <v-subheader>Recent chat</v-subheader>
-            <v-list-tile v-for="item in items" :key="item.title" avatar @click>
+            <v-list-tile
+              v-for="item in items"
+              :key="item.title"
+              avatar
+              to="/social/room"
+            >
               <v-list-tile-content>
                 <v-list-tile-title v-html="item.title"></v-list-tile-title>
+                <v-list-tile-title v-html="item.owner"></v-list-tile-title>
               </v-list-tile-content>
-
               <v-list-tile-action>
                 <v-icon :color="item.active ? 'teal' : 'grey'">chat_bubble</v-icon>
               </v-list-tile-action>
@@ -24,27 +29,35 @@
 </template>
 
 <script>
+import io from "socket.io-client";
+import caxios from "@/plugins/createaxios.js";
 export default {
   name: "SocialList",
   data() {
     return {
-      items: [
-        {
-          active: true,
-          title: "Jason Oner"
-        },
-        {
-          active: true,
-          title: "Ranee Carlson"
-        },
-        {
-          title: "Cindy Baker"
-        },
-        {
-          title: "Ali Connors"
-        }
-      ]
+      items: [],
+      dbserver: this.$store.state.dbserver,
+      token: this.$session.get("token"),
+      chatserver : this.$store.state.chatserver
     };
+  },
+  methods: {
+    getRooms() {
+      let roomURL = this.dbserver;
+      caxios(roomURL)
+        .request({
+          url: "/rooms/" + this.token,
+          method: "get",
+          baseURL: roomURL
+        })
+        .then(res => {
+          this.items = res.data;
+          console.log("res", res.data);
+        });
+    }
+  },
+  mounted() {
+    this.getRooms();
   }
 };
 </script>

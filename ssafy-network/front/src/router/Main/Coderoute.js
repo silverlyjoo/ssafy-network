@@ -19,7 +19,7 @@ export default {
             component: CodeWriter,
         },
         {
-            path: 'detail',
+            path: 'board/detail',
             name: 'detail',
             component: CodeDetail,
         }
