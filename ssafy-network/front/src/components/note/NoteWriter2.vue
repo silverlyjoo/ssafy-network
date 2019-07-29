@@ -1,10 +1,10 @@
 <!-- tiptap 버전 -->
 <template>
-<v-container>
-  <div>
-
+<v-container >
+  <div style="margin-top: 20px; margin-left:30px;">
+    <h1>{{title}}</h1>
   </div>
-   <div class="editor">
+   <div class="editor" >
     <editor-menu-bar :editor="editor" v-slot="{ commands, isActive}">
       <div class="menubar">
         <button
@@ -144,6 +144,10 @@
 
     <editor-content class="editor__content" :editor="editor" />
   </div>
+  <v-flex text-xs-right>
+  <v-btn @click="close()">취소</v-btn>
+  <v-btn @click="writeNote()">작성</v-btn>
+  </v-flex>
   </v-container>
 </template>
 
@@ -178,7 +182,8 @@ export default {
     Icon
   },
   props:{
-    title:""
+    title:{type:String},
+    _id:{type:String}
   },
   data() {
     return {
@@ -246,6 +251,11 @@ export default {
         command({ src })
       }
     },
+    writeNote(){
+      alert(this.editor.content);
+    },close(){
+      this.$router.push("note")
+    }
   }
 }
 </script>
@@ -313,9 +323,9 @@ export default {
   margin: 4rem auto 4rem auto;
   
   &__content {
-
+    padding: 20px;
     word-wrap: break-word;
-
+    background: rgb(236, 236, 236);
     * {
       caret-color: currentColor;
     }
