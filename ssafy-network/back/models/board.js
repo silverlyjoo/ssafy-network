@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 
 const boardSchema = new mongoose.Schema({
-    code: String,
+    language: String,
     writer:{
         type: String,
         required: true,
@@ -10,6 +10,7 @@ const boardSchema = new mongoose.Schema({
         type: String,
         required: true,
     },
+    source: String,
     content: String,
     hit: Number,
     createdAt:{

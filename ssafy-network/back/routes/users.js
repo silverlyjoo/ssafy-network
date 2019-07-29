@@ -207,7 +207,7 @@ router.post('/', function (req, res) {
 
 /**
  * @swagger
- *  /users/id:
+ *  /users:
  *    put:
  *      tags:
  *      - User
@@ -219,6 +219,9 @@ router.post('/', function (req, res) {
  *        schema:
  *          type: object
  *          properties:
+ *            token:
+ *              type: string
+ *              required: true
  *            name:
  *              type: string
  *            id:
@@ -238,7 +241,11 @@ router.post('/', function (req, res) {
  *       200:
  *        description: "result = true 일 경우 정상적으로 작동"
  */
-router.put('/id', function (req, res) {
+router.put('/', function (req, res) {
+  var info = decode(req.params.token);
+  if (!info) {
+    return res.json({ result: false });
+  }
   User.update({ id: req.body.id }, { $set: req.body }, function (err, output) {
     if (err) {
       res.status(500).json({ error: 'database failure' });
