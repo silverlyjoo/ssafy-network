@@ -15,5 +15,7 @@ export default new Router({
     Mainroute,
     Secureroute
 
-  ]
+  ],
+  linkActiveClass: 'is-active',
+  linkExactActiveClass: 'is-exact-active',
 })

@@ -40,7 +40,6 @@
                     <v-icon v-else>{{ files[item.file] }}</v-icon>
                   </v-btn>
                 </template>
-
                 <template slot="append" slot-scope="{item}">
                   <v-tooltip bottom>
                     <template v-slot:activator="{ on }">
@@ -267,7 +266,7 @@ export default {
         if (!res) {
           alert("값이 유효한지 확인해 주세요.");
         } else {
-          fetch(this.$store.state.dbserver + "/trees/", {
+          fetch(this.$store.state.dbserver + "/trees/txt", {
             method: "POST",
             headers: {
               "Access-Control-Allow-Origin": "*",
@@ -277,7 +276,6 @@ export default {
           token: this.$session.get("token"),
           parent_id : this.seleteItem._id,
           name : this.NoteTitle,
-          file : 'txt'
             })
           })
             .then(res => res.json())
@@ -297,7 +295,7 @@ export default {
         if (!res) {
           alert("값이 유효한지 확인해 주세요.");
         } else {
-          fetch(this.$store.state.dbserver + "/trees/", {
+          fetch(this.$store.state.dbserver + "/trees/folder/", {
             method: "POST",
             headers: {
               "Access-Control-Allow-Origin": "*",
@@ -306,9 +304,7 @@ export default {
             body: JSON.stringify({
           token: this.$session.get("token"),
           parent_id : this.seleteItem._id,
-          name : this.FolderTitle,
-          file : 'folder',
-          children:[]
+          name : this.FolderTitle
             })
           })
             .then(res => res.json())
@@ -376,7 +372,8 @@ export default {
             },
             body: JSON.stringify({
               _id : this.seleteItem._id,
-          token: this.$session.get("token")
+          token: this.$session.get("token"),
+          file: this.seleteItem.file
             })
           })
             .then(res => res.json())
