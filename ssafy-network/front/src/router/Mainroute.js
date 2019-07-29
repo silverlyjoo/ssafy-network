@@ -16,7 +16,7 @@ export default {
         Coderoute,
         Socialroute,
         Noteroute,
-        Adminroute
+        ...Adminroute
       ]
 }
 
