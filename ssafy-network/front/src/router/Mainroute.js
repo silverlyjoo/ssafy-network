@@ -1,6 +1,7 @@
 import MainPage from '@/views/MainPage.vue'
 
 
+import Adminroute from '@/router/Main/Adminroute.js';
 import Homeroute from '@/router/Main/Homeroute.js';
 import Coderoute from '@/router/Main/Coderoute.js';
 import Socialroute from '@/router/Main/Socialroute.js';
@@ -14,7 +15,8 @@ export default {
         Homeroute,
         Coderoute,
         Socialroute,
-        Noteroute
+        Noteroute,
+        ...Adminroute
       ]
 }
 

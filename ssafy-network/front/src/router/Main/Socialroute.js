@@ -11,7 +11,8 @@ export default {
         {
             path: 'room',
             name: 'room',
-            component: SocialRoom
+            component: SocialRoom,
+            props: true
         },
         {
             path: 'list',
