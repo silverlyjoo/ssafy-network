@@ -2,11 +2,6 @@
   <v-container>
     <v-layout column>
       <v-flex>
-        <v-card>
-          <v-img:src="../home/chatting.png">
-        </v-card>
-      </v-flex>
-      <v-flex>
         <h1>This is Our Home page</h1>
         <!-- session 값 있을때 바로 페이지 -->
         <router-link to="/about">about</router-link>
