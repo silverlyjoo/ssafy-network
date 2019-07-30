@@ -107,6 +107,52 @@ router.get('/txt/:_id/:token', function (req, res) {
 
 /**
  * @swagger
+ *  /trees/txt/{parent_id}/{name}/{token}:
+ *    get:
+ *      tags:
+ *      - Tree
+ *      description: 텍스트 파일 반환
+ *      parameters:
+ *      - name: parent_id
+ *        in: path
+ *        description: "상위 폴더 오브젝트 아이디"
+ *        required: true
+ *        type: string
+ *      - name: name
+ *        in: path
+ *        description: "파일명"
+ *        required: true
+ *        type: string
+ *      - name: token
+ *        in: path
+ *        description: "토큰"
+ *        required: true
+ *        type: string
+ *      responses:
+ *       200:
+ *        description: 텍스트 파일 정보 반환
+ */
+router.get('/txt/:parent_id/:name/:token', function (req, res) {
+    var info = decode(req.params.token);
+    if (!info) {
+        return res.json({ result: false });
+    }
+    Txt.findOne({parent_id: req.params.parent_id, name: req.params.name},function(err,txt){
+        if(err){
+            res.json({result: false});
+            return;
+        }
+        if(!txt){
+            return res.json({result: false});
+        }
+        console.log(txt);
+        res.json(txt);
+    });
+    
+});
+
+/**
+ * @swagger
  *  /trees/folder:
  *    post:
  *      tags:

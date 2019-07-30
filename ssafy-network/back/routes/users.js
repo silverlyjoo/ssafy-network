@@ -135,6 +135,45 @@ router.get('/overlap/nickname/:nickname', function (req, res) {
   })
 });
 
+/**
+ * @swagger
+ *  /users/login/{id}/{pwd}:
+ *    get:
+ *      tags:
+ *      - User
+ *      description: 로그인
+ *      parameters:
+ *      - name: id
+ *        in: path
+ *        description: "아이디"
+ *        required: true
+ *        type: string
+ *      - name: pwd
+ *        in: path
+ *        description: "비밀번호"
+ *        required: true
+ *        type: string
+ *      responses:
+ *       200:
+ *        description: 로그인
+ */
+router.get('/login/:id/:pwd', function (req, res) {
+  User.findOne({ id: req.params.id, pwd: req.params.pwd }, function (err, user) {
+    if (err) {
+      return res.status(500).json({ error: err });
+    }
+    if (!user) {
+      return res.json(false);
+    }
+    var token = encode(user);
+    console.log(user,token);
+    res.json({
+      token: token,
+      nickname: user.nickname
+    });
+  });
+});
+
 
 /**
  * @swagger
@@ -259,43 +298,44 @@ router.put('/', function (req, res) {
 });
 
 
+
+
 /**
  * @swagger
- *  /users/login/{id}/{pwd}:
- *    get:
+ *  /users:
+ *    delete:
  *      tags:
  *      - User
- *      description: 로그인
+ *      description: 유저 정보 삭제
  *      parameters:
- *      - name: id
- *        in: path
- *        description: "아이디"
- *        required: true
- *        type: string
- *      - name: pwd
- *        in: path
- *        description: "비밀번호"
- *        required: true
- *        type: string
+ *      - in: body
+ *        name: deleteUser
+ *        description: "유저 정보 삭제"
+ *        schema:
+ *          type: object
+ *          properties:
+ *            _id:
+ *              type: string
+ *              required: true
+ *            token:
+ *              type: string
+ *              required: true
  *      responses:
  *       200:
- *        description: 로그인
+ *        description: "result = true 일 경우 정상적으로 작동"
  */
-router.get('/login/:id/:pwd', function (req, res) {
-  User.findOne({ id: req.params.id, pwd: req.params.pwd }, function (err, user) {
-    if (err) {
-      return res.status(500).json({ error: err });
-    }
-    if (!user) {
-      return res.json(false);
-    }
-    var token = encode(user);
-    console.log(user,token);
-    res.json({
-      token: token,
-      nickname: user.nickname
-    });
-  });
+router.delete('/',function(req,res){
+  var info = decode(req.body.token);
+  if (!info) {
+      return res.json({ result: false });
+  }
+  User.remove({ _id: req.body._id }, function (err, output) {
+      if (err) {
+        return res.status(500).json({ error: "database failure" });
+      }
+      console.log(output);
+      res.json({ result: true });
+    })
 });
 
 module.exports = router;

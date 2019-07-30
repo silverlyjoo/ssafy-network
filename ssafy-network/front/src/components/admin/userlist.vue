@@ -87,14 +87,51 @@ export default {
         .then(data => {
           if (data.result == true) {
             alert("수정 성공!!!");
-            this.$store.state.CalendarCheck = true;
           } else {
             alert("수정 실패...");
           }
-          this.dialog = false;
-          this.$validator.reset();
         });
-    }
+    },
+    deleteUser() {
+      fetch(this.$store.state.dbserver + "/users", {
+        method: "DELETE",
+        headers: {
+          "Access-Control-Allow-Origin": "*",
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          _id: "오브젝트 아이디",
+          token: this.$session.get("token")
+        })
+      })
+        .then(res => res.json())
+        .then(data => {
+          if (data.result == true) {
+            alert("삭제 성공!!!");
+          } else {
+            alert("성공 실패...");
+          }
+        });
+    },
+    searchUsers() {
+      fetch(this.$store.state.dbserver + "/search/users/" +'id'+'/'+'t'+'/'+ this.$session.get("token"), {
+        method: "GET",
+        headers: {
+          "Access-Control-Allow-Origin": "*",
+          "Content-Type": "application/json"
+        }
+      })
+        .then(res => res.json())
+        .then(data => {
+          if (data) {
+            this.userList = data;
+          } else {
+            alert("올바른 값을 입력하세요");
+          }
+        })
+        .catch(error => console.log(error))
+        .finally();
+    },
   }
 };
 </script>
