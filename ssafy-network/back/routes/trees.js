@@ -1,6 +1,5 @@
 var express = require('express');
 var router = express.Router();
-var async = require('async');
 var Supertree = require('../models/supertree');
 var Txt = require('../models/txt');
 var Folder = require('../models/folder'); 
@@ -8,21 +7,22 @@ var decode = require('../decode');
 
 
 async function dfs(p_id,ItemTree){
-    await Txt.find({parent_id: p_id}, function(err, tree){
-        for (let i = 0; i < tree.length; i++) {
-            ItemTree.push(tree[i]);
-        }
-    });
-    await Folder.find({parent_id: p_id} ,async function(err, tree){
-        for (let i = 0; i < tree.length; i++) {
-            dfs(tree[i]._id,tree[i].children);
-            ItemTree.push(tree[i]);
+    Folder.find({parent_id: p_id} , async function(err, folder){
+        Txt.find({parent_id: p_id}, function(err, txt){
+            for (let i = 0; i < txt.length; i++) {
+                ItemTree.push(txt[i]);
+            }
+        });
+        for (let i = 0; i < folder.length; i++) {
+            dfs(folder[i]._id,folder[i].children);
+            ItemTree.push(folder[i]);
         }
     });
     ItemTree.sort(function(a, b){
         return a.file < b.file ? -1 : a.file > b.file ? 1 : 0;
     });
 }
+
 
 /**
  * @swagger
@@ -56,15 +56,15 @@ router.get('/:id/:token', function (req, res) {
         if(err){
             res.json({result: false})
         }
-        await dfs(tree._id,ItemTree);
-        
+        dfs(tree._id,ItemTree);
+
         setTimeout(function() {
             console.log(ItemTree);
             
             res.json({
                 item: ItemTree
             });
-        }, 500);
+        }, 2000);
     });
 });
 
@@ -98,6 +98,7 @@ router.get('/txt/:_id/:token', function (req, res) {
     Txt.findOne({_id: req.params._id} , function(err, txt){
         if(err){
             res.json({result: false})
+            return;
         }
         console.log(txt);
         res.json(txt);
