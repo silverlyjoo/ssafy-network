@@ -176,6 +176,9 @@ import "codemirror/addon/fold/xml-fold.js";
 // 여기까지
 
 export default {
+  $_veeValidate: {
+    validator: "new",
+  },
   data() {
     return {
       search: "",
@@ -247,36 +250,12 @@ export default {
           sortable: false,
           value: "title"
         },
-        // {
-        //   text: "코드",
-        //   align: "center",
-        //   sortable: false,
-        //   value: "sourcecode"
-        // },
         {
           text: "조회수",
           align: "center",
           sortable: true,
           value: "hit"
         },
-        // {
-        //   text: "내용",
-        //   align: "center",
-        //   sortable: false,
-        //   value: "content"
-        // },
-        // {
-        //   text: "작성자",
-        //   align: "center",
-        //   sortable: false,
-        //   value: "writer"
-        // },
-        // {
-        //   text: "수정/삭제",
-        //   align: "center",
-        //   sortable: false,
-        //   value: "editorremove"
-        // },
       ],
       articles: [],
       editedIndex: -1,
@@ -300,33 +279,6 @@ export default {
     }
   },
 
-  // mounted() {
-  //   setTimeout(() => {
-  //     (this.styleSelectedText = true), (this.cmOption.styleActiveLine = true);
-  //   }, 1800);
-  // },
-
-  // mounted() {
-  //   setTimeout(() => {
-  //     this.styleSelectedText =  true,
-  //     this.cmOption.styleActiveLine = true
-  //   }, 1800)
-  // },
-
-  // mounted() {
-  //   // console.log('this is current codemirror object', this.codemirror)
-
-  //   this.editor = CodeMirror.fromTextArea(document.getElementById('codemirror'), {
-  //     mode:  "htmlmixed",
-  //     extraKeys: {"Ctrl-Space": "autocomplete"},
-  //     lineNumbers: true,
-  //     autoCloseTags: true,
-  //     theme: 'monokai'
-  //   });
-
-  //   this.autoFormat();
-  // },
-
   watch: {
     dialog(val) {
       val || this.close();
@@ -344,10 +296,6 @@ export default {
       } else if (to == "") {
       }
     }
-  },
-
-  created() {
-    this.initialize();
   },
 
   methods: {
@@ -380,98 +328,6 @@ export default {
         })
       });
     },
-
-    // initialize() {
-    //   this.articles = [
-    //     {
-    //       index: 1,
-    //       title: "I have a question about python",
-    //       sourcecode: "",
-    //       content: "In python, how can I define function?",
-    //       hit: 5,
-    //       writer: "Maestro_Of_Python"
-    //     },
-    //     {
-    //       index: 2,
-    //       title: "Vue, 꼭 해야하나요?",
-    //       sourcecode: "",
-    //       content:
-    //         "다른 사람들 다 앵귤러나 리액트하는데 왜 뷰 해야하는지 모르겠네요",
-    //       hit: 87,
-    //       writer: "앵귤러리액트"
-    //     },
-    //     {
-    //       index: 3,
-    //       title:
-    //         "알고리즘 시험 대비해서 링크드 리스트 만들 때, 더 쉽게 외우는 방법 없나요?",
-    //       sourcecode: "",
-    //       content:
-    //         "이미 외웠긴 했는데, 더 쉽게 외울 수 있는 방법이 있나 궁금하네요",
-    //       hit: 25,
-    //       writer: "SW_Expert"
-    //     },
-    //     {
-    //       index: 4,
-    //       title: "자바 스프링 다 까먹었는데 큰 일이네요 ㅠㅠ",
-    //       sourcecode: "",
-    //       content: "다른 분들은 어떠신가요??",
-    //       hit: 29,
-    //       writer: "JavaMaster"
-    //     },
-    //     {
-    //       index: 5,
-    //       title: "자소서 한 번도 안 써봤는데 7월 절반이 지나갔네요 ㅠㅠ",
-    //       sourcecode: "",
-    //       content: "이번에 안랩하고 인바디 떴던데 이참에 한 번 쓸까봐요",
-    //       hit: 15,
-    //       writer: "경력3년차"
-    //     },
-    //     {
-    //       index: 6,
-    //       title: "면접볼 때 PT 면접 있잖아요, 어떻게 해요? ㅠㅠ",
-    //       sourcecode: "",
-    //       content:
-    //         "제가 발표를 한 번도 해 본 적이 없는데 슬슬 걱정이네요... 다들 발표 잘 하시나요?",
-    //       hit: 15,
-    //       writer: "PT의신"
-    //     },
-    //     {
-    //       index: 7,
-    //       title: "오늘 조퇴하고 싶네요",
-    //       sourcecode: "",
-    //       content: "물론 다음 주 월요일 팀빌딩도 조퇴, 아니 결석하고 싶어요",
-    //       hit: 111,
-    //       writer: "출석률100%"
-    //     },
-    //     {
-    //       index: 8,
-    //       title: "지금 편성된 조에 적응을 잘 못하겠어요ㅠㅠ",
-    //       sourcecode: "",
-    //       content:
-    //         "다음 주 월요일 팀빌딩으로 친해지는 시간 있다는데, 제가 소극적이라서... 친해질 수 있을지 걱정이에요... ㅠㅠ",
-    //       hit: 45,
-    //       writer: "핵인싸"
-    //     },
-    //     {
-    //       index: 9,
-    //       title: "IT에서 돈 많이 벌려면 뭘 준비해야 할까요",
-    //       sourcecode: "",
-    //       content:
-    //         "역시 실력을 키우는 걸까요? 아니면 로또가 답일까요? 결국엔 치킨집 차릴텐데 휴...",
-    //       hit: 22,
-    //       writer: "IT개발자-연봉1억"
-    //     },
-    //     {
-    //       index: 10,
-    //       title: "삼성 오딧세이 좋네요 하나 사려는데 최저가 아시는 분?",
-    //       sourcecode: "",
-    //       content:
-    //         '소위 말하는 "앱등이"입니다. 오딧세이 사용해보니 좋네요. 오딧세이 올해 최신판으로 사볼까 하는데 조언 부탁드려요',
-    //       hit: 19,
-    //       writer: "앱등이"
-    //     }
-    //   ];
-    // },
 
     editItem(item) {
       this.editedIndex = this.articles.indexOf(item);
