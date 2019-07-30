@@ -1,42 +1,128 @@
 var express = require('express');
 var router = express.Router();
 var Room = require('../models/room');
-var encode = require('../encode');
 var decode = require('../decode');
 
-//render 의 형태는 views 에 있는 pug와 연동되는 것으로 전부 고쳐야함
-router.get('/', async(req, res, next) =>{
-    try{
-      var rooms = await Room.find({});
-      res.render('main', {rooms, title:'Gif 채팅방',error: req.flash('roomError')});
+/**
+ * @swagger
+ *  /rooms/{token}:
+ *    get:
+ *      tags:
+ *      - Room
+ *      description: 모든 채팅방 리스트 반환
+ *      parameters:
+ *      - name: token
+ *        in: path
+ *        description: "토큰"
+ *        required: true
+ *        type: string
+ *      responses:
+ *       200:
+ *        description: 채팅방 정보를 json 리스트에 담음
+ */
+router.get('/:token', function (req, res) {
+    var info = decode(req.params.token);
+    if (!info) {
+        return res.json({ result: false });
     }
-    catch(error){
-      console.error(error);
-      next(error);
+    Room.find(function (err, rooms) {
+    if (err) {
+        return res.status(500).send({ error: 'database failure' });
     }
+    res.json(rooms);
+    }).sort({ title: 1 });
 });
   
-router.get('/create', (req,res) =>{
-    res.render('room', {title: 'GIF 채팅방 생성'});
-});
+/**
+ * @swagger
+ *  /rooms:
+ *    post:
+ *      tags:
+ *      - Room
+ *      description: 채팅방 추가
+ *      parameters:
+ *      - in: body
+ *        name: createRoom
+ *        description: "채팅방 만들기"
+ *        schema:
+ *          type: object
+ *          properties:
+ *            token:
+ *              type: string
+ *              required: true
+ *            title:
+ *              type: string
+ *              required: true
+ *            max:
+ *              type: integer
+ *              required: true
+ *            owner:
+ *              type: string
+ *              required: true
+ *            password:
+ *              type: string
+ *      responses:
+ *       200:
+ *        description: "result = true 일 경우 정상적으로 작동"
+ */
+router.post('/', function (req, res) {
+    var info = decode(req.body.token);
+    if (!info) {
+        return res.json({ result: false });
+    }
 
-router.post('/create',async(req, res, next) =>{
-    try{
-        var room = new Room({
-            title: req.body.title,
-            max: req.body.max,
-            owner: req.body.owner,
-            password: req.body.password,
-        });
-        var newRoom = await room.save();
-        var io = req.app.get('io');
-        io.of('/room').emit('newRoom',newRoom);
-        res.redirect('/room/${newRoom._id}?password=${req.body.password}');
+    var room = new Room();
+    room.title = req.body.title;
+    room.max = req.body.max;
+    room.owner = req.body.owner;
+    room.password = req.body.password;
+  
+    console.log(req.body);
+  
+    room.save(function (err) {
+      if (err) {
+        return res.json({ result: false });
+      }
+      res.json({ result: true });
+    });
+});
+  
+  /**
+ * @swagger
+ *  /rooms:
+ *    delete:
+ *      tags:
+ *      - Room
+ *      description: 채팅방 삭제
+ *      parameters:
+ *      - in: body
+ *        name: deleteRoom
+ *        description: "채팅방 삭제"
+ *        schema:
+ *          type: object
+ *          properties:
+ *            _id:
+ *              type: string
+ *              required: true
+ *            token:
+ *              type: string
+ *              required: true
+ *      responses:
+ *       200:
+ *        description: "result = true 일 경우 정상적으로 작동"
+ */
+router.delete('/',function(req,res){
+    var info = decode(req.body.token);
+    if (!info) {
+        return res.json({ result: false });
     }
-    catch(error){
-        console.error(error);
-        next(error);
-    }
+    Room.remove({ _id: req.body._id }, function (err, output) {
+        if (err) {
+          return res.status(500).json({ error: "database failure" });
+        }
+        console.log(output);
+        res.json({ result: true });
+      })
 });
 
 module.exports = router;

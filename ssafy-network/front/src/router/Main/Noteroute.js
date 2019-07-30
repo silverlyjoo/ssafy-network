@@ -16,7 +16,7 @@ export default {
             props:true
           },
           {
-            path: 'detail',
+            path: 'detail/:_id',
             name: 'notedetail',
             component: NoteDetail,
             props:true

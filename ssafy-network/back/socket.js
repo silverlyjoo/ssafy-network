@@ -6,42 +6,22 @@ module.exports = (server) => {
     var io = SocketIO(server);
     console.log("소켓IO 서버 오픈");
 
-    var room = io.of('/room');
-    room.on('connection', function(socket){
-      console.log(socket.id,'가 room 에 접속 하였습니다: ',moment().format("YYYY-MM-DD HH:mm:ss"));
-      var req = socket.request;
-      var {headers : {referer}} = req;
-      var roomId = referer.split('/')[referer.split('/').length -1].replace(/\?.+/,'');
-      console.log(roomId);
-      socket.join(roomId);
-
-      socket.to(roomId).emit('join', {
-        from: {
-          name: 'System',
-        },
-        msg: "손님 한분 입장이요~",
-        time : moment().format("YYYY-MM-DD HH:mm:ss")
-      });
-      
-      socket.on('disconnect', function() {
-        console.log('유저가 room 에서 나갔습니다: ',moment().format("YYYY-MM-DD HH:mm:ss"));
-        socket.leave(roomId);
-
-        socket.to(roomId).emit('exit', {
-          from: {
-            name: 'System',
-          },
-          msg: "손님 한분 퇴장이요~",
-          time : moment().format("YYYY-MM-DD HH:mm:ss")
-        });
-      });
-    });
-
     io.on('connection', function(socket){
         console.log(socket.id,'가 접속 하였습니다: ',moment().format("YYYY-MM-DD HH:mm:ss"));
-        //메세지를 받아 로그에 띄우고 다른 클라이언트에게 전송하는 과정
+        
+        socket.on('switchRoom', function(newroom){
+          socket.leave(socket.room);
+          socket.join(newroom);
+          socket.emit('chat', 'SERVER', 'you have connected to '+ newroom);
+          socket.broadcast.to(socket.room).emit('chat', 'SERVER', socket.username+' has left this room');
+          socket.room = newroom;
+          socket.broadcast.to(newroom).emit('chat', 'SERVER', socket.username+' has joined this room');
+          socket.emit('updaterooms', rooms, newroom);
+        });
+
         socket.on('chat', function(data) {
             var msg = {
+              room : data.room,
               from: {
                 name: data.name,
               },
@@ -61,7 +41,7 @@ module.exports = (server) => {
             //   }
             //   console.log('Message from %s: %s', chat.name, chat.msg);
             // });
-            console.log('Message from %s: %s', data.name, data.msg);
+            console.log('Message %s from %s: %s', data.room,data.name, data.msg);
 
             socket.broadcast.emit('broadcast', msg);
             socket.emit('broadcast',msg);

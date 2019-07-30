@@ -353,7 +353,7 @@ export default {
   methods: {
     addArticle() {
       this.$validator.validateAll().then(res => {
-        fetch(this.$store.state.dbserver + "",
+        fetch(this.$store.state.dbserver + "/boards",
         {
           method: "POST",
           hearders: {
@@ -361,6 +361,7 @@ export default {
             "Content-Type": "application/json"
           },
           body: JSON.stringify ({
+            token: this.$session.get("token"),
             language: this.$session.get("language"),
             writer: this.$session.get("writer"),
             title: this.$session.get("title"),

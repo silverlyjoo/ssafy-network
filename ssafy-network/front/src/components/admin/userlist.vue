@@ -1,11 +1,139 @@
 <template>
   <v-container>
-    <h1>userlist</h1>
+    <v-list subheader>
+      <v-subheader>userlist</v-subheader>
+      <v-list-tile
+        v-for="user in userList"
+        :key="user.id"
+        avatar
+      >
+        <v-list-tile-content>
+          <v-list-tile-title v-html="user.id"></v-list-tile-title>
+        </v-list-tile-content>
+        <v-list-tile-content>
+          <v-list-tile-title v-html="user.name"></v-list-tile-title>
+        </v-list-tile-content>
+        <v-list-tile-content>
+          <v-list-tile-title v-html="user.nickname"></v-list-tile-title>
+        </v-list-tile-content>
+        <v-list-tile-content>
+          <v-list-tile-title v-html="user.membership"></v-list-tile-title>
+        </v-list-tile-content>
+        <v-list-tile-content>
+          <v-list-tile-title v-html="user.region"></v-list-tile-title>
+        </v-list-tile-content>
+        <v-list-tile-content>
+          <v-list-tile-title v-html="user.year"></v-list-tile-title>
+        </v-list-tile-content>
+      </v-list-tile>
+    </v-list>
   </v-container>
 </template>
 
 <script>
-export default {};
+export default {
+  data() {
+    return {
+      id: "",
+      name: "",
+      nickname: "",
+      region: "",
+      year: "",
+      userList: []
+    };
+  },
+  mounted(){
+    this.getUserList();
+  },
+  methods: {
+    getUserList() {
+      fetch(this.$store.state.dbserver + "/users/" + this.$session.get("token"), {
+        method: "GET",
+        headers: {
+          "Access-Control-Allow-Origin": "*",
+          "Content-Type": "application/json"
+        }
+      })
+        .then(res => res.json())
+        .then(data => {
+          if (data) {
+            this.userList = data;
+          } else {
+            alert("관리자 권한이 없습니다");
+          }
+        })
+        .catch(error => console.log(error))
+        .finally();
+    },
+    updateUser(){
+      fetch(this.$store.state.dbserver + "/users", {
+        method: "PUT",
+        headers: {
+          "Access-Control-Allow-Origin": "*",
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          token: this.$session.get("token"),
+          name: "model달기 귀찮아요",
+          id: this.$session.get("id"),
+          pwd: "패스워드는 확인 하나 해주세요",
+          nickname: "닉네임은 중복확인 한번 해주세요",
+          region: "year은 반드시 숫자",
+          year: 1,
+          membership: "관리자,회원,비회원 중에 하나가 되게",
+        })
+      })
+        .then(res => res.json())
+        .then(data => {
+          if (data.result == true) {
+            alert("수정 성공!!!");
+          } else {
+            alert("수정 실패...");
+          }
+        });
+    },
+    deleteUser() {
+      fetch(this.$store.state.dbserver + "/users", {
+        method: "DELETE",
+        headers: {
+          "Access-Control-Allow-Origin": "*",
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          _id: "오브젝트 아이디",
+          token: this.$session.get("token")
+        })
+      })
+        .then(res => res.json())
+        .then(data => {
+          if (data.result == true) {
+            alert("삭제 성공!!!");
+          } else {
+            alert("성공 실패...");
+          }
+        });
+    },
+    searchUsers() {
+      fetch(this.$store.state.dbserver + "/search/users/" +'id'+'/'+'t'+'/'+ this.$session.get("token"), {
+        method: "GET",
+        headers: {
+          "Access-Control-Allow-Origin": "*",
+          "Content-Type": "application/json"
+        }
+      })
+        .then(res => res.json())
+        .then(data => {
+          if (data) {
+            this.userList = data;
+          } else {
+            alert("올바른 값을 입력하세요");
+          }
+        })
+        .catch(error => console.log(error))
+        .finally();
+    },
+  }
+};
 </script>
 
 <style>
