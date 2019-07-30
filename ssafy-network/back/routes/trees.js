@@ -1,25 +1,28 @@
 var express = require('express');
 var router = express.Router();
 var Supertree = require('../models/supertree');
-var Tree = require('../models/tree');
+var Txt = require('../models/txt');
+var Folder = require('../models/folder'); 
 var decode = require('../decode');
 
+
 async function dfs(p_id,ItemTree){
-    await Tree.find({parent_id: p_id, file: "txt"}, function(err, tree){
-        for (let i = 0; i < tree.length; i++) {
-            ItemTree.push(tree[i]);
-        }
-    });
-    await Tree.find({parent_id: p_id, file: "folder"} ,async function(err, tree){
-        for (let i = 0; i < tree.length; i++) {
-            dfs(tree[i]._id,tree[i].children);
-            ItemTree.push(tree[i]);
+    Folder.find({parent_id: p_id} , async function(err, folder){
+        Txt.find({parent_id: p_id}, function(err, txt){
+            for (let i = 0; i < txt.length; i++) {
+                ItemTree.push(txt[i]);
+            }
+        });
+        for (let i = 0; i < folder.length; i++) {
+            dfs(folder[i]._id,folder[i].children);
+            ItemTree.push(folder[i]);
         }
     });
     ItemTree.sort(function(a, b){
         return a.file < b.file ? -1 : a.file > b.file ? 1 : 0;
     });
 }
+
 
 /**
  * @swagger
@@ -53,23 +56,104 @@ router.get('/:id/:token', function (req, res) {
         if(err){
             res.json({result: false})
         }
-        await dfs(tree._id,ItemTree);
-        
+        dfs(tree._id,ItemTree);
+
         setTimeout(function() {
             console.log(ItemTree);
             
             res.json({
                 item: ItemTree
             });
-        }, 500);
-
-        
+        }, 2000);
     });
 });
 
 /**
  * @swagger
- *  /trees:
+ *  /trees/txt/{_id}/{token}:
+ *    get:
+ *      tags:
+ *      - Tree
+ *      description: 텍스트 파일 반환
+ *      parameters:
+ *      - name: _id
+ *        in: path
+ *        description: "오브젝트 아이디"
+ *        required: true
+ *        type: string
+ *      - name: token
+ *        in: path
+ *        description: "토큰"
+ *        required: true
+ *        type: string
+ *      responses:
+ *       200:
+ *        description: 텍스트 파일 정보 반환
+ */
+router.get('/txt/:_id/:token', function (req, res) {
+    var info = decode(req.params.token);
+    if (!info) {
+        return res.json({ result: false });
+    }
+    Txt.findOne({_id: req.params._id} , function(err, txt){
+        if(err){
+            res.json({result: false})
+            return;
+        }
+        console.log(txt);
+        res.json(txt);
+    });
+});
+
+/**
+ * @swagger
+ *  /trees/txt/{parent_id}/{name}/{token}:
+ *    get:
+ *      tags:
+ *      - Tree
+ *      description: 텍스트 파일 반환
+ *      parameters:
+ *      - name: parent_id
+ *        in: path
+ *        description: "상위 폴더 오브젝트 아이디"
+ *        required: true
+ *        type: string
+ *      - name: name
+ *        in: path
+ *        description: "파일명"
+ *        required: true
+ *        type: string
+ *      - name: token
+ *        in: path
+ *        description: "토큰"
+ *        required: true
+ *        type: string
+ *      responses:
+ *       200:
+ *        description: 텍스트 파일 정보 반환
+ */
+router.get('/txt/:parent_id/:name/:token', function (req, res) {
+    var info = decode(req.params.token);
+    if (!info) {
+        return res.json({ result: false });
+    }
+    Txt.findOne({parent_id: req.params.parent_id, name: req.params.name},function(err,txt){
+        if(err){
+            res.json({result: false});
+            return;
+        }
+        if(!txt){
+            return res.json({result: false});
+        }
+        console.log(txt);
+        res.json(txt);
+    });
+    
+});
+
+/**
+ * @swagger
+ *  /trees/folder:
  *    post:
  *      tags:
  *      - Tree
@@ -90,101 +174,96 @@ router.get('/:id/:token', function (req, res) {
  *            name:
  *              type: string
  *              required: true
- *            file:
- *              type: string
- *              required: true
- *            children:
- *              type: array
- *              items:
- *                  type: object
  *      responses:
  *       200:
  *        description: "result = true 일 경우 정상적으로 작동"
  */
-router.post('/', function (req, res) {
+router.post('/folder', function (req, res) {
     var info = decode(req.body.token);
     if (!info) {
         return res.json({ result: false });
     }
-    var tree = new Tree();
-    tree.parent_id = req.body.parent_id;
-    tree.name = req.body.name;
-    tree.file = req.body.file;
-    if(tree.file == "folder"){
-        tree.children = req.body.children;
-    }
+    var folder = new Folder();
+    folder.parent_id = req.body.parent_id;
+    folder.name = req.body.name;
+    folder.file = "folder";
+    folder.children = [];
+
     console.log(req.body);
 
-    tree.save(function (err) {
+    folder.save(function (err) {
         if (err) {
             console.error(err);
             res.json({ result: false });
             return;
         }
-
         res.json({ result: true });
     });
 });
 
-// /**
-//  * @swagger
-//  *  /trees:
-//  *    put:
-//  *      tags:
-//  *      - Tree
-//  *      description: 노트 트리 업데이트
-//  *      parameters:
-//  *      - in: body
-//  *        name: updateTree
-//  *        description: "노트 트리 정보 업데이트"
-//  *        schema:
-//  *          type: object
-//  *          properties:
-//  *            _id:
-//  *              type: string
-//  *              required: true
-//  *            token:
-//  *              type: string
-//  *              required: true
-//  *            id:
-//  *              type: string
-//  *              required: true
-//  *            item:
-//  *              type: array
-//  *              items:
-//  *                  type: object
-//  *      responses:
-//  *       200:
-//  *        description: "result = true 일 경우 정상적으로 작동"
-//  */
-// router.put('/', function (req, res) {
-//     var info = decode(req.body.token);
-//     if (!info) {
-//         return res.json({ result: false });
-//     }
-//     Tree.update({ _id: req.body._id, id: req.body.id }, { $set: { item: req.body.item } }, function (err, output) {
-//         if (err) {
-//             res.status(500).json({ error: 'database failure' });
-//         }
-//         console.log(output);
-//         if (!output.n) {
-//             return res.json({ result: false });
-//         }
-//         res.json({ result: true });
-//     })
-// });
+/**
+ * @swagger
+ *  /trees/txt:
+ *    post:
+ *      tags:
+ *      - Tree
+ *      description: 노트 트리 추가
+ *      parameters:
+ *      - in: body
+ *        name: addTree
+ *        description: "노트 트리 정보 추가"
+ *        schema:
+ *          type: object
+ *          properties:
+ *            token:
+ *              type: string
+ *              required: true
+ *            parent_id:
+ *              type: string
+ *              required: true
+ *            name:
+ *              type: string
+ *              required: true
+ *            content:
+ *              type: string
+ *      responses:
+ *       200:
+ *        description: "result = true 일 경우 정상적으로 작동"
+ */
+router.post('/txt', function (req, res) {
+    var info = decode(req.body.token);
+    if (!info) {
+        return res.json({ result: false });
+    }
+    var txt = new Txt();
+    txt.parent_id = req.body.parent_id;
+    txt.name = req.body.name;
+    txt.file = "txt";
+    txt.content = "";
+
+    console.log(req.body);
+
+    txt.save(function (err) {
+        if (err) {
+            console.error(err);
+            res.json({ result: false });
+            return;
+        }
+        res.json({ result: true });
+    });
+});
 
 /**
  * @swagger
- *  /trees:
- *    delete:
+ *  /trees/txt:
+ *    put:
  *      tags:
  *      - Tree
- *      description: 노트 트리 정보 삭제
+ *      description: 파일 업데이트
  *      parameters:
  *      - in: body
- *        name: updateTree
- *        description: "노트 트리 정보 업데이트"
+ *        name: updatetxt
+ *        description: "파일 정보 업데이트"
  *        schema:
  *          type: object
  *          properties:
@@ -192,6 +271,61 @@ router.post('/', function (req, res) {
  *              type: string
  *              required: true
  *            token:
+ *              type: string
+ *              required: true
+ *            name:
+ *              type: string
+ *              required: true
+ *            content:
+ *              type: string
+ *              required: true
+ *      responses:
+ *       200:
+ *        description: "result = true 일 경우 정상적으로 작동"
+ */
+router.put('/txt', function (req, res) {
+    var info = decode(req.body.token);
+    if (!info) {
+        return res.json({ result: false });
+    }
+    console.log(req.body);
+    Txt.update({ _id: req.body._id }, { $set: {
+            name: req.body.name,
+            content: req.body.content,
+        }}, function (err, output) {
+        if (err) {
+            res.status(500).json({ error: 'database failure' });
+        }
+        console.log(output);
+        if (!output.n) {
+            return res.json({ result: false });
+        }
+        res.json({ result: true });
+    })
+});
+
+
+/**
+ * @swagger
+ *  /trees:
+ *    delete:
+ *      tags:
+ *      - Tree
+ *      description: 노트 트리 파일 삭제
+ *      parameters:
+ *      - in: body
+ *        name: deletefile
+ *        description: "노트 트리 파일 삭제"
+ *        schema:
+ *          type: object
+ *          properties:
+ *            _id:
+ *              type: string
+ *              required: true
+ *            token:
+ *              type: string
+ *              required: true
+ *            file:
  *              type: string
  *              required: true
  *      responses:
@@ -204,13 +338,25 @@ router.delete('/',function(req,res){
         return res.json({ result: false });
     }
     console.log(req.body._id);
-    Tree.remove({ _id: req.body._id }, function (err, output) {
-        if (err) {
-          return res.status(500).json({ error: "database failure" });
-        }
-        console.log(output);
-        res.json({ result: true });
-      })
+    if(req.body.file == "folder"){
+        Folder.remove({ _id: req.body._id }, function (err, output) {
+            if (err) {
+              return res.status(500).json({ error: "database failure" });
+            }
+            console.log(output);
+            res.json({ result: true });
+        });
+    }
+    if(req.body.file == "txt"){
+        Txt.remove({ _id: req.body._id }, function (err, output) {
+            if (err) {
+              return res.status(500).json({ error: "database failure" });
+            }
+            console.log(output);
+            res.json({ result: true });
+        });
+    }
 });
+
 
 module.exports = router;

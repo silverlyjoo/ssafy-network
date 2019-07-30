@@ -171,8 +171,8 @@ router.put('/', function (req, res) {
  *      description: 캘린더 정보 삭제
  *      parameters:
  *      - in: body
- *        name: updateCalendar
- *        description: "캘린더 정보 업데이트"
+ *        name: deleteCalendar
+ *        description: "캘린더 삭제"
  *        schema:
  *          type: object
  *          properties:

@@ -6,7 +6,7 @@ function encode(info){
         },
         "PsjPsmHmwKktMhi",
         {
-        expiresIn: '60m'
+        expiresIn: '600m'
     });
     return token;
   }

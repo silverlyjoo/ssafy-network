@@ -5,23 +5,32 @@ var decode = require('../decode');
 
 /**
  * @swagger
- *  /boards:
+ *  /boards/{token}:
  *    get:
  *      tags:
  *      - Board
  *      description: 모든 게시글 반환
+ *      parameters:
+ *      - name: token
+ *        in: path
+ *        description: "토큰"
+ *        required: true
+ *        type: string
  *      responses:
  *       200:
- *        description: 게시글 정보를 json 리스트에 담음
+ *        description: 모든 게시글을 json 리스트에 반환
  */
-router.get('/', function(req,res){
-    var sort = {createdAt: -1};
-    Board.find(function(err, boards){
-        if(err) {
-          return res.status(500).send({error: 'database failure'});
-        }
-        res.json(boards);
-    }).sort(sort);
+router.get('/:token', function (req, res) {
+  var info = decode(req.params.token);
+  if (!info) {
+      return res.json({ result: false });
+  }
+  Board.find(function (err, boards) {
+      if (err) {
+          return res.status(500).send({ error: 'database failure' });
+      }
+      res.json(boards);
+  });
 });
 
 /**
@@ -38,7 +47,10 @@ router.get('/', function(req,res){
  *        schema:
  *          type: object
  *          properties:
- *            code:
+ *            token:
+ *              type: string
+ *              required: true
+ *            language:
  *              type: string
  *            writer:
  *              type: string
@@ -46,33 +58,37 @@ router.get('/', function(req,res){
  *            title:
  *              type: string
  *              required: true
+ *            source:
+ *              type: string
  *            content:
  *              type: string
- *            hit:
- *              type: integer
  *      responses:
  *       200:
  *        description: "result = true 일 경우 정상적으로 작동"
  */
-router.post('/', function(req, res){
-    var board = new Board();
-    board.code = req.body.code;
-    board.writer = req.body.writer;
-    board.title = req.body.title;
-    board.content = req.body.content;
-    board.hit = req.body.hit;
-  
-    console.log(req.body);
-  
-    board.save(function(err){
-        if(err){
-            console.error(err);
-            res.json({result: 0});
-            return;
-        }
-  
-        res.json({result: true});
-    });
+router.post('/', function (req, res) {
+  var info = decode(req.body.token);
+  if (!info) {
+      return res.json({ result: false });
+  }
+  var board = new Board();
+  board.language = req.body.language;
+  board.writer = req.body.writer;
+  board.title = req.body.title;
+  board.source = req.body.source;
+  board.content = req.body.content;
+  board.hit = 0;
+
+  console.log(req.body);
+
+  board.save(function (err) {
+      if (err) {
+          console.error(err);
+          res.json({ result: false });
+          return;
+      }
+      res.json({ result: true });
+  });
 });
 
 /**
@@ -91,33 +107,43 @@ router.post('/', function(req, res){
  *          properties:
  *            _id:
  *              type: string
- *            code:
- *              type: string
- *            writer:
+ *              required: true
+ *            token:
  *              type: string
  *              required: true
+ *            language:
+ *              type: string
  *            title:
  *              type: string
  *              required: true
+ *            source:
+ *              type: string
  *            content:
  *              type: string
- *            hit:
- *              type: integer
  *      responses:
  *       200:
  *        description: "result = true 일 경우 정상적으로 작동"
  */
-router.put('/', function(req, res){
-    Board.update({ _id: req.body._id }, { $set: req.body }, function(err, output){
-        if(err){
+router.put('/', function (req, res) {
+  var info = decode(req.body.token);
+  if (!info) {
+      return res.json({ result: false });
+  }
+  Board.update({ _id: req.body._id}, { $set: {
+        language: req.body.language,
+        title: req.body.title,
+        source: req.body.source,
+        content: req.body.content
+      }}, function (err, output) {
+      if (err) {
           res.status(500).json({ error: 'database failure' });
-        }
-        console.log(output);
-        if(!output.n){
-          return res.status(404).json({ error: 'board not found' });
-        } 
-        res.json({result: true});
-    })
+      }
+      console.log(output);
+      if (!output.n) {
+          return res.json({ result: false });
+      }
+      res.json({ result: true });
+  })
 });
 
 /**
@@ -129,24 +155,33 @@ router.put('/', function(req, res){
  *      description: 게시글 삭제
  *      parameters:
  *      - in: body
- *        name: updateBoard
- *        description: "게시글 정보 업데이트"
+ *        name: deleteBoard
+ *        description: "게시글 삭제"
  *        schema:
  *          type: object
  *          properties:
  *            _id:
  *              type: string
+ *              required: true
+ *            token:
+ *              type: string
+ *              required: true
  *      responses:
  *       200:
- *        description: 게시글 삭제
+ *        description: "result = true 일 경우 정상적으로 작동"
  */
-router.delete('/', function(req, res){
-  Board.remove({ _id: req.body._id }, function(err, output){
-      if(err){
+router.delete('/',function(req,res){
+  var info = decode(req.body.token);
+  if (!info) {
+      return res.json({ result: false });
+  }
+  Board.remove({ _id: req.body._id }, function (err, output) {
+      if (err) {
         return res.status(500).json({ error: "database failure" });
-      } 
-      res.json({result: true});
-  })
+      }
+      console.log(output);
+      res.json({ result: true });
+    })
 });
 
 module.exports = router;
