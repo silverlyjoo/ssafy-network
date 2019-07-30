@@ -35,11 +35,7 @@
             <v-container grid-list-md style="width:80%; padding:100px;">
               <v-layout wrap>
                 <v-flex xs12>
-                  <v-text-field
-                    v-model="editedItem.title"
-                    label="제목"
-                    v-validate="'required'"
-                    ></v-text-field>
+                  <v-text-field v-model="editedItem.title" label="제목"></v-text-field>
                 </v-flex>
                 <v-flex xs12>
                   <v-select
@@ -63,15 +59,7 @@
                   <!-- <v-textarea id="editor" box label="Code" v-model="editedItem.code" auto-grow value></v-textarea> -->
                 </v-flex>
                 <v-flex xs12>
-                  <v-textarea
-                    box
-                    label="내용"
-                    v-model="editedItem.content"
-                    auto-grow
-                    value
-                    v-validate="'required'"
-                  >
-                  </v-textarea>
+                  <v-textarea box label="내용" v-model="editedItem.content" auto-grow value></v-textarea>
                 </v-flex>
               </v-layout>
             </v-container>
@@ -308,10 +296,6 @@ export default {
       } else if (to == "") {
       }
     }
-  },
-
-  created() {
-    this.initialize();
   },
 
   methods: {
