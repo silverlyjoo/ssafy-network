@@ -28,15 +28,15 @@
                 :items="items"
                 activatable
                 item-key="name"
-                
                 v-if="click"
                 style="overflow:hidden!important; text-overflow: ellipsis; "
               >
                 <template v-slot:prepend="{item, open,selected}">
-                  <v-btn flat class="ma-0 pa-0" style="min-width:30px!important;" >
+                  <v-btn flat class="ma-0 pa-0" style="min-width:30px!important;">
                     <v-icon
                       v-if="item.file == 'folder'"
-                    open-on-click>{{ open ? 'mdi-folder-open' : 'mdi-folder' }}</v-icon>
+                      open-on-click
+                    >{{ open ? 'mdi-folder-open' : 'mdi-folder' }}</v-icon>
                     <v-icon v-else @click="NoteDetail(item._id)">{{ files[item.file] }}</v-icon>
                   </v-btn>
                 </template>
@@ -231,7 +231,7 @@ export default {
   },
   methods: {
     NoteDetail(id) {
-      this.$router.push({name:"notedetail",params:{_id:id}});
+      this.$router.push("/note/detail/" + id);
     },
     addNoteOpen(item) {
       this.showNote = true;
@@ -271,30 +271,81 @@ export default {
         if (!res) {
           alert("값이 유효한지 확인해 주세요.");
         } else {
-          fetch(this.$store.state.dbserver + "/trees/txt", {
-            method: "POST",
-            headers: {
-              "Access-Control-Allow-Origin": "*",
-              "Content-Type": "application/json"
-            },
-            body: JSON.stringify({
-              token: this.$session.get("token"),
-              parent_id: this.seleteItem._id,
-              name: this.NoteTitle
-            })
-          })
+          // 같은 폴더내에 이름이 같은 파일이 존재하는지 체크
+          const pid = this.seleteItem._id;
+          const title = this.NoteTitle;
+          const tokenid = this.$session.get("token");
+          fetch(
+            this.$store.state.dbserver +
+              "/trees/txt/" +
+              pid +
+              "/" +
+              title +
+              "/" +
+              tokenid,
+            {
+              method: "GET",
+              headers: {
+                "Access-Control-Allow-Origin": "*",
+                "Content-Type": "application/json"
+              }
+            }
+          )
             .then(res => res.json())
             .then(data => {
-              if (data.result == true) {
-                this.$router.push({
-                  name: "notewrite",
-                  params: { title: this.NoteTitle }
-                });
+              if (data.result == false) {
+                // 존재 하지 않는다면 post 로 추가한다.
+                fetch(this.$store.state.dbserver + "/trees/txt", {
+                  method: "POST",
+                  headers: {
+                    "Access-Control-Allow-Origin": "*",
+                    "Content-Type": "application/json"
+                  },
+                  body: JSON.stringify({
+                    token: tokenid,
+                    parent_id: pid,
+                    name: title
+                  })
+                })
+                  .then(res => res.json())
+                  .then(data => {
+                    if (data.result == true) {
+                      // 만약 추가가 성공한다면 그 id 값을 조회해서 writeForm 으로 보내준다.
+                      fetch(
+                        this.$store.state.dbserver +
+                          "/trees/txt/" +
+                          pid +
+                          "/" +
+                          title +
+                          "/" +
+                          tokenid,
+                        {
+                          method: "GET",
+                          headers: {
+                            "Access-Control-Allow-Origin": "*",
+                            "Content-Type": "application/json"
+                          }
+                        }
+                      )
+                        .then(res => res.json())
+                        .then(data => {
+                          if (data.result == false) {
+                            alert("추가를 실패하였습니다...");
+                          } else {
+                            this.$router.push({
+                              name: "notewrite",
+                              params: { title: data.name, _id: data._id }
+                            });
+                          }
+                        });
+                    } else {
+                      alert("실패");
+                    }
+                  });
               } else {
-                alert("실패");
+                alert("이미 존재하는 파일입니다. (실패...)");
               }
-                this.addNoteClose();
-              
+              this.addNoteClose();
             });
         }
       });
@@ -348,31 +399,7 @@ export default {
           this.items = data.item;
         });
     },
-    updateItems() {
-      fetch(this.$store.state.dbserver + "/trees", {
-        method: "PUT",
-        headers: {
-          "Access-Control-Allow-Origin": "*",
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify({
-          _id: this._id,
-          token: this.$session.get("token"),
-          id: this.$session.get("id"),
-          item: this.items
-        })
-      })
-        .then(res => res.json())
-        .then(data => {
-          if (data.result == true) {
-            console.log("업데이트 성공");
-          } else {
-            console.log("업데이트 실패");
-          }
-        });
-    },
     deleteItem() {
-      console.log(this.seleteItem._id);
       fetch(this.$store.state.dbserver + "/trees/", {
         method: "DELETE",
         headers: {
@@ -393,6 +420,7 @@ export default {
             alert("실패");
           }
           this.showDelete = false;
+          this.$router.push("/note/calendar");
           this.closeForm();
         });
     },

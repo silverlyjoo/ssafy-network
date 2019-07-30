@@ -2,7 +2,7 @@
 <template>
 <v-container >
   <div style="margin-top: 20px; margin-left:30px;">
-    <h1>{{title}}</h1>
+    <h1><v-text-field v-model="name"></v-text-field></h1>
   </div>
    <div class="editor" >
     <editor-menu-bar :editor="editor" v-slot="{ commands, isActive}">
@@ -183,11 +183,12 @@ export default {
   },
   props:{
     _id:{type:String},
-    title:{type:String},
-    content:{type:String}
+    title:{type:String}
   },
   data() {
     return {
+      changeContent:"",
+      name :"",
       editor: new Editor({
         extensions: [
           new Image(),
@@ -208,7 +209,10 @@ export default {
           new Strike(),
           new Underline(),
           new History(),
-        ],
+        ], onUpdate: ({ getHTML }) => {
+            const newContent = getHTML()
+        this.changeContent = newContent;
+    },
         content: "",
       }),
     
@@ -225,11 +229,36 @@ export default {
       }
     },
     writeNote(){
-
-      },close(){
-      this.$router.push("/")
+      fetch(this.$store.state.dbserver + "/trees/txt", {
+            method: "PUT",
+            headers: {
+              "Access-Control-Allow-Origin": "*",
+              "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+              _id : this._id,
+              token : this.$session.get("token"),
+              name : this.name,
+              content : this.changeContent
+            })
+          })
+            .then(res => res.json())
+            .then(data => {
+                if(data.result == true){
+                    alert("작성 성공");
+                    this.$store.state.NoteCheck = true;
+                }else{
+                    alert("작성 실패..");
+                }
+                 this.$router.push("/");
+            });
+    },close(){
+       this.$router.push("/note/calendar")
     }
-  }
+  },
+    created(){
+      this.name = this.title;
+    }
 }
 </script>
 

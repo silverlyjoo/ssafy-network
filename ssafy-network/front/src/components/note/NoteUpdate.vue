@@ -253,7 +253,7 @@ export default {
                 }
             });
     },close(){
-      this.$router.push("note")
+      this.$router.push("/note/calendar")
     }
   },
   mounted(){

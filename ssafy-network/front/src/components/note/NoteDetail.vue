@@ -44,14 +44,12 @@ export default {
     EditorMenuBar,
     Icon
   },
-  props:{
-    _id:{type:String}
-  },
   data() {
     return {
       editor: {type:Object},
         title:"",
-        content:""
+        content:"",
+        _id:""
     }
   },
   beforeDestroy() {
@@ -67,8 +65,9 @@ export default {
     writeNote(){
       this.$router.push({name:"noteupdate",params:{_id:this._id , title:this.title , content:this.content} })
     },close(){
-      this.$router.push("note")
+       this.$router.push("/note/calendar")
     },getNoteOne(){
+      
         fetch(this.$store.state.dbserver + "/trees/txt/"+ this._id +"/"+this.$session.get("token"), {
             method: "GET",
             headers: {
@@ -108,7 +107,17 @@ export default {
     }
   },
   created(){
+    this._id = this.$route.params._id;
+    this.getNoteOne();
+  },
+  watch:{
+    '$route'(to,from){
+      this._id = this.$route.params._id;
+      this.title = "";
+      this.content = "";
+      this.editor.destroy();
       this.getNoteOne();
+    }
   }
 }
 </script>
