@@ -8,7 +8,6 @@
     <editor-content class="editor__content" :editor="editor"/>
   </div>
   <v-flex text-xs-right>
-  <v-btn @click="close()">취소</v-btn>
   <v-btn @click="writeNote()">수정</v-btn>
   </v-flex>
   </v-container>
