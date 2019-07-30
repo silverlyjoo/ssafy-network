@@ -7,16 +7,11 @@ module.exports = (server) => {
     console.log("소켓IO 서버 오픈");
 
     io.on('connection', function(socket){
-        console.log(socket.id,'가 접속 하였습니다: ',moment().format("YYYY-MM-DD HH:mm:ss"));
+        //console.log(socket.id,'가 접속 하였습니다: ',moment().format("YYYY-MM-DD HH:mm:ss"));
         
-        socket.on('switchRoom', function(newroom){
-          console.log("누가 방을 바꿈");
-          socket.leave(socket.room);
+        socket.on('join', function(newroom){
+          console.log("누가 방을 바꿈",newroom);
           socket.join(newroom);
-          socket.emit('chat', 'SERVER', 'you have connected to '+ newroom);
-          socket.broadcast.to(socket.room).emit('switch'+newroom, socket.username+' has left this room');
-          socket.room = newroom;
-          socket.broadcast.to(newroom).emit('switch'+newroom, socket.username+' has joined this room');
         });
 
         socket.on('chat', function(data) {
@@ -29,8 +24,7 @@ module.exports = (server) => {
               time : moment().format("YYYY-MM-DD HH:mm:ss")
             };
 
-            socket.broadcast.to(data.room).emit('broadcast', msg);
-            socket.to(data.room).emit('broadcast', msg);
+            io.sockets.in(data.room).emit('broadcast',msg);
             // var chat = new Chat();
             // chat.name = msg.from.name;
             // chat.msg = msg.msg;
@@ -45,8 +39,6 @@ module.exports = (server) => {
             // });
             console.log('Message %s from %s: %s', data.room,data.name, data.msg);
 
-            // socket.broadcast.emit('broadcast', msg);
-            // socket.emit('broadcast',msg);
         });
 
         socket.on('disconnect', function() {

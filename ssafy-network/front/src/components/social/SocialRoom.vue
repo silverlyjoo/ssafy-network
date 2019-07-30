@@ -65,8 +65,8 @@ export default {
   methods: {
     ConnectSocket() {
       this.socket = io(this.chatserver);
-      this.socket.emit('switchRoom', {'_id': this._id})
-      this.socket.on("switch", data => {
+      this.socket.emit('join', this._id);
+      this.socket.on("broadcast", data => {
         this.chatdata.push(data);
       });
     },
