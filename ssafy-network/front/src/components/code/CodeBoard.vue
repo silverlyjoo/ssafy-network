@@ -79,38 +79,27 @@
     >
       <template v-slot:items="props">
         <td class="text-xs-center">{{ props.item.index }}</td>
-        <td>{{ props.item.title }}</td>
-        <!-- <td>{{ props.item.sourcecode }}</td> -->
+        <td><router-link to="/code/board/detail" style="text-decoration: none !important; color:black;">{{ props.item.title }}</router-link></td>
         <td class="text-xs-center">{{ props.item.hit }}</td>
+        <!-- <td>{{ props.item.sourcecode }}</td> -->
         <!-- <td class="text-xs-center">{{ props.item.writer }}</td> -->
         <!-- <td class="justify-center text-xs-center layout px-0">{{ props.item.editorremove }}</td> -->
-        <td class="text-xs-center">
+
+        <!-- <td class="text-xs-center"> -->
+
           <!-- {{ props.item.content }} -->
-          <v-btn v-if="props.expanded" @click="props.expanded=false">
-            <v-icon>keyboard_arrow_up</v-icon>
-          </v-btn>
-          <v-btn v-else @click="read(props)">
-            <v-icon>keyboard_arrow_down</v-icon>
-          </v-btn>
           <!-- {{ props.item.editorremove }} -->
           <!-- <v-icon small class="mr-2" color="teal" @click="editItem(props.item)">edit</v-icon> -->
           <!-- <v-icon small color="pink" @click="deleteItem(props.item)">delete</v-icon> -->
-        </td>
-      </template>
-      <template>
-        <v-expansion-panels focusable>
-          <v-expansion-panel v-for="(item,i) in 5" :key="i">
-            <v-expansion-panel-header>Item</v-expansion-panel-header>
-            <v-expansion-panel-content>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</v-expansion-panel-content>
-          </v-expansion-panel>
-        </v-expansion-panels>
+
+        <!-- </td> -->
       </template>
 
       <template slot="no-data">
         <v-alert :value="true" color="info" icon="info">게시글이 하나도 없습니다</v-alert>
       </template>
     </v-data-table>
-  </div>  
+  </div>
 </template>
 
 
@@ -270,12 +259,12 @@ export default {
           sortable: true,
           value: "hit"
         },
-        {
-          text: "내용",
-          align: "center",
-          sortable: false,
-          value: "content"
-        }
+        // {
+        //   text: "내용",
+        //   align: "center",
+        //   sortable: false,
+        //   value: "content"
+        // },
         // {
         //   text: "작성자",
         //   align: "center",
@@ -362,97 +351,127 @@ export default {
   },
 
   methods: {
-    initialize() {
-      this.articles = [
+    addArticle() {
+      this.$validator.validateAll().then(res => {
+        fetch(this.$store.state.dbserver + "/boards",
         {
-          index: 1,
-          title: "I have a question about python",
-          sourcecode: "",
-          content: "In python, how can I define function?",
-          hit: 5,
-          writer: "Maestro_Of_Python"
-        },
-        {
-          index: 2,
-          title: "Vue, 꼭 해야하나요?",
-          sourcecode: "",
-          content:
-            "다른 사람들 다 앵귤러나 리액트하는데 왜 뷰 해야하는지 모르겠네요",
-          hit: 87,
-          writer: "앵귤러리액트"
-        },
-        {
-          index: 3,
-          title:
-            "알고리즘 시험 대비해서 링크드 리스트 만들 때, 더 쉽게 외우는 방법 없나요?",
-          sourcecode: "",
-          content:
-            "이미 외웠긴 했는데, 더 쉽게 외울 수 있는 방법이 있나 궁금하네요",
-          hit: 25,
-          writer: "SW_Expert"
-        },
-        {
-          index: 4,
-          title: "자바 스프링 다 까먹었는데 큰 일이네요 ㅠㅠ",
-          sourcecode: "",
-          content: "다른 분들은 어떠신가요??",
-          hit: 29,
-          writer: "JavaMaster"
-        },
-        {
-          index: 5,
-          title: "자소서 한 번도 안 써봤는데 7월 절반이 지나갔네요 ㅠㅠ",
-          sourcecode: "",
-          content: "이번에 안랩하고 인바디 떴던데 이참에 한 번 쓸까봐요",
-          hit: 15,
-          writer: "경력3년차"
-        },
-        {
-          index: 6,
-          title: "면접볼 때 PT 면접 있잖아요, 어떻게 해요? ㅠㅠ",
-          sourcecode: "",
-          content:
-            "제가 발표를 한 번도 해 본 적이 없는데 슬슬 걱정이네요... 다들 발표 잘 하시나요?",
-          hit: 15,
-          writer: "PT의신"
-        },
-        {
-          index: 7,
-          title: "오늘 조퇴하고 싶네요",
-          sourcecode: "",
-          content: "물론 다음 주 월요일 팀빌딩도 조퇴, 아니 결석하고 싶어요",
-          hit: 111,
-          writer: "출석률100%"
-        },
-        {
-          index: 8,
-          title: "지금 편성된 조에 적응을 잘 못하겠어요ㅠㅠ",
-          sourcecode: "",
-          content:
-            "다음 주 월요일 팀빌딩으로 친해지는 시간 있다는데, 제가 소극적이라서... 친해질 수 있을지 걱정이에요... ㅠㅠ",
-          hit: 45,
-          writer: "핵인싸"
-        },
-        {
-          index: 9,
-          title: "IT에서 돈 많이 벌려면 뭘 준비해야 할까요",
-          sourcecode: "",
-          content:
-            "역시 실력을 키우는 걸까요? 아니면 로또가 답일까요? 결국엔 치킨집 차릴텐데 휴...",
-          hit: 22,
-          writer: "IT개발자-연봉1억"
-        },
-        {
-          index: 10,
-          title: "삼성 오딧세이 좋네요 하나 사려는데 최저가 아시는 분?",
-          sourcecode: "",
-          content:
-            '소위 말하는 "앱등이"입니다. 오딧세이 사용해보니 좋네요. 오딧세이 올해 최신판으로 사볼까 하는데 조언 부탁드려요',
-          hit: 19,
-          writer: "앱등이"
-        }
-      ];
+          method: "POST",
+          hearders: {
+            "Access-Control-Allow-Origin": "*",
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify ({
+            token: this.$session.get("token"),
+            language: this.$session.get("language"),
+            writer: this.$session.get("writer"),
+            title: this.$session.get("title"),
+            source: this.$session.get("source"),
+            content: this.$session.get("content")
+          })
+          }).then(res => res.json())
+        .then(data => {
+          if (data.result == true) {
+            alert("글이 등록되었습니다!");
+            
+          } else {
+            alert("글을 등록할 수 없습니다.");
+          }
+          this.close();
+        })
+      });
     },
+
+    // initialize() {
+    //   this.articles = [
+    //     {
+    //       index: 1,
+    //       title: "I have a question about python",
+    //       sourcecode: "",
+    //       content: "In python, how can I define function?",
+    //       hit: 5,
+    //       writer: "Maestro_Of_Python"
+    //     },
+    //     {
+    //       index: 2,
+    //       title: "Vue, 꼭 해야하나요?",
+    //       sourcecode: "",
+    //       content:
+    //         "다른 사람들 다 앵귤러나 리액트하는데 왜 뷰 해야하는지 모르겠네요",
+    //       hit: 87,
+    //       writer: "앵귤러리액트"
+    //     },
+    //     {
+    //       index: 3,
+    //       title:
+    //         "알고리즘 시험 대비해서 링크드 리스트 만들 때, 더 쉽게 외우는 방법 없나요?",
+    //       sourcecode: "",
+    //       content:
+    //         "이미 외웠긴 했는데, 더 쉽게 외울 수 있는 방법이 있나 궁금하네요",
+    //       hit: 25,
+    //       writer: "SW_Expert"
+    //     },
+    //     {
+    //       index: 4,
+    //       title: "자바 스프링 다 까먹었는데 큰 일이네요 ㅠㅠ",
+    //       sourcecode: "",
+    //       content: "다른 분들은 어떠신가요??",
+    //       hit: 29,
+    //       writer: "JavaMaster"
+    //     },
+    //     {
+    //       index: 5,
+    //       title: "자소서 한 번도 안 써봤는데 7월 절반이 지나갔네요 ㅠㅠ",
+    //       sourcecode: "",
+    //       content: "이번에 안랩하고 인바디 떴던데 이참에 한 번 쓸까봐요",
+    //       hit: 15,
+    //       writer: "경력3년차"
+    //     },
+    //     {
+    //       index: 6,
+    //       title: "면접볼 때 PT 면접 있잖아요, 어떻게 해요? ㅠㅠ",
+    //       sourcecode: "",
+    //       content:
+    //         "제가 발표를 한 번도 해 본 적이 없는데 슬슬 걱정이네요... 다들 발표 잘 하시나요?",
+    //       hit: 15,
+    //       writer: "PT의신"
+    //     },
+    //     {
+    //       index: 7,
+    //       title: "오늘 조퇴하고 싶네요",
+    //       sourcecode: "",
+    //       content: "물론 다음 주 월요일 팀빌딩도 조퇴, 아니 결석하고 싶어요",
+    //       hit: 111,
+    //       writer: "출석률100%"
+    //     },
+    //     {
+    //       index: 8,
+    //       title: "지금 편성된 조에 적응을 잘 못하겠어요ㅠㅠ",
+    //       sourcecode: "",
+    //       content:
+    //         "다음 주 월요일 팀빌딩으로 친해지는 시간 있다는데, 제가 소극적이라서... 친해질 수 있을지 걱정이에요... ㅠㅠ",
+    //       hit: 45,
+    //       writer: "핵인싸"
+    //     },
+    //     {
+    //       index: 9,
+    //       title: "IT에서 돈 많이 벌려면 뭘 준비해야 할까요",
+    //       sourcecode: "",
+    //       content:
+    //         "역시 실력을 키우는 걸까요? 아니면 로또가 답일까요? 결국엔 치킨집 차릴텐데 휴...",
+    //       hit: 22,
+    //       writer: "IT개발자-연봉1억"
+    //     },
+    //     {
+    //       index: 10,
+    //       title: "삼성 오딧세이 좋네요 하나 사려는데 최저가 아시는 분?",
+    //       sourcecode: "",
+    //       content:
+    //         '소위 말하는 "앱등이"입니다. 오딧세이 사용해보니 좋네요. 오딧세이 올해 최신판으로 사볼까 하는데 조언 부탁드려요',
+    //       hit: 19,
+    //       writer: "앱등이"
+    //     }
+    //   ];
+    // },
 
     editItem(item) {
       this.editedIndex = this.articles.indexOf(item);
@@ -480,7 +499,7 @@ export default {
         this.articles.push(this.editedItem);
       }
       this.close();
-    }
+    },
   }
 };
 </script>
