@@ -7,11 +7,18 @@ module.exports = (server) => {
     console.log("소켓IO 서버 오픈");
 
     io.on('connection', function(socket){
-        //console.log(socket.id,'가 접속 하였습니다: ',moment().format("YYYY-MM-DD HH:mm:ss"));
-        
-        socket.on('join', function(newroom){
-          console.log("누가 방을 바꿈",newroom);
-          socket.join(newroom);
+        socket.on('join', function(data){
+          console.log(data.nickname+"님이 입장하셨습니다.");
+          socket.join(data._id);
+          var msg = {
+            room : data._id,
+            from: {
+              name: "System",
+            },
+            msg: data.nickname+"님이 입장하셨습니다.",
+            time : moment().format("YYYY-MM-DD HH:mm:ss")
+          };
+          io.sockets.in(data._id).emit('join',msg);
         });
 
         socket.on('chat', function(data) {
@@ -41,8 +48,18 @@ module.exports = (server) => {
 
         });
 
-        socket.on('disconnect', function() {
-            console.log('유저가 연결을 종료하였습니다: ',moment().format("YYYY-MM-DD HH:mm:ss"));
-        });
+        // socket.on('leave', function(data){
+        //   console.log(data.nickname+"님이 퇴장하셨습니다.");
+        //   socket.leave(data._id);
+        //   var msg = {
+        //     room : data._id,
+        //     from: {
+        //       name: "System",
+        //     },
+        //     msg: data.nickname+"님이 퇴장하셨습니다.",
+        //     time : moment().format("YYYY-MM-DD HH:mm:ss")
+        //   };
+        //   io.sockets.in(data._id).emit('leave',msg);
+        // });
     });
 };
