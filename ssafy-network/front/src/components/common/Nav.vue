@@ -1,7 +1,6 @@
 <template>
   <div>
     <div class="navLayout">
-      <div class="navBg">
         <v-container class="navcon">
           <aside>
             <div class="navBtn">
@@ -186,9 +185,7 @@
             </div>
           </aside>
         </v-container>
-      </div>
     </div>
-    <div class="navBg"></div>
   </div>
 </template>
 
@@ -202,6 +199,7 @@ export default {
   name: "Nav",
   data() {
     return {
+      width:200,
       showNote: false,
       showFolder: false,
       showDelete: false,
@@ -482,12 +480,10 @@ export default {
   border-radius: 15px;
 }
 .navLayout {
-  position: fixed;
+  position: relative;
   height: 100vh;
   background: rgb(128, 149, 202);
   z-index: 100;
 }
-.navBg {
-  width: 250px;
-}
+
 </style>

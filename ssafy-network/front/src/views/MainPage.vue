@@ -1,7 +1,8 @@
 <template>
   <v-layout>
-    <Nav></Nav>
-
+    <vue-resizable :min-height="height" :max-height="height" :min-width="minWidth" :max-width="maxWidth">
+    <Nav class="nav"></Nav>
+    </vue-resizable> 
     <div class="mainsection">
       <Header></Header>
       <div class="routingbody"><router-view></router-view></div>
@@ -14,17 +15,25 @@
 import Header from "@/components/common/Header";
 import Footer from "@/components/common/Footer";
 import Nav from "@/components/common/Nav";
+import VueResizable from 'vue-resizable';
 
 export default {
   data() {
     return {
-      login: this.$store.state.login
+      login: this.$store.state.login,
+      height:"",
+minWidth:250,
+maxWidth:700
     };
   },
   components: {
     Header,
     Footer,
-    Nav
+    Nav,
+    VueResizable
+  },
+  created(){
+    this.height = window.innerHeight;
   }
 };
 </script>
@@ -35,5 +44,10 @@ export default {
 }
 .routingbody {
   min-height: calc(100vh - 165px);
+}
+.nav{
+  width:100%;
+  height: 100%;
+  background-color: aqua;
 }
 </style>
