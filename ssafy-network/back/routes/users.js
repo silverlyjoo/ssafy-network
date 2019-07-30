@@ -25,7 +25,7 @@ var decode = require('../decode');
  */
 router.get('/:token', function (req, res) {
   var info = decode(req.params.token);
-  if (info.membership == 9102) {
+  if (info.membership == "관리자") {
     User.find(function (err, users) {
       if (err) {
         return res.status(500).send({ error: 'database failure' });
@@ -135,6 +135,45 @@ router.get('/overlap/nickname/:nickname', function (req, res) {
   })
 });
 
+/**
+ * @swagger
+ *  /users/login/{id}/{pwd}:
+ *    get:
+ *      tags:
+ *      - User
+ *      description: 로그인
+ *      parameters:
+ *      - name: id
+ *        in: path
+ *        description: "아이디"
+ *        required: true
+ *        type: string
+ *      - name: pwd
+ *        in: path
+ *        description: "비밀번호"
+ *        required: true
+ *        type: string
+ *      responses:
+ *       200:
+ *        description: 로그인
+ */
+router.get('/login/:id/:pwd', function (req, res) {
+  User.findOne({ id: req.params.id, pwd: req.params.pwd }, function (err, user) {
+    if (err) {
+      return res.status(500).json({ error: err });
+    }
+    if (!user) {
+      return res.json(false);
+    }
+    var token = encode(user);
+    console.log(user,token);
+    res.json({
+      token: token,
+      nickname: user.nickname
+    });
+  });
+});
+
 
 /**
  * @swagger
@@ -204,55 +243,10 @@ router.post('/', function (req, res) {
   });
 });
 
-// /**
-//  * @swagger
-//  *  /users/folder:
-//  *    post:
-//  *      tags:
-//  *      - User
-//  *      description: 회원가입시 노트 트리에 사용될 최상위 폴더 추가
-//  *      parameters:
-//  *      - in: body
-//  *        name: addfolder
-//  *        description: "최상위 폴더 추가"
-//  *        schema:
-//  *          type: object
-//  *          properties:
-//  *            id:
-//  *              type: string
-//  *              required: true
-//  *      responses:
-//  *       200:
-//  *        description: "result = true 일 경우 정상적으로 작동"
-//  */
-// router.post('/folder', function (req, res) {
-//   Tree.findOne({id: req.body.id}, function(err, tree){
-//     if (err) {
-//       return res.status(500).json({ error: err });
-//     }
-//     if (!tree) {
-//       return res.json({ result: false });
-//     }
-//     var folder = new Tree();
-//     folder.parent_id = tree._id;
-//     folder.name = tree.id;
-//     folder.file = "folder";
-//     folder.children = [];
-
-//     folder.save(function (err) {
-//       if(err){
-//         console.log(err);
-//         return;
-//       } 
-//       res.json({ result: true });
-//     });
-//   });
-// });
-
 
 /**
  * @swagger
- *  /users/id:
+ *  /users:
  *    put:
  *      tags:
  *      - User
@@ -264,6 +258,9 @@ router.post('/', function (req, res) {
  *        schema:
  *          type: object
  *          properties:
+ *            token:
+ *              type: string
+ *              required: true
  *            name:
  *              type: string
  *            id:
@@ -283,7 +280,11 @@ router.post('/', function (req, res) {
  *       200:
  *        description: "result = true 일 경우 정상적으로 작동"
  */
-router.put('/id', function (req, res) {
+router.put('/', function (req, res) {
+  var info = decode(req.params.token);
+  if (!info) {
+    return res.json({ result: false });
+  }
   User.update({ id: req.body.id }, { $set: req.body }, function (err, output) {
     if (err) {
       res.status(500).json({ error: 'database failure' });
@@ -296,66 +297,45 @@ router.put('/id', function (req, res) {
   })
 });
 
-/**
- * @swagger
- *  /users/{id}:
- *    delete:
- *      tags:
- *      - User
- *      description: 유저 삭제
- *      parameters:
- *      - name: id
- *        in: path
- *        description: "아이디"
- *        required: true
- *        type: string
- *      responses:
- *       200:
- *        description: 아이디를 통해 유저 삭제
- */
-router.delete('/:id', function (req, res) {
-  User.remove({ id: req.params.id }, function (err, output) {
-    if (err) {
-      return res.status(500).json({ error: "database failure" });
-    }
-    res.json({ result: true });
-  })
-});
+
+
 
 /**
  * @swagger
- *  /users/login/{id}/{pwd}:
- *    get:
+ *  /users:
+ *    delete:
  *      tags:
  *      - User
- *      description: 로그인
+ *      description: 유저 정보 삭제
  *      parameters:
- *      - name: id
- *        in: path
- *        description: "아이디"
- *        required: true
- *        type: string
- *      - name: pwd
- *        in: path
- *        description: "비밀번호"
- *        required: true
- *        type: string
+ *      - in: body
+ *        name: deleteUser
+ *        description: "유저 정보 삭제"
+ *        schema:
+ *          type: object
+ *          properties:
+ *            _id:
+ *              type: string
+ *              required: true
+ *            token:
+ *              type: string
+ *              required: true
  *      responses:
  *       200:
- *        description: 로그인
+ *        description: "result = true 일 경우 정상적으로 작동"
  */
-router.get('/login/:id/:pwd', function (req, res) {
-  User.findOne({ id: req.params.id, pwd: req.params.pwd }, function (err, user) {
-    if (err) {
-      return res.status(500).json({ error: err });
-    }
-    if (!user) {
-      return res.json(false);
-    }
-    var token = encode(user);
-    console.log(user,token);
-    res.json(token);
-  });
+router.delete('/',function(req,res){
+  var info = decode(req.body.token);
+  if (!info) {
+      return res.json({ result: false });
+  }
+  User.remove({ _id: req.body._id }, function (err, output) {
+      if (err) {
+        return res.status(500).json({ error: "database failure" });
+      }
+      console.log(output);
+      res.json({ result: true });
+    })
 });
 
 module.exports = router;

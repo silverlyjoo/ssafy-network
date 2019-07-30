@@ -5,12 +5,12 @@ var logger = require('morgan');
 var cors = require('cors');
 
 
-var authRouter = require('./routes/auth');
 var usersRouter = require('./routes/users');
 var roomsRouter = require('./routes/rooms');
 var boardsRouter = require('./routes/boards');
 var calendarsRouter = require('./routes/calendars');
 var treesRouter = require('./routes/trees');
+var searchRouter = require('./routes/search');
 
 var app = express();
 var db = require('./db');
@@ -31,11 +31,11 @@ app.use(cors());
 db();
 app.use(swagger);
 
-app.use('/', authRouter);
 app.use('/users', usersRouter);
 app.use('/rooms', roomsRouter);
 app.use('/boards', boardsRouter);
 app.use('/calendars', calendarsRouter);
 app.use('/trees', treesRouter);
+app.use('/search',searchRouter);
 
 module.exports = app;

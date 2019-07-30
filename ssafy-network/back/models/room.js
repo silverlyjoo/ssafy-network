@@ -1,5 +1,5 @@
 var mongoose = require('mongoose');
-
+var moment = require('moment');
 const roomSchema = new mongoose.Schema({
     title:{
         type: String,
@@ -17,9 +17,9 @@ const roomSchema = new mongoose.Schema({
     },
     password: String,
     createdAt:{
-        type: Date,
-        default: Date.now,
-    },
+        type: String,
+        default: moment().format("YYYY-MM-DD HH:mm:ss"),
+    }
 });
 
 module.exports = mongoose.model('Room',roomSchema);
