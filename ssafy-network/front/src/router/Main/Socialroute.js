@@ -9,7 +9,7 @@ export default {
     component: SocialPage,
     children : [
         {
-            path: 'room',
+            path: 'room/:_id',
             name: 'room',
             component: SocialRoom,
             props: true

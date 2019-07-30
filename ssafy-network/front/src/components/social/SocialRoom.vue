@@ -53,6 +53,7 @@ export default {
       socket: ""
     };
   },
+  props : ['_id'],
   computed: {},
   created() {},
   mounted() {
@@ -64,12 +65,14 @@ export default {
   methods: {
     ConnectSocket() {
       this.socket = io(this.chatserver);
-      this.socket.on("broadcast", data => {
+      this.socket.emit('switchRoom', {'_id': this._id})
+      this.socket.on("switch", data => {
         this.chatdata.push(data);
       });
     },
     SendMsg() {
-      let message = { name: this.nickname, msg: this.chatText };
+      let message = { name: this.nickname, msg: this.chatText, room: this._id };
+      console.log(message)
       this.socket.emit("chat", message);
       this.chatText = "";
       this.$refs.txt.focus();

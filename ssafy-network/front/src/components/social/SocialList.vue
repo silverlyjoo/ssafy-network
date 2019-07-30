@@ -5,12 +5,7 @@
         <v-card class="my-4 chatlistbox">
           <v-list subheader>
             <v-subheader>Recent chat</v-subheader>
-            <v-list-tile
-              v-for="item in items"
-              :key="item.title"
-              avatar
-              to="/social/room"
-            >
+            <v-list-tile v-for="item in items" :key="item.title" avatar @click="joinchat(item._id)">
               <v-list-tile-content>
                 <v-list-tile-title v-html="item.title"></v-list-tile-title>
                 <v-list-tile-title v-html="item.owner"></v-list-tile-title>
@@ -38,7 +33,7 @@ export default {
       items: [],
       dbserver: this.$store.state.dbserver,
       token: this.$session.get("token"),
-      chatserver : this.$store.state.chatserver
+      chatserver: this.$store.state.chatserver
     };
   },
   methods: {
@@ -52,8 +47,13 @@ export default {
         })
         .then(res => {
           this.items = res.data;
-          console.log("res", res.data);
+          // console.log("res", res.data);
         });
+    },
+    joinchat(roomId) {
+      this.$router.push({ name: "room", params: { _id: roomId } });
+
+      console.log(roomId);
     }
   },
   mounted() {
