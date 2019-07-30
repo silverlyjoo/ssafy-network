@@ -24,6 +24,8 @@
     "vue": "^2.6.10",
     "vue-codemirror": "^4.0.6",
     "vue-fullcalendar": "^1.0.9",
+    "vue-resizable": "^1.0.15",
+    "vue-resize-handle": "^1.0.0",
     "vue-router": "^3.0.3",
     "vue-session": "^1.0.0",
     "vue-svg-filler": "^1.0.6",
