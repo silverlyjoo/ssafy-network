@@ -26,27 +26,27 @@
             <v-toolbar-title style="color:white;">{{ formTitle }}</v-toolbar-title>
             <v-spacer></v-spacer>
             <v-toolbar-items>
-              <v-btn dark flat @click="save">등록</v-btn>
-              <v-btn dark flat @click="close">취소</v-btn>
+              <v-btn dark flat >등록</v-btn>
+              <v-btn dark flat >취소</v-btn>
             </v-toolbar-items>
           </v-toolbar>
 
           <v-card-text>
             <v-container grid-list-md style="width:80%; padding:100px;">
-              <v-layout wrap>
-                <v-flex xs12>
-                  <v-text-field v-model="editedItem.title" label="제목"></v-text-field>
+              <v-layout wrap column>
+                <v-flex xs12 sm6 md4>
+                  <v-text-field v-model="article.title" label="제목"></v-text-field>
                 </v-flex>
-                <v-flex xs12>
+                <v-flex xs12 sm6 md4>
                   <v-select
                     :items="languages"
                     :menu-props="{ top: false, offsetY: true }"
-                    v-model="language"
+                    v-model="article.language"
                     label="선택 언어"
                   ></v-select>
                 </v-flex>
-                <v-flex xs12>
-                  <codemirror v-model="editedItem.source" :options="option"></codemirror>
+                <v-flex xs12 sm6 md4>
+                  <codemirror v-model="article.source" :options="option"></codemirror>
                   <!-- <div v-else="items.JavaScript" class="codemirror">
                     <codemirror
                       v-if="items.Python"
@@ -58,8 +58,8 @@
                   <!-- <codemirror v-model="source" :options="cmOptions">{{ source }}</codemirror> -->
                   <!-- <v-textarea id="editor" box label="Code" v-model="editedItem.code" auto-grow value></v-textarea> -->
                 </v-flex>
-                <v-flex xs12>
-                  <v-textarea box label="내용" v-model="editedItem.content" auto-grow value></v-textarea>
+                <v-flex xs12 sm6 md4>
+                  <v-textarea box label="내용" v-model="article.content" auto-grow value></v-textarea>
                 </v-flex>
               </v-layout>
             </v-container>
@@ -78,9 +78,9 @@
       style="width:80%; margin-left:auto; margin-right:auto;"
     >
       <template v-slot:items="props">
-        <td class="text-xs-center">{{ props.item.index }}</td>
-        <td><router-link to="/code/board/detail" style="text-decoration: none !important; color:black;">{{ props.item.title }}</router-link></td>
-        <td class="text-xs-center">{{ props.item.hit }}</td>
+        <td class="text-xs-center">{{ prop.article.index }}</td>
+        <td><router-link to="/code/board/detail" style="text-decoration: none !important; color:black;">{{ prop.article.title }}</router-link></td>
+        <td class="text-xs-center">{{ prop.article.hit }}</td>
         <!-- <td>{{ props.item.source }}</td> -->
         <!-- <td class="text-xs-center">{{ props.item.writer }}</td> -->
         <!-- <td class="justify-center text-xs-center layout px-0">{{ props.item.editorremove }}</td> -->
@@ -176,19 +176,29 @@ import "codemirror/addon/fold/xml-fold.js";
 // 여기까지
 
 export default {
+  name: "CodeBoard",
+  props: ["articles"],
   $_veeValidate: {
     validator: "new",
   },
   data() {
     return {
       search: "",
-      languages: ["JavaScript", "Python", "Vue"],
+      dialog: false,
+      article: {
+        _id: "",
+        title: "",
+        source: "",
+        content: "",
+        selectedLanguage: "",
+      },
+      languages: [
+        { text: "JavaScript" },
+        { text: "Python" },
+        { text: "Vue" },
+      ],
       language: "",
       option: {},
-      _id: "",
-      title: "",
-      content: "",
-      source: "",
       cmOptionsJs: {
         autoCloseBrackets: true,
         tabSize: 4,
@@ -239,8 +249,7 @@ export default {
           }
         }
       },
-      editor: "",
-      dialog: false,
+      // editor: "",
       headers: [
         {
           text: "글 번호",
@@ -261,19 +270,18 @@ export default {
           value: "hit"
         },
       ],
-      articles: [],
       editedIndex: -1,
       editedItem: {
         title: "",
         source: "",
         content: "",
-        languages: ""
+        language: ""
       },
       defaultItem: {
         title: "",
         source: "",
         content: "",
-        languages: ""
+        language: ""
       }
     };
   },
@@ -290,136 +298,51 @@ export default {
     language(to, from) {
       if (to == "JavaScript") {
         this.option = this.cmOptionsJs;
-        this.editedItem.language = this.languages[0];
+        // this.editedItem.language = this.languages[0];
       } else if (to == "Python") {
         this.option = this.cmOptionsPy;
-        this.editedItem.language = this.languages[1];
+        // this.editedItem.language = this.languages[1];
       } else if (to == "Vue") {
         this.option = this.cmOptionsVue;
-        this.editedItem.language = this.languages[2];
-      } else if (to == "") {
+        // this.editedItem.language = this.languages[2];
       }
+      // else if (to == "") {
+      // }
     }
   },
 
   methods: {
-    getArticle() {
-      this.$validator.validateAll().then(res => {
-        fetch(this.$store.state.dbserver + "/boards/" + this._id + "/" + this.$session.get("token"), {
-          method: "GET",
-          hearders: {
-            "Access-Control-Allow-Origin": "*",
-            "Content-Type": "application/json"
-          },
-          body: JSON.stringify ({
-            token: this.$session.get("token"),
-            language: this.$session.get("language"),
-            writer: this.$session.get("writer"),
-            title: this.$session.get("title"),
-            source: this.$session.get("source"),
-            content: this.$session.get("content")
-          })
-          }).then(res => res.json())
-      });
-    },
-    addArticle() {
-      this.$validator.validateAll().then(res => {
-        fetch(this.$store.state.dbserver + "/boards",
-        {
-          method: "POST",
-          hearders: {
-            "Access-Control-Allow-Origin": "*",
-            "Content-Type": "application/json"
-          },
-          body: JSON.stringify ({
-            token: this.$session.get("token"),
-            language: this.$session.get("language"),
-            writer: this.$session.get("writer"),
-            title: this.$session.get("title"),
-            source: this.$session.get("source"),
-            content: this.$session.get("content")
-          })
-          }).then(res => res.json())
-        .then(data => {
-          if (data.result == true) {
-            alert("글이 등록되었습니다!");
-            
-          } else {
-            alert("글을 등록할 수 없습니다.");
-          }
-          this.close();
-        })
-      });
-    },
-    editArticle() {
-      this.$validator.validateAll().then(res => {
-        fetch(this.$store.state.dbserver + "/boards",
-        {
-          method: "PUT",
-          hearders: {
-            "Access-Control-Allow-Origin": "*",
-            "Content-Type": "application/json"
-          },
-          body: JSON.stringify ({
-            token: this.$session.get("token"),
-            language: this.$session.get("language"),
-            writer: this.$session.get("writer"),
-            title: this.$session.get("title"),
-            source: this.$session.get("source"),
-            content: this.$session.get("content")
-          })
-          }).then(res => res.json())
-        .then(data => {
-          if (data.result == true) {
-            alert("글이 수정되었습니다!");
-            
-          } else {
-            alert("글을 수정할 수 없습니다.");
-          }
-          this.close();
-        })
-      });
-    },
-    deleteArticle() {
-      this.$validator.validateAll().then(res => {
-        fetch(this.$store.state.dbserver + "/boards",
-        {
-          method: "DELETE",
-          hearders: {
-            "Access-Control-Allow-Origin": "*",
-            "Content-Type": "application/json"
-          },
-          body: JSON.stringify ({
-            token: this.$session.get("token"),
-            language: this.$session.get("language"),
-            writer: this.$session.get("writer"),
-            title: this.$session.get("title"),
-            source: this.$session.get("source"),
-            content: this.$session.get("content")
-          })
-          }).then(res => res.json())
-        .then(data => {
-          if (data.result == true) {
-            alert("글이 삭제되었습니다!");
-            
-          } else {
-            alert("글을 삭제할 수 없습니다.");
-          }
-          this.close();
-        })
-      });
-    },
-
-    editItem(item) {
-      this.editedIndex = this.articles.indexOf(item);
-      this.editedItem = Object.assign({}, item);
+    articleClick(article, jsArticle, pos) {
       this.dialog = true;
+      this.article._id = article._id;
+      this.article.title = article.title;
+      this.article.source = article.source;
+      this.article.content = article.content;
+      this.article.selectedLanguage = article.selectedLanguage;
+    },
+    getArticle() {
+      fetch(this.$store.state.dbserver + "/boards/" + "/" + this.$session.get("token"), {
+        method: "GET",
+        hearders: {
+          "Access-Control-Allow-Origin": "*",
+          "Content-Type": "application/json"
+        }
+      }).then(res => res.json())
+      .then(data => {
+        this.events = data;
+      })
     },
 
-    deleteItem(item) {
-      const index = this.articles.indexOf(item);
-      confirm("삭제하시겠습니까?") && this.articles.splice(index, 1);
-    },
+    // editItem(item) {
+    //   this.editedIndex = this.articles.indexOf(item);
+    //   this.editedItem = Object.assign({}, item);
+    //   this.dialog = true;
+    // },
+
+    // deleteItem(item) {
+    //   const index = this.articles.indexOf(item);
+    //   confirm("삭제하시겠습니까?") && this.articles.splice(index, 1);
+    // },
 
     close() {
       this.dialog = false;
@@ -429,14 +352,14 @@ export default {
       }, 300);
     },
 
-    save() {
-      if (this.editedIndex > -1) {
-        Object.assign(this.articles[this.editedIndex], this.editedItem);
-      } else {
-        this.articles.push(this.editedItem);
-      }
-      this.close();
-    },
+    // save() {
+    //   if (this.editedIndex > -1) {
+    //     Object.assign(this.articles[this.editedIndex], this.editedItem);
+    //   } else {
+    //     this.articles.push(this.editedItem);
+    //   }
+    //   this.close();
+    // },
   }
 };
 </script>
