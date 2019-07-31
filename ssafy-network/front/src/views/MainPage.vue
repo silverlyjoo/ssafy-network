@@ -1,8 +1,7 @@
 <template>
   <v-layout fill-height>
     <vue-resizable
-      :min-height="height"
-      :max-height="height"
+      :height ="height"
       :min-width="minWidth"
       :max-width="maxWidth"
       :active="handlers"
@@ -42,8 +41,19 @@ export default {
     VueResizable
   },
   created() {
-    this.height = window.innerHeight;
+    window.addEventListener('resize', this.handleResize)
+    this.handleResize();
+  },
+  destroyed() {
+    window.removeEventListener('resize', this.handleResize)
+  },
+  methods:{
+    handleResize(){
+      this.height = window.innerHeight;
+    }
   }
+
+
 };
 </script>
 
