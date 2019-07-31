@@ -50,7 +50,8 @@ export default {
       nickname: this.$session.get("nickname"),
       chatText: "",
       chatdata: [],
-      socket: ""
+      socket: "",
+      userlist: []
     };
   },
   props: ["_id"],
@@ -73,7 +74,10 @@ export default {
       this.socket.emit("join", { _id: this._id, nickname: this.nickname });
       this.socket.on("broadcast", data => {
         this.chatdata.push(data);
-      this.scrollset()
+        this.scrollset();
+      });
+      this.socket.on("userlist", data => {
+        console.log(data)
       });
     },
     disconnect() {
@@ -84,7 +88,7 @@ export default {
       let message = { name: this.nickname, msg: this.chatText, room: this._id };
       // console.log(message);
       await this.socket.emit("chat", message);
-      // this.chatText = "";
+      this.chatText = "";
       await this.$refs.txt.focus();
     }
   }

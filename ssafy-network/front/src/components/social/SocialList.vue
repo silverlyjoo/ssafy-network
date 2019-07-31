@@ -2,7 +2,7 @@
   <v-container>
     <v-layout row justify-center>
       <v-flex xs11>
-        <v-card class="px-3 sociallist-header">
+        <v-card flat class="px-3 sociallist-header">
           <v-text-field v-model="chatroomsearchkeyword"></v-text-field>
           <v-btn small style="width:5px;" @click="searchRooms">
             <i class="fas fa-search"></i>

@@ -42,7 +42,6 @@ export default {
     VueResizable
   },
   created() {
-    this.height = window.innerHeight;
   }
 };
 </script>
