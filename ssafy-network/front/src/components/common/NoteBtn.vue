@@ -2,7 +2,12 @@
   <div class="navBtn mb-3">
     <v-layout align-center class="pa-2" @click="goNote()">
       <v-flex xs7 text-xs-center>
+        
         <span class="navtext navtcolor">NOTE</span>
+      </v-flex>
+      <v-flex v-if="overlay">
+        <v-progress-circular indeterminate color="white" 
+             size ="15" ></v-progress-circular>
       </v-flex>
     </v-layout>
     <v-treeview
@@ -179,9 +184,7 @@
         </v-card-actions>
       </v-card>
     </v-dialog>
-    <v-overlay :value="overlay">
-      <v-progress-circular indeterminate size="64"></v-progress-circular>
-    </v-overlay>
+      
   </div>
 </template>
 
@@ -191,7 +194,7 @@ import { mapState } from "vuex";
 export default {
   data() {
     return {
-      overlay:false,
+      overlay: false,
       showNote: false,
       showFolder: false,
       showDelete: false,
@@ -480,10 +483,10 @@ export default {
       this.click = this.$store.state.notetreefoldflag;
     },
     overlay(to,from){
-      if(to == false && from == true){
-        val && setTimeout(() => {
-          this.overlay = false
-        }, 3000)
+      if(to == true && from == false){
+          setTimeout(() => {
+          this.overlay = false;
+        }, 3000);
       }
       
     }
