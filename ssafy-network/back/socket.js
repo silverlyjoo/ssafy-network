@@ -48,18 +48,18 @@ module.exports = (server) => {
 
         });
 
-        // socket.on('leave', function(data){
-        //   console.log(data.nickname+"님이 퇴장하셨습니다.");
-        //   socket.leave(data._id);
-        //   var msg = {
-        //     room : data._id,
-        //     from: {
-        //       name: "System",
-        //     },
-        //     msg: data.nickname+"님이 퇴장하셨습니다.",
-        //     time : moment().format("YYYY-MM-DD HH:mm:ss")
-        //   };
-        //   io.sockets.in(data._id).emit('leave',msg);
-        // });
+        socket.on('leave', function(data){
+          console.log(data.nickname+"님이 퇴장하셨습니다.");
+          socket.leave(data._id);
+          var msg = {
+            room : data._id,
+            from: {
+              name: "System",
+            },
+            msg: data.nickname+"님이 퇴장하셨습니다.",
+            time : moment().format("YYYY-MM-DD HH:mm:ss")
+          };
+          io.sockets.in(data._id).emit('leave',msg);
+        });
     });
 };

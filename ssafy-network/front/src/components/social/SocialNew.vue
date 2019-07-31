@@ -22,6 +22,9 @@
                 ref="max"
                 v-model="max"
                 label="최대 인원"
+                v-validate="'required|min_value:2'"
+                  data-vv-name="number"
+                  :error-messages="errors.collect('number')"
                 required
               ></v-text-field>
               <v-text-field
