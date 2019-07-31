@@ -1,12 +1,19 @@
 <template>
   <v-layout>
-    <vue-resizable :min-height="height" :max-height="height" :min-width="minWidth" :max-width="maxWidth">
-    <Nav class="nav"></Nav>
-    </vue-resizable> 
+    <vue-resizable
+      :min-height="height"
+      :max-height="height"
+      :min-width="minWidth"
+      :max-width="maxWidth"
+    >
+      <Nav class="nav"></Nav>
+    </vue-resizable>
     <div class="mainsection">
       <Header></Header>
-      <div class="routingbody"><router-view></router-view></div>
-      <Footer></Footer>
+      <div class="routingbody">
+        <router-view></router-view>
+      </div>
+      <!-- <Footer></Footer> -->
     </div>
   </v-layout>
 </template>
@@ -15,15 +22,15 @@
 import Header from "@/components/common/Header";
 import Footer from "@/components/common/Footer";
 import Nav from "@/components/common/Nav";
-import VueResizable from 'vue-resizable';
+import VueResizable from "vue-resizable";
 
 export default {
   data() {
     return {
       login: this.$store.state.login,
-      height:"",
-minWidth:250,
-maxWidth:700
+      height: "",
+      minWidth: 250,
+      maxWidth: 700
     };
   },
   components: {
@@ -32,7 +39,7 @@ maxWidth:700
     Nav,
     VueResizable
   },
-  created(){
+  created() {
     this.height = window.innerHeight;
   }
 };
@@ -41,12 +48,11 @@ maxWidth:700
 <style>
 .mainsection {
   width: 100%;
+  height: 100vh;
+  overflow: auto;
 }
-.routingbody {
-  min-height: calc(100vh - 165px);
-}
-.nav{
-  width:100%;
+.nav {
+  width: 100%;
   height: 100%;
   background-color: aqua;
 }
