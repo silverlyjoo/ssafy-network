@@ -64,7 +64,7 @@ router.get('/:id/:token', function (req, res) {
             res.json({
                 item: ItemTree
             });
-        }, 2000);
+        }, 3000);
     });
 });
 
@@ -339,6 +339,52 @@ router.put('/txt', function (req, res) {
     })
 });
 
+/**
+ * @swagger
+ *  /trees/folder:
+ *    put:
+ *      tags:
+ *      - Tree
+ *      description: 폴더 업데이트
+ *      parameters:
+ *      - in: body
+ *        name: updatefolder
+ *        description: "폴더 정보 업데이트"
+ *        schema:
+ *          type: object
+ *          properties:
+ *            _id:
+ *              type: string
+ *              required: true
+ *            token:
+ *              type: string
+ *              required: true
+ *            name:
+ *              type: string
+ *              required: true
+ *      responses:
+ *       200:
+ *        description: "result = true 일 경우 정상적으로 작동"
+ */
+router.put('/folder', function (req, res) {
+    var info = decode(req.body.token);
+    if (!info) {
+        return res.json({ result: false });
+    }
+    console.log(req.body);
+    Folder.update({ _id: req.body._id }, { $set: {
+            name: req.body.name,
+        }}, function (err, output) {
+        if (err) {
+            res.status(500).json({ error: 'database failure' });
+        }
+        console.log(output);
+        if (!output.n) {
+            return res.json({ result: false });
+        }
+        res.json({ result: true });
+    })
+});
 
 /**
  * @swagger
