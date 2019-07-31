@@ -66,9 +66,7 @@ export default {
     ConnectSocket() {
       this.socket = io(this.chatserver);
       this.socket.emit("join", { _id: this._id, nickname: this.nickname });
-      this.socket.on("join", data => {
-        this.chatdata.push(data);
-      });
+
       this.socket.on("broadcast", data => {
         this.chatdata.push(data);
       });
