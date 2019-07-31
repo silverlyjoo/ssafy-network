@@ -274,7 +274,7 @@ import { mapState } from "vuex";
 export default {
   data() {
     return {
-      showRoot:false,
+      showRoot: false,
       rootid: "",
       overlay: false,
       showNote: false,
@@ -336,7 +336,7 @@ export default {
         });
     },
     addRootNote() {
-       this.$validator.validateAll("NoteTitle").then(res => {
+      this.$validator.validateAll("NoteTitle").then(res => {
         if (!res) {
           alert("값이 유효한지 확인해 주세요.");
         } else {
@@ -449,7 +449,26 @@ export default {
         if (!res) {
           alert("값이 유효한지 확인해 주세요.");
         } else {
-      fetch(this.$store.state.dbserver + "/trees/folder", {
+          fetch(
+            this.$store.state.dbserver +
+              "/trees/folder/" +
+              this.rootid +
+              "/" +
+              this.FolderTitle +
+              "/" +
+              this.$session.get("token"),
+            {
+              method: "GET",
+              headers: {
+                "Access-Control-Allow-Origin": "*",
+                "Content-Type": "application/json"
+              }
+            }
+          )
+            .then(res => res.json())
+            .then(data => {
+              if (data.result == false) {
+                fetch(this.$store.state.dbserver + "/trees/folder", {
                   method: "POST",
                   headers: {
                     "Access-Control-Allow-Origin": "*",
@@ -463,14 +482,17 @@ export default {
                 })
                   .then(res => res.json())
                   .then(data => {
-                    if(data.result == true){
+                    if (data.result == true) {
                       alert("폴더 추가 성공!");
-                      
-                    }else{
+                    } else {
                       alert("폴더 추가 실패...");
                     }
-                    this.closeRoot();
                   });
+              } else {
+                alert("이미 폴더 이름이 존재합니다...");
+              }
+              this.closeRoot();
+            });
         }
       });
     },
@@ -634,24 +656,47 @@ export default {
         if (!res) {
           alert("값이 유효한지 확인해 주세요.");
         } else {
-          fetch(this.$store.state.dbserver + "/trees/folder/", {
-            method: "POST",
-            headers: {
-              "Access-Control-Allow-Origin": "*",
-              "Content-Type": "application/json"
-            },
-            body: JSON.stringify({
-              token: this.$session.get("token"),
-              parent_id: this.seleteItem._id,
-              name: this.FolderTitle
-            })
-          })
+          fetch(
+            this.$store.state.dbserver +
+              "/trees/folder/" +
+              this.seleteItem._id +
+              "/" +
+              this.FolderTitle +
+              "/" +
+              this.$session.get("token"),
+            {
+              method: "GET",
+              headers: {
+                "Access-Control-Allow-Origin": "*",
+                "Content-Type": "application/json"
+              }
+            }
+          )
             .then(res => res.json())
             .then(data => {
-              if (data.result == true) {
-                alert("성공");
+              if (data.result == false) {
+                fetch(this.$store.state.dbserver + "/trees/folder/", {
+                  method: "POST",
+                  headers: {
+                    "Access-Control-Allow-Origin": "*",
+                    "Content-Type": "application/json"
+                  },
+                  body: JSON.stringify({
+                    token: this.$session.get("token"),
+                    parent_id: this.seleteItem._id,
+                    name: this.FolderTitle
+                  })
+                })
+                  .then(res => res.json())
+                  .then(data => {
+                    if (data.result == true) {
+                      alert("폴더 추가 성공");
+                    } else {
+                      alert("폴더 추가 실패");
+                    }
+                  });
               } else {
-                alert("실패");
+                alert("이미 존재하는 폴더이름입니다");
               }
               this.addFolderClose();
             });
@@ -723,9 +768,7 @@ export default {
       this.items.sort(this.compare);
     }
   },
-  mounted() {
-    
-  },
+  mounted() {},
   computed: mapState(["NoteCheck", "notetreefoldflag"]),
   watch: {
     NoteCheck(to, from) {

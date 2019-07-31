@@ -5,6 +5,7 @@
       :max-height="height"
       :min-width="minWidth"
       :max-width="maxWidth"
+      :active="handlers"
     >
       <Nav class="nav"></Nav>
     </vue-resizable>
@@ -30,7 +31,8 @@ export default {
       login: this.$store.state.login,
       height: "",
       minWidth: 320,
-      maxWidth: 700
+      maxWidth: 700,
+      handlers: ['r'],
     };
   },
   components: {
@@ -48,12 +50,11 @@ export default {
 <style>
 .mainsection {
   width: 100%;
-  height: 100vh;
+  height: 100%;
   overflow: auto;
 }
 .nav {
   width: 100%;
-  height: 100vh;
-  background-color: aqua;
+  height: 100%;
 }
 </style>

@@ -251,7 +251,7 @@ export default {
                 }
             });
     },close(){
-      this.$router.push("/note/calendar")
+      this.$router.push("/note/detail/" + this._id);
     }
   },
   mounted(){

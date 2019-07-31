@@ -98,7 +98,7 @@ export default {
 }
 .navLayout {
   position: relative;
-  height: 100vh;
+  height: 100%;
   background: rgb(75, 75, 75);
   z-index: 100;
 }

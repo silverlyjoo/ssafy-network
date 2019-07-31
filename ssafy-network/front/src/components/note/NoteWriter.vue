@@ -254,7 +254,7 @@ export default {
                  this.$router.push("/");
             });
     },close(){
-       this.$router.push("/note/calendar")
+       this.$router.push("/note/detail/" + this._id);
     }
   },
     created(){
