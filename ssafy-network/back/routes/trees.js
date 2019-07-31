@@ -70,6 +70,41 @@ router.get('/:id/:token', function (req, res) {
 
 /**
  * @swagger
+ *  /trees/super/{id}/{token}:
+ *    get:
+ *      tags:
+ *      - Tree
+ *      description: 회원가입시 생성된 최상위 오브젝트 아이디를 반환
+ *      parameters:
+ *      - name: id
+ *        in: path
+ *        description: "아이디"
+ *        required: true
+ *        type: string
+ *      - name: token
+ *        in: path
+ *        description: "토큰"
+ *        required: true
+ *        type: string
+ *      responses:
+ *       200:
+ *        description: 회원가입시 생성된 최상위 오브젝트 아이디를 반환
+ */
+router.get('/super/:id/:token', function (req, res) {
+    var info = decode(req.params.token);
+    if (!info) {
+        return res.json({ result: false });
+    }
+    Supertree.findOne({id: req.params.id} , function(err, tree){
+        if(err){
+            res.json({result: false})
+        }
+        res.json(tree);
+    });
+});
+
+/**
+ * @swagger
  *  /trees/txt/{_id}/{token}:
  *    get:
  *      tags:
