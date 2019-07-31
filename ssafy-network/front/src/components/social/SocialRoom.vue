@@ -3,7 +3,7 @@
     <v-content>
       <h1>Chatroom</h1>
       <v-card class="chatwindow">
-        <v-container id="scrolldown" class="chats" >
+        <v-container id="scrolldown" class="chats">
           <div v-for="chat in chatdata" :key="chat.id" class="chat">
             <div v-if="chat.from.name == nickname" class="me">
               <span class="title">{{ chat.msg }}</span>
@@ -47,10 +47,10 @@ export default {
   data() {
     return {
       chatserver: this.$store.state.dbserver,
-      nickname: this.$session.get("id"),
+      nickname: this.$session.get("nickname"),
       chatText: "",
       chatdata: [],
-      socket: "",
+      socket: ""
     };
   },
   props: ["_id"],
@@ -63,24 +63,29 @@ export default {
     this.disconnect();
   },
   methods: {
+    scrollset() {
+      document.getElementById("scrolldown").scrollTop = document.getElementById(
+        "scrolldown"
+      ).scrollHeight;
+    },
     ConnectSocket() {
       this.socket = io(this.chatserver);
       this.socket.emit("join", { _id: this._id, nickname: this.nickname });
       this.socket.on("broadcast", data => {
         this.chatdata.push(data);
-        document.getElementById("scrolldown").scrollTop =  document.getElementById("scrolldown").scrollHeight;
+      this.scrollset()
       });
     },
-    disconnect () {
-      this.socket = io(this.chatserver)
-      this.socket.emit("leave", { _id: this._id, nickname: this.nickname })
+    disconnect() {
+      this.socket = io(this.chatserver);
+      this.socket.emit("leave", { _id: this._id, nickname: this.nickname });
     },
-    SendMsg() {
+    async SendMsg() {
       let message = { name: this.nickname, msg: this.chatText, room: this._id };
-      console.log(message);
-      this.socket.emit("chat", message);
-      this.chatText = "";
-      this.$refs.txt.focus();
+      // console.log(message);
+      await this.socket.emit("chat", message);
+      // this.chatText = "";
+      await this.$refs.txt.focus();
     }
   }
 };
