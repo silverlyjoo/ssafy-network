@@ -16,7 +16,7 @@
             <v-divider class="mb-3" style="border-color: rgb(218, 234, 248);"></v-divider>
 
             <div class="navBtn">
-              <v-layout align-center class="pa-2 mb-3" @click="goNote()">
+              <v-layout align-center class="pa-2 mb-3" @click="goNote()" style="cursor:pointer;">
                 <v-flex xs7 text-xs-center>
                   <span class="navtext navtcolor">NOTE</span>
                 </v-flex>
@@ -462,6 +462,7 @@ export default {
 .navBtn:hover {
   background: rgba(212, 212, 212, 0.212);
   border-radius: 10px;
+  
 }
 .navtext {
   font-family: "Raleway";
