@@ -66,7 +66,6 @@ export default {
   methods: {
     foldnote() {
       this.$store.state.notetreefoldflag = false
-      console.log('hey')
     }
   },
   mounted() {}
