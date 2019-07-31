@@ -22,6 +22,7 @@
                 ref="max"
                 v-model="max"
                 label="최대 인원"
+                
                 required
               ></v-text-field>
               <v-text-field
@@ -78,7 +79,9 @@ export default {
             }
           })
           .catch(error => console.log(error))
-          .finally();
+          .finally(
+            this.$router.push({path: '/social/rooms'})
+          );
       });
     }
   }
