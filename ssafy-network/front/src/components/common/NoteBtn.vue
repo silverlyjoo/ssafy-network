@@ -34,6 +34,22 @@
             <v-btn
               flat
               v-on="on"
+              @click="FolderEdit(item)"
+              v-if="item.file != 'txt'"
+              small
+              class="ma-0 pa-0"
+              style="min-width:10px!important;"
+            >
+              <v-icon small>edit</v-icon>
+            </v-btn>
+          </template>
+          <span>폴더 수정</span>
+        </v-tooltip>
+        <v-tooltip bottom>
+          <template v-slot:activator="{ on }">
+            <v-btn
+              flat
+              v-on="on"
               @click="addNoteOpen(item)"
               v-if="item.file != 'txt'"
               small
@@ -128,6 +144,31 @@
         </v-card-actions>
       </v-card>
     </v-dialog>
+    <v-dialog v-model="showFolderEdit" max-width="300">
+      <v-card class="pa-2">
+        <v-card-title class="headline justify-center">폴더 이름 수정</v-card-title>
+        <v-card-actions class="text-xs-center">
+          <v-container>
+            <v-layout wrap>
+              <v-flex>
+                <v-text-field
+                  label="폴더 제목"
+                  v-model="FolderTitle"
+                  v-validate="'required|min:2'"
+                  data-vv-name="FolderTitle"
+                  data-vv-scope="FolderTitle"
+                  :error-messages="errors.collect('FolderTitle')"
+                ></v-text-field>
+              </v-flex>
+              <v-flex>
+                <v-btn color="green darken-1" flat="flat" @click="FolderEditClose()">취소</v-btn>
+                <v-btn color="green darken-1" flat="flat" @click="FolderUpdate()">수정</v-btn>
+              </v-flex>
+            </v-layout>
+          </v-container>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
     <v-dialog v-model="showDelete" max-width="400">
       <v-card class="pa-2">
         <v-card-title class="headline justify-center">삭제 하시겠습니까?</v-card-title>
@@ -138,6 +179,9 @@
         </v-card-actions>
       </v-card>
     </v-dialog>
+    <v-overlay :value="overlay">
+      <v-progress-circular indeterminate size="64"></v-progress-circular>
+    </v-overlay>
   </div>
 </template>
 
@@ -147,15 +191,14 @@ import { mapState } from "vuex";
 export default {
   data() {
     return {
+      overlay:false,
       showNote: false,
       showFolder: false,
       showDelete: false,
+      showFolderEdit: false,
       seleteItem: "",
-      x: 0,
-      y: 0,
       FolderTitle: "",
       NoteTitle: "",
-      menuItems: ["파일 추가", "폴더 추가"],
       foldflag: this.$store.state.navFoldFlag,
       click: false,
       open: [],
@@ -170,11 +213,42 @@ export default {
         xls: "mdi-file-excel"
       },
       tree: [],
-      _id: "",
       items: []
     };
   },
   methods: {
+    FolderEdit(item){
+      this.seleteItem = item;
+      this.FolderTitle = item.name;
+      this.showFolderEdit = true;
+    },
+    FolderUpdate(){
+      fetch(this.$store.state.dbserver + "/trees/folder", {
+            method: "PUT",
+            headers: {
+              "Access-Control-Allow-Origin": "*",
+              "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+              _id : this.seleteItem._id,
+              token : this.$session.get("token"),
+              name : this.FolderTitle,
+            })
+          })
+            .then(res => res.json())
+            .then(data => {
+                if(data.result == true){
+                    alert("폴더 이름 수정 성공");
+                }else{
+                    alert("폴더 이름 수정 실패..");
+                }
+                this.FolderEditClose();
+            });
+    },FolderEditClose(){
+      this.showFolderEdit = false;
+      this.FolderTitle = "";
+      this.closeForm();
+    },
     NoteDetail(id) {
       this.$router.push("/note/detail/" + id);
     },
@@ -326,6 +400,7 @@ export default {
       });
     },
     getItems() {
+      this.overlay = !this.overlay;
       fetch(
         this.$store.state.dbserver +
           "/trees/" +
@@ -402,8 +477,15 @@ export default {
       }
     },
     notetreefoldflag(to , from){
-      console.log(this.$store.state.notetreefoldflag)
       this.click = this.$store.state.notetreefoldflag;
+    },
+    overlay(to,from){
+      if(to == false && from == true){
+        val && setTimeout(() => {
+          this.overlay = false
+        }, 3000)
+      }
+      
     }
 
   }

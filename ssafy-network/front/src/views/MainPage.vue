@@ -29,7 +29,7 @@ export default {
     return {
       login: this.$store.state.login,
       height: "",
-      minWidth: 300,
+      minWidth: 320,
       maxWidth: 700
     };
   },
