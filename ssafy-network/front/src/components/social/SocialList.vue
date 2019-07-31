@@ -2,6 +2,13 @@
   <v-container>
     <v-layout row justify-center>
       <v-flex xs11>
+        <v-card class="px-3 sociallist-header">
+          <v-text-field v-model="chatroomsearchkeyword"></v-text-field>
+          <v-btn small style="width:5px;" @click="searchRooms">
+            <i class="fas fa-search"></i>
+          </v-btn>
+          <v-btn small to="/social/new">New chat</v-btn>
+        </v-card>
         <v-card class="my-4 chatlistbox">
           <v-list subheader>
             <v-subheader>Recent chat</v-subheader>
@@ -18,8 +25,6 @@
         </v-card>
       </v-flex>
     </v-layout>
-    <v-btn to="/social/room">Start chat</v-btn>
-    <v-btn to="/social/new">New chat</v-btn>
   </v-container>
 </template>
 
@@ -33,10 +38,14 @@ export default {
       items: [],
       dbserver: this.$store.state.dbserver,
       token: this.$session.get("token"),
-      chatserver: this.$store.state.chatserver
+      chatserver: this.$store.state.chatserver,
+      chatroomsearchkeyword: ""
     };
   },
   methods: {
+    searchRooms() {
+
+    },
     getRooms() {
       let roomURL = this.dbserver;
       caxios(roomURL)
@@ -65,5 +74,9 @@ export default {
 <style>
 .chatlistbox {
   height: 45rem;
+}
+.sociallist-header {
+  display: flex;
+  align-items: center;
 }
 </style>
