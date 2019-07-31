@@ -48,14 +48,6 @@
 
         <button
           class="menubar__button"
-          :class="{ 'is-active': isActive.code() }"
-          @click="commands.code"
-        >
-          <icon name="code" />
-        </button>
-
-        <button
-          class="menubar__button"
           :class="{ 'is-active': isActive.paragraph() }"
           @click="commands.paragraph"
         >
@@ -155,9 +147,10 @@
 import Icon from '@/components/note/Icon'
 import { Editor, EditorContent, EditorMenuBar } from 'tiptap'
 import {
+  CodeBlockHighlight,
   Image,
   Blockquote,
-  CodeBlock,
+  // CodeBlock,
   HardBreak,
   Heading,
   HorizontalRule,
@@ -167,13 +160,16 @@ import {
   TodoItem,
   TodoList,
   Bold,
-  Code,
+  // Code,
   Italic,
   Link,
   Strike,
   Underline,
   History,
 } from 'tiptap-extensions'
+import javascript from 'highlight.js/lib/languages/javascript'
+import css from 'highlight.js/lib/languages/css'
+
 
 export default {
     components: {
@@ -190,11 +186,16 @@ export default {
       changeContent:"",
       name :"",
       editor: new Editor({
-        extensions: [
+        extensions: [ new CodeBlockHighlight({
+            languages: {
+              javascript,
+              css,
+            },
+          }),
           new Image(),
           new Blockquote(),
           new BulletList(),
-          new CodeBlock(),
+          // new CodeBlock(),
           new HardBreak(),
           new Heading({ levels: [1, 2, 3] }),
           new HorizontalRule(),
@@ -204,7 +205,7 @@ export default {
           new TodoList(),
           new Link(),
           new Bold(),
-          new Code(),
+          // new Code(),
           new Italic(),
           new Strike(),
           new Underline(),
@@ -319,6 +320,63 @@ export default {
     background-color: rgba(black, 0.15);
   }
 }
+pre {
+  &::before {
+    content: attr(data-language);
+    text-transform: uppercase;
+    display: block;
+    text-align: right;
+    font-weight: bold;
+    font-size: 0.6rem;
+  }
+  code {
+    .hljs-comment,
+    .hljs-quote {
+      color: #999999;
+    }
+    .hljs-variable,
+    .hljs-template-variable,
+    .hljs-attribute,
+    .hljs-tag,
+    .hljs-name,
+    .hljs-regexp,
+    .hljs-link,
+    .hljs-name,
+    .hljs-selector-id,
+    .hljs-selector-class {
+      color: #f2777a;
+    }
+    .hljs-number,
+    .hljs-meta,
+    .hljs-built_in,
+    .hljs-builtin-name,
+    .hljs-literal,
+    .hljs-type,
+    .hljs-params {
+      color: #f99157;
+    }
+    .hljs-string,
+    .hljs-symbol,
+    .hljs-bullet {
+      color: #99cc99;
+    }
+    .hljs-title,
+    .hljs-section {
+      color: #ffcc66;
+    }
+    .hljs-keyword,
+    .hljs-selector-tag {
+      color: #6699cc;
+    }
+    .hljs-emphasis {
+      font-style: italic;
+    }
+    .hljs-strong {
+      font-weight: 700;
+    }
+  }
+}
+
 .editor {
   position: relative;
   max-width: 50rem;
@@ -349,6 +407,7 @@ export default {
         color: rgba(white, 0.9)!important;
       }
     }
+   
 
 
     ul,

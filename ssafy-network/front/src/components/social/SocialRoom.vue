@@ -53,30 +53,36 @@ export default {
       socket: ""
     };
   },
-  props : ['_id'],
+  props: ["_id"],
   computed: {},
   created() {},
   mounted() {
     this.ConnectSocket();
   },
   destroyed() {
-    // this.disconnect();
+    this.disconnect();
   },
   methods: {
     ConnectSocket() {
       this.socket = io(this.chatserver);
-      this.socket.emit('join', {_id: this._id, nickname: this.nickname});
+      this.socket.emit("join", { _id: this._id, nickname: this.nickname });
       this.socket.on("join", data => {
         this.chatdata.push(data);
       });
       this.socket.on("broadcast", data => {
         this.chatdata.push(data);
       });
-      
+    },
+    disconnect () {
+      this.socket = io(this.chatserver)
+      this.socket.emit("leave", { _id: this._id, nickname: this.nickname })
+      this.socket.on("leave", data => {
+        this.chatdata.push(data);
+      });
     },
     SendMsg() {
       let message = { name: this.nickname, msg: this.chatText, room: this._id };
-      console.log(message)
+      console.log(message);
       this.socket.emit("chat", message);
       this.chatText = "";
       this.$refs.txt.focus();
