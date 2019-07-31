@@ -22,7 +22,6 @@
                 ref="max"
                 v-model="max"
                 label="최대 인원"
-                
                 required
               ></v-text-field>
               <v-text-field

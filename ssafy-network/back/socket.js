@@ -18,7 +18,7 @@ module.exports = (server) => {
             msg: data.nickname+"님이 입장하셨습니다.",
             time : moment().format("YYYY-MM-DD HH:mm:ss")
           };
-          io.sockets.in(data._id).emit('join',msg);
+          io.sockets.in(data._id).emit('broadcast',msg);
         });
 
         socket.on('chat', function(data) {
@@ -59,7 +59,7 @@ module.exports = (server) => {
             msg: data.nickname+"님이 퇴장하셨습니다.",
             time : moment().format("YYYY-MM-DD HH:mm:ss")
           };
-          io.sockets.in(data._id).emit('leave',msg);
+          io.sockets.in(data._id).emit('broadcast',msg);
         });
     });
 };
