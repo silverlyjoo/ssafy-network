@@ -64,7 +64,42 @@ router.get('/:id/:token', function (req, res) {
             res.json({
                 item: ItemTree
             });
-        }, 2000);
+        }, 3000);
+    });
+});
+
+/**
+ * @swagger
+ *  /trees/super/{id}/{token}:
+ *    get:
+ *      tags:
+ *      - Tree
+ *      description: 회원가입시 생성된 최상위 오브젝트 아이디를 반환
+ *      parameters:
+ *      - name: id
+ *        in: path
+ *        description: "아이디"
+ *        required: true
+ *        type: string
+ *      - name: token
+ *        in: path
+ *        description: "토큰"
+ *        required: true
+ *        type: string
+ *      responses:
+ *       200:
+ *        description: 회원가입시 생성된 최상위 오브젝트 아이디를 반환
+ */
+router.get('/super/:id/:token', function (req, res) {
+    var info = decode(req.params.token);
+    if (!info) {
+        return res.json({ result: false });
+    }
+    Supertree.findOne({id: req.params.id} , function(err, tree){
+        if(err){
+            res.json({result: false})
+        }
+        res.json(tree);
     });
 });
 
@@ -143,10 +178,58 @@ router.get('/txt/:parent_id/:name/:token', function (req, res) {
             return;
         }
         if(!txt){
-            return res.json({result: false});
+            res.json({result: false});
+            return;
         }
         console.log(txt);
         res.json(txt);
+    });
+    
+});
+
+/**
+ * @swagger
+ *  /trees/folder/{parent_id}/{name}/{token}:
+ *    get:
+ *      tags:
+ *      - Tree
+ *      description: 폴더 파일 반환
+ *      parameters:
+ *      - name: parent_id
+ *        in: path
+ *        description: "상위 폴더 오브젝트 아이디"
+ *        required: true
+ *        type: string
+ *      - name: name
+ *        in: path
+ *        description: "파일명"
+ *        required: true
+ *        type: string
+ *      - name: token
+ *        in: path
+ *        description: "토큰"
+ *        required: true
+ *        type: string
+ *      responses:
+ *       200:
+ *        description: 폴더 파일 정보 반환
+ */
+router.get('/folder/:parent_id/:name/:token', function (req, res) {
+    var info = decode(req.params.token);
+    if (!info) {
+        return res.json({ result: false });
+    }
+    Folder.findOne({parent_id: req.params.parent_id, name: req.params.name},function(err,folder){
+        if(err){
+            res.json({result: false});
+            return;
+        }
+        if(!folder){
+            res.json({result: false});
+            return;
+        }
+        console.log(folder);
+        res.json(folder);
     });
     
 });
@@ -304,6 +387,52 @@ router.put('/txt', function (req, res) {
     })
 });
 
+/**
+ * @swagger
+ *  /trees/folder:
+ *    put:
+ *      tags:
+ *      - Tree
+ *      description: 폴더 업데이트
+ *      parameters:
+ *      - in: body
+ *        name: updatefolder
+ *        description: "폴더 정보 업데이트"
+ *        schema:
+ *          type: object
+ *          properties:
+ *            _id:
+ *              type: string
+ *              required: true
+ *            token:
+ *              type: string
+ *              required: true
+ *            name:
+ *              type: string
+ *              required: true
+ *      responses:
+ *       200:
+ *        description: "result = true 일 경우 정상적으로 작동"
+ */
+router.put('/folder', function (req, res) {
+    var info = decode(req.body.token);
+    if (!info) {
+        return res.json({ result: false });
+    }
+    console.log(req.body);
+    Folder.update({ _id: req.body._id }, { $set: {
+            name: req.body.name,
+        }}, function (err, output) {
+        if (err) {
+            res.status(500).json({ error: 'database failure' });
+        }
+        console.log(output);
+        if (!output.n) {
+            return res.json({ result: false });
+        }
+        res.json({ result: true });
+    })
+});
 
 /**
  * @swagger

@@ -12,6 +12,7 @@ export default new Vuex.Store({
     CalendarCheck: false,
     NoteCheck: false,
     chatmsg : [],
+    notetreefoldflag: false,
   },
   mutations: {
 
