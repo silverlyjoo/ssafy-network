@@ -147,7 +147,6 @@ import { mapState } from "vuex";
 export default {
   data() {
     return {
-      width: 200,
       showNote: false,
       showFolder: false,
       showDelete: false,

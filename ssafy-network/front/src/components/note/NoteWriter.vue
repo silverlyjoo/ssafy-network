@@ -45,14 +45,6 @@
         >
           <icon name="underline" />
         </button>
-<!-- 
-        <button
-          class="menubar__button"
-          :class="{ 'is-active': isActive.code() }"
-          @click="commands.code"
-        >
-          <icon name="code" />
-        </button> -->
 
         <button
           class="menubar__button"
@@ -158,7 +150,7 @@ import {
   CodeBlockHighlight,
   Image,
   Blockquote,
-  CodeBlock,
+  // CodeBlock,
   HardBreak,
   Heading,
   HorizontalRule,
@@ -203,7 +195,7 @@ export default {
           new Image(),
           new Blockquote(),
           new BulletList(),
-          new CodeBlock(),
+          // new CodeBlock(),
           new HardBreak(),
           new Heading({ levels: [1, 2, 3] }),
           new HorizontalRule(),

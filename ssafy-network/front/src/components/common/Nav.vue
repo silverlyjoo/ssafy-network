@@ -17,14 +17,9 @@
 
           <NoteBtn></NoteBtn>
 
-<<<<<<< HEAD
-            <div class="navBtn">
-              <v-layout align-center class="pa-2 mb-3" @click="goNote()" style="cursor:pointer;">
-=======
           <div class="navBtn" @click="foldnote">
             <router-link to="/code/board" style="text-decoration: none !important">
               <v-layout align-center class="pa-2 mb-3">
->>>>>>> d6724e608178acc928d3804376fe496bca830253
                 <v-flex xs7 text-xs-center>
                   <span class="navtext navtcolor">CODE</span>
                 </v-flex>
