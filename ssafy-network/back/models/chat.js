@@ -4,7 +4,6 @@ const chatSchema = new mongoose.Schema({
     room:{
         type: String,
         required: true,
-        ref: 'Room',
     },
     name:{
         type: String,
