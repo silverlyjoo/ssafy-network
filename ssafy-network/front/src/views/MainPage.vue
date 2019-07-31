@@ -1,5 +1,5 @@
 <template>
-  <v-layout>
+  <v-layout fill-height>
     <vue-resizable
       :min-height="height"
       :max-height="height"
@@ -53,7 +53,7 @@ export default {
 }
 .nav {
   width: 100%;
-  height: 100%;
+  height: 100vh;
   background-color: aqua;
 }
 </style>

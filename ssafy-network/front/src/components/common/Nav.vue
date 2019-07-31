@@ -3,7 +3,7 @@
     <div class="navLayout">
       <v-container class="navcon">
         <aside>
-          <div class="navBtn">
+          <div class="navBtn" @click="foldnote">
             <router-link to="/index" style="text-decoration: none !important">
               <v-layout align-center class="pa-2 mb-3">
                 <v-flex xs7 text-xs-center>
@@ -13,11 +13,11 @@
             </router-link>
           </div>
 
-          <v-divider class="mb-3" style="border-color: rgb(218, 234, 248);"></v-divider>
+          <v-divider class="mb-3" style="border-color: rgb(218, 234, 248); width: 90%;"></v-divider>
 
           <NoteBtn></NoteBtn>
 
-          <div class="navBtn">
+          <div class="navBtn" @click="foldnote">
             <router-link to="/code/board" style="text-decoration: none !important">
               <v-layout align-center class="pa-2 mb-3">
                 <v-flex xs7 text-xs-center>
@@ -27,7 +27,7 @@
             </router-link>
           </div>
 
-          <div class="navBtn">
+          <div class="navBtn" @click="foldnote">
             <router-link to="/social/list" style="text-decoration: none !important">
               <v-layout align-center class="pa-2 mb-3">
                 <v-flex xs7 text-xs-center>
@@ -36,7 +36,7 @@
               </v-layout>
             </router-link>
           </div>
-          <div class="navBtn">
+          <div class="navBtn"  @click="foldnote">
             <router-link to="/admin" style="text-decoration: none !important">
               <v-layout align-center class="pa-2 mb-3">
                 <v-flex xs7 text-xs-center>
@@ -63,7 +63,12 @@ export default {
   data() {
     return {};
   },
-  methods: {},
+  methods: {
+    foldnote() {
+      this.$store.state.notetreefoldflag = false
+      console.log('hey')
+    }
+  },
   mounted() {}
 };
 </script>

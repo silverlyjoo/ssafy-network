@@ -1,6 +1,6 @@
 <template>
-  <div class="navBtn">
-    <v-layout align-center class="pa-2 mb-3" @click="goNote()">
+  <div class="navBtn mb-3">
+    <v-layout align-center class="pa-2" @click="goNote()">
       <v-flex xs7 text-xs-center>
         <span class="navtext navtcolor">NOTE</span>
       </v-flex>
@@ -13,14 +13,15 @@
       item-key="name"
       v-if="click"
       style="overflow:hidden!important; text-overflow: ellipsis; "
+      class="treecss"
     >
       <template v-slot:prepend="{item, open,selected}">
         <v-btn flat class="ma-0 pa-0" style="min-width:30px!important;">
-          <v-icon
+          <v-icon class="iconn"
             v-if="item.file == 'folder'"
             open-on-click
           >{{ open ? 'mdi-folder-open' : 'mdi-folder' }}</v-icon>
-          <v-icon v-else @click="NoteDetail(item._id)">{{ files[item.file] }}</v-icon>
+          <v-icon v-else @click="NoteDetail(item._id)" class="iconn">{{ files[item.file] }}</v-icon>
         </v-btn>
       </template>
       <template slot="label" slot-scope="{ item }">
@@ -210,6 +211,7 @@ export default {
     goNote() {
       this.$router.push("/note/calendar");
       this.click = true;
+      this.$store.state.notetreefoldflag = true;
     },
     addNote() {
       this.$validator.validateAll("NoteTitle").then(res => {
@@ -391,17 +393,39 @@ export default {
   mounted() {
     this.getItems();
   },
-  computed: mapState(["NoteCheck"]),
+  computed:
+    mapState(["NoteCheck" , "notetreefoldflag"]),
   watch: {
     NoteCheck(to, from) {
       if (from == false && to == true) {
         this.getItems();
         this.$store.state.NoteCheck = false;
       }
+    },
+    notetreefoldflag(to , from){
+      console.log(this.$store.state.notetreefoldflag)
+      this.click = this.$store.state.notetreefoldflag;
     }
+
   }
 };
 </script>
 
+
 <style>
+.iconn {
+  color: white !important;
+  /* background-color: white !important; */
+}
+.navBtn label {
+  color: white;
+  font-size: 16px;
+  font-weight: 100;
+  font-family:'Nanum Gothic Coding';
+}
+.treecss {
+  padding: 10px;
+  background-color: rgb(117, 117, 117);
+  border-radius : 10px;
+}
 </style>
