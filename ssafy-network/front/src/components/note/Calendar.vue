@@ -149,6 +149,8 @@ export default {
         { text: "pink" }
       ]
     };
+  },mounted(){
+    this.$store.state.heightflag = true;
   },
   methods: {
     dateClick(arg) {

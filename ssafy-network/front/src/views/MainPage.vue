@@ -8,9 +8,9 @@
     >
       <Nav class="nav"></Nav>
     </vue-resizable>
-    <div class="mainsection">
+    <div class="mainsection" >
       <Header></Header>
-      <div class="routingbody">
+      <div class="routingbody" id="routingbody">
         <router-view></router-view>
       </div>
       <!-- <Footer></Footer> -->
@@ -23,6 +23,7 @@ import Header from "@/components/common/Header";
 import Footer from "@/components/common/Footer";
 import Nav from "@/components/common/Nav";
 import VueResizable from "vue-resizable";
+import { mapState } from "vuex";
 
 export default {
   data() {
@@ -40,16 +41,29 @@ export default {
     Nav,
     VueResizable
   },
-  created() {
+  mounted() {
     window.addEventListener('resize', this.handleResize)
     this.handleResize();
   },
   destroyed() {
     window.removeEventListener('resize', this.handleResize)
+  },computed:mapState(["heightflag"]),
+  watch:{
+    heightflag(to,from){
+      if(from == false && to == true){
+        this.handleResize();
+        this.$store.state.heightflag = false;
+      }
+    }
   },
   methods:{
     handleResize(){
-      this.height = window.innerHeight;
+      this.height = document.getElementById('routingbody').offsetHeight;
+      if(this.height < 800){
+        this.height = window.innerHeight;
+      }else{
+         this.height += this.height*0.1;
+      }
     }
   }
 
