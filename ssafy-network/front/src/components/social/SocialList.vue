@@ -2,7 +2,8 @@
   <v-container>
     <v-layout row justify-center>
       <v-flex xs11>
-        <v-card flat class="px-3 sociallist-header">
+        <v-card class="px-3 sociallist-header">
+          <v-select v-model="searchoption" :items="searchoptions"></v-select>
           <v-text-field v-model="chatroomsearchkeyword"></v-text-field>
           <v-btn small style="width:5px;" @click="searchRooms">
             <i class="fas fa-search"></i>
@@ -39,12 +40,30 @@ export default {
       dbserver: this.$store.state.dbserver,
       token: this.$session.get("token"),
       chatserver: this.$store.state.chatserver,
-      chatroomsearchkeyword: ""
+      chatroomsearchkeyword: "",
+      searchoption:"title",
+      searchoptions: ["title", "max", "owner"],
     };
   },
   methods: {
     searchRooms() {
-
+      fetch(this.$store.state.dbserver + "/search/rooms/" +this.searchoption+'/'+this.chatroomsearchkeyword+'/'+ this.$session.get("token"), {
+        method: "GET",
+        headers: {
+          "Access-Control-Allow-Origin": "*",
+          "Content-Type": "application/json"
+        }
+      })
+        .then(res => res.json())
+        .then(data => {
+          if (data) {
+            this.items = data;
+          } else {
+            alert("올바른 값을 입력하세요");
+          }
+        })
+        .catch(error => console.log(error))
+        .finally();
     },
     getRooms() {
       let roomURL = this.dbserver;
