@@ -224,6 +224,7 @@ export default {
           .then(data => {
             if(data.result == true){
               alert("게시글이 등록되었습니다.");
+              this.$router.push("/code/board");
             }else{
             alert("게시글을 등록할 수 없습니다...");
             }

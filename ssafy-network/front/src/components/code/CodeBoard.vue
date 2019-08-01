@@ -18,7 +18,7 @@
       style="width:80%; margin-left:auto; margin-right:auto;"
     >
       <template v-slot:items="props">
-        <td class="text-xs-center">{{ props.item.title }}</td>
+        <td class="text-xs-center"><router-link to="/board/detail/" style="text-decoration: none !important; color:black;">{{ props.item.title }}</router-link></td>
         <td class="text-xs-center">{{ props.item.writer }}</td>
         <td class="text-xs-center">{{ props.item.createdAt }}</td>
         <td class="text-xs-center">{{ props.item.hit }}</td>
@@ -39,6 +39,7 @@ export default {
   },
   data() {
     return {
+      today: "",
       totalArticles: 0,
       articles: [],
       loading: true,
@@ -47,7 +48,7 @@ export default {
         {
           text: "제목",
           align: "center",
-          sortable: true,
+          sortable: false,
           value: "title"
         },
         {
@@ -74,6 +75,7 @@ export default {
 
   mounted() {
     this.getArticles();
+    this.getDay();
   },
 
   language(to, from) {
@@ -100,6 +102,20 @@ export default {
         this.articles = data;
         this.loading = false;
       })
+    },
+    getDay() {
+      var today = new Date();
+      var dd = today.getDate();
+      var mm = today.getMonth() + 1; // 1월이 0 !
+      var yyyy = today.getFullYear();
+      if ( dd < 10 ) {
+        dd = "0" + dd;
+      }
+      this.month = mm;
+      if (mm < 10) {
+        mm = "0" + mm;
+      }
+      this.today = yyyy + "-" + mm + "-" + dd;
     },
   }
 };
