@@ -5,14 +5,14 @@
       <v-card class="chatwindow">
         <v-container id="scrolldown" class="chats">
           <div v-for="chat in chatdata" :key="chat.id" class="chat">
-            <div v-if="chat.from.name == nickname" class="me">
+            <div v-if="chat.name == nickname" class="me">
               <span class="title">{{ chat.msg }}</span>
-              <span class="body-3">{{ chat.time }}</span>
+              <span class="body-3">{{ chat.createdAt }}</span>
             </div>
             <div v-else class="chat">
-              <span class="title">{{ chat.from.name }} :</span>
+              <span class="title">{{ chat.name }} :</span>
               <span class="subheading">{{ chat.msg }}</span>
-              <span class="body-3">{{ chat.time }}</span>
+              <span class="body-3">{{ chat.createdAt }}</span>
             </div>
           </div>
         </v-container>
@@ -50,7 +50,8 @@ export default {
       nickname: this.$session.get("nickname"),
       chatText: "",
       chatdata: [],
-      socket: ""
+      socket: "",
+      userlist: []
     };
   },
   props: ["_id"],
@@ -71,9 +72,17 @@ export default {
     ConnectSocket() {
       this.socket = io(this.chatserver);
       this.socket.emit("join", { _id: this._id, nickname: this.nickname });
+      this.socket.on("chatlist", data => {
+        this.chatdata = this.chatdata.concat(data)
+        // console.log(data)
+      });
       this.socket.on("broadcast", data => {
         this.chatdata.push(data);
-      this.scrollset()
+        this.scrollset();
+        // console.log('chatdata', data)
+      });
+      this.socket.on("userlist", data => {
+        // console.log(data)
       });
     },
     disconnect() {
