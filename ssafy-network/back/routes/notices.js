@@ -67,7 +67,7 @@ router.get('/:id/:token', function (req, res) {
     if (!info) {
         return res.json({ result: false });
     }
-    Notice.find({ unread : req.params.id },function(err, notices){
+    Notice.find({$or :[ { unread : req.params.id }, { read: req.params.id } ] },function(err, notices){
         if(err){
             console.log(err);
             return;

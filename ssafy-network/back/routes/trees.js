@@ -25,8 +25,6 @@ async function dfs(p_id, ItemTree){
     });
 }
 
-
-
 /**
  * @swagger
  *  /trees/{id}/{token}:
@@ -68,7 +66,6 @@ router.get('/:id/:token', function (req, res) {
                 item: ItemTree
             });
         }, 3000);
-        
     });
 });
 
