@@ -7,14 +7,14 @@
     <h4 class="toolbartext title">SSAFY WM</h4>
     <v-spacer />
     <v-toolbar-items>
-      <v-btn icon @click="goCalendar()">
+      <v-btn icon @click="goCalendar()" class="toolbartext">
         <v-icon color="white">dashboard</v-icon>
       </v-btn>
       <v-menu bottom left content-class="dropdown-menu" offset-y transition="slide-y-transition">
         <v-btn icon slot="activator">
           <v-badge color="red" overlap>
             <template slot="badge">{{ notifications.length }}</template>
-            <v-icon color="white">notifications</v-icon>
+            <v-icon class="toolbartext" color="white">notifications</v-icon>
           </v-badge>
         </v-btn>
         <v-card>
@@ -28,6 +28,9 @@
       <v-btn icon>
         <v-icon class="toolbartext" color="white">person</v-icon>
       </v-btn>
+      <v-btn icon to="/admin" v-if="selfmembership === '관리자'">
+        <v-icon class="adminicon">mdi-settings</v-icon>
+      </v-btn>
       <v-btn icon @click="logout">
         <v-icon class="toolbartext" color="white">mdi-exit-to-app</v-icon>
       </v-btn>
@@ -36,17 +39,36 @@
 </template>
 
 <script>
+import caxios from "@/plugins/createaxios.js";
 export default {
-  data: () => ({
-    notifications: [
-      "메세지 11",
-      "메세지 22",
-      "메세지 33",
-      "메세지 44",
-      "메세지 55"
-    ]
-  }),
+  data() {
+    return {
+      notifications: [
+        "메세지 11",
+        "메세지 22",
+        "메세지 33",
+        "메세지 44",
+        "메세지 55"
+      ],
+      token: this.$session.get("token"),
+      id: this.$session.get("id"),
+      dbserver : this.$store.state.dbserver,
+      selfmembership: ''
+    };
+  },
   methods: {
+    isAdmin() {
+      let memberUrl = this.dbserver;
+      caxios(memberUrl)
+        .request({
+          url: `/users/admin/${this.id}/${this.token}`,
+          method: "get",
+          baseURL: memberUrl
+        })
+        .then(res => {
+          this.selfmembership = res.data.membership
+        });
+    },
     logout() {
       this.$store.state.login = false;
       this.$session.clear();
@@ -58,7 +80,10 @@ export default {
     onClick() {
       alert("1!");
     }
-  }
+  },
+  mounted () {
+    this.isAdmin()
+  },
 };
 </script>
 <style>
@@ -72,5 +97,9 @@ export default {
 .toolbartext {
   text-shadow: 1px 1px 5px black;
   color: white;
+}
+.adminicon {
+  color: rgb(255, 142, 142) !important;
+  text-shadow: 1px 1px 3px rgb(129, 129, 129);
 }
 </style>
