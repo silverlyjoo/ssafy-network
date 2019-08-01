@@ -1,5 +1,5 @@
 import CodePage from '@/views/CodePage.vue'
-import BoardForm from '@/components/code/BoardForm.vue'
+import CodeWriter from '@/components/code/CodeWriter.vue'
 import CodeDetail from '@/components/code/CodeDetail.vue'
 import CodeBoard from '@/components/code/CodeBoard.vue'
 
