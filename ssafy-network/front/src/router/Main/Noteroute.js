@@ -19,7 +19,8 @@ export default {
             path: 'detail/:_id',
             name: 'notedetail',
             component: NoteDetail,
-            props:true
+            props:true,
+            
           }, {
             path: 'update',
             name: 'noteupdate',
