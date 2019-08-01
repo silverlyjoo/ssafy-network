@@ -11,11 +11,11 @@
 
     <v-data-table
       :headers="headers"
-      :items="items"
+      :items="articles"
       class="elevation-1"
       style="width:80%; margin-left:auto; margin-right:auto;"
     >
-      <template v-slot:items="props">
+      <template v-slot:top>
         <td class="text-xs-center">{{ prop.article.index }}</td>
         <td><router-link to="/code/board/detail" style="text-decoration: none !important; color:black;">{{ prop.article.title }}</router-link></td>
         <td class="text-xs-center">{{ prop.article.hit }}</td>
@@ -47,8 +47,9 @@ export default {
   $_veeValidate: {
     validator: "new",
   },
-  props: {  
-  },
+  props: [
+    "articles"
+  ],
   data() {
     return {
       articles: [],
@@ -64,8 +65,8 @@ export default {
         { text: "Python" },
         { text: "Vue" },
       ],
-      language: "",
-      option: {},
+      // language: "",
+      // option: {},
       headers: [
         {
           text: "글 번호",
@@ -86,26 +87,26 @@ export default {
           value: "hit"
         },
       ],
-      editedIndex: -1,
-      editedItem: {
-        title: "",
-        source: "",
-        content: "",
-        language: ""
-      },
-      defaultItem: {
-        title: "",
-        source: "",
-        content: "",
-        language: ""
-      }
+      // editedIndex: -1,
+      // editedItem: {
+      //   title: "",
+      //   source: "",
+      //   content: "",
+      //   language: ""
+      // },
+      // defaultItem: {
+      //   title: "",
+      //   source: "",
+      //   content: "",
+      //   language: ""
+      // }
     };
   },
-  computed: {
-    formTitle() {
-      return this.editedIndex === -1 ? "새 글 작성하기" : "글 수정하기";
-    }
-  },
+  // computed: {
+  //   formTitle() {
+  //     return this.editedIndex === -1 ? "새 글 작성하기" : "글 수정하기";
+  //   }
+  // },
 
   watch: {
     language(to, from) {
@@ -126,7 +127,7 @@ export default {
 
   methods: {
     articleClick(article, jsArticle, pos) {
-      this.dialog = true;
+      // this.dialog = true;
       this.article._id = article._id;
       this.article.title = article.title;
       this.article.source = article.source;
