@@ -2,7 +2,9 @@
   <div>
     <div class="navLayout">
       <v-container class="navcon">
-        <aside>
+        <aside class="navgo">
+
+
           <div class="navBtn" @click="foldnote">
             <router-link to="/index" style="text-decoration: none !important">
               <v-layout align-center class="pa-2 mb-3">
@@ -36,6 +38,7 @@
               </v-layout>
             </router-link>
           </div>
+
         </aside>
       </v-container>
     </div>
@@ -93,5 +96,11 @@ export default {
   height: 100%;
   background: rgb(75, 75, 75);
   z-index: 100;
+}
+.navgo {
+  display : flex;
+  flex-direction: column;
+  justify-content: space-around;
+  
 }
 </style>

@@ -79,7 +79,7 @@ export default {
           })
           .catch(error => console.log(error))
           .finally(
-            this.$router.push({path: '/social/rooms'})
+            this.$router.push({name: 'list'})
           );
       });
     }
