@@ -6,22 +6,25 @@ var Folder = require('../models/folder');
 var decode = require('../decode');
 
 
-function dfs(p_id,ItemTree){
-    Folder.find({parent_id: p_id} , function(err, folder){
-        Txt.find({parent_id: p_id}, function(err, txt){
-            for (let i = 0; i < txt.length; i++) {
-                ItemTree.push(txt[i]);
-            }
-        });
+async function dfs(p_id, ItemTree){
+    var txt = await Txt.find({parent_id: p_id});
+    if(txt){
+        for (let i = 0; i < txt.length; i++) {
+            ItemTree.push(txt[i]);
+        }
+    }
+    var folder = await Folder.find({parent_id: p_id});
+    if(folder){
         for (let i = 0; i < folder.length; i++) {
             dfs(folder[i]._id,folder[i].children);
             ItemTree.push(folder[i]);
         }
-    });
-    ItemTree.sort(function(a, b){
+    }
+    ItemTree.sort((a, b) => {
         return a.file < b.file ? -1 : a.file > b.file ? 1 : 0;
     });
 }
+
 
 
 /**
@@ -57,7 +60,7 @@ router.get('/:id/:token', function (req, res) {
             res.json({result: false})
         }
         dfs(tree._id,ItemTree);
-
+        
         setTimeout(function() {
             console.log(ItemTree);
             
@@ -65,6 +68,7 @@ router.get('/:id/:token', function (req, res) {
                 item: ItemTree
             });
         }, 3000);
+        
     });
 });
 

@@ -42,6 +42,21 @@ module.exports = (server) => {
               msg: data.nickname+"님이 입장하셨습니다.",
               createdAt : moment().format("YYYY-MM-DD HH:mm:ss")
             };
+
+            //DB 채팅 내용 저장
+            var chat = new Chat();
+            chat.room = data._id;
+            chat.name = "System";
+            chat.msg = data.nickname+"님이 입장하셨습니다.";
+            chat.createdAt = moment().format("YYYY-MM-DD HH:mm:ss");
+
+            chat.save(function (err) {
+              if (err) {
+                  console.error(err);
+                  return;
+              }
+            });
+
             io.sockets.in(data._id).emit('broadcast',msg);
           }).sort({ createdAt: 1 });
         });
@@ -95,6 +110,21 @@ module.exports = (server) => {
             msg: data.nickname+"님이 퇴장하셨습니다.",
             createdAt : moment().format("YYYY-MM-DD HH:mm:ss")
           };
+
+          //DB 채팅 내용 저장
+          var chat = new Chat();
+          chat.room = data._id;
+          chat.name = "System";
+          chat.msg = data.nickname+"님이 퇴장하셨습니다.";
+          chat.createdAt = moment().format("YYYY-MM-DD HH:mm:ss");
+
+          chat.save(function (err) {
+            if (err) {
+                console.error(err);
+                return;
+            }
+          });
+
           io.sockets.in(data._id).emit('broadcast',msg);
         });
     });
