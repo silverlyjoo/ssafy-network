@@ -215,7 +215,7 @@ export default {
             body: JSON.stringify({
               token: this.$session.get("token"),
               language: this.article.selectedLanguage,
-              writer: this.article.writer,
+              writer: this.$session.get("nickname"),
               title: this.article.title,
               source: this.article.source,
               content: this.article.content
