@@ -68,9 +68,8 @@ export default {
       this.$router.push({name:"noteupdate",params:{_id:this._id , title:this.title , content:this.content} })
     },close(){
        this.$router.push("/note/calendar")
-    },getNoteOne(){
-      
-        fetch(this.$store.state.dbserver + "/trees/txt/"+ this._id +"/"+this.$session.get("token"), {
+    },async getNoteOne(){
+        await fetch(this.$store.state.dbserver + "/trees/txt/"+ this._id +"/"+this.$session.get("token"), {
             method: "GET",
             headers: {
               "Access-Control-Allow-Origin": "*",
@@ -109,13 +108,17 @@ export default {
           new History(),
         ],
         content: this.content,
-      })
+      });
+     
             });
     }
   },
   created(){
     this._id = this.$route.params._id;
     this.getNoteOne();
+  },
+  updated(){
+    this.$store.state.heightflag=true;
   },
   watch:{
     '$route'(to,from){

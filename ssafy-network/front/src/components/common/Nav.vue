@@ -56,7 +56,8 @@ export default {
   },
   methods: {
     foldnote() {
-      this.$store.state.notetreefoldflag = false
+      this.$store.state.notetreefoldflag = false;
+      this.$store.state.heightflag = true;
     }
   },
   mounted() {}

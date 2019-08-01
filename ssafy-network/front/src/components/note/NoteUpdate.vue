@@ -209,6 +209,7 @@ export default {
         ], onUpdate: ({ getHTML }) => {
             const newContent = getHTML()
         this.changeContent = newContent;
+        this.$store.state.heightflag= true;
     },
         content:"",
       }),
@@ -245,7 +246,7 @@ export default {
                 if(data.result == true){
                     alert("수정 성공");
                     this.$store.state.NoteCheck = true;
-                    this.$router.push("/");
+                    this.$router.push("/note/detail/"+this._id);
                 }else{
                     alert("수정 실패..");
                 }
