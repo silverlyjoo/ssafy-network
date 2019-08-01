@@ -6,8 +6,8 @@ var Folder = require('../models/folder');
 var decode = require('../decode');
 
 
-async function dfs(p_id,ItemTree){
-    Folder.find({parent_id: p_id} , async function(err, folder){
+function dfs(p_id,ItemTree){
+    Folder.find({parent_id: p_id} , function(err, folder){
         Txt.find({parent_id: p_id}, function(err, txt){
             for (let i = 0; i < txt.length; i++) {
                 ItemTree.push(txt[i]);
@@ -52,7 +52,7 @@ router.get('/:id/:token', function (req, res) {
         return res.json({ result: false });
     }
     var ItemTree = [];
-    Supertree.findOne({id: req.params.id} ,async function(err, tree){
+    Supertree.findOne({id: req.params.id} , function(err, tree){
         if(err){
             res.json({result: false})
         }

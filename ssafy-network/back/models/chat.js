@@ -11,7 +11,7 @@ const chatSchema = new mongoose.Schema({
     },
     msg: String,
     gif: String,
-    time: String
+    createdAt: String
 });
 
 module.exports = mongoose.model('Chat',chatSchema);

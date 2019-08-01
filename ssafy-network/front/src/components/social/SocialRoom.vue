@@ -84,7 +84,7 @@ export default {
       let message = { name: this.nickname, msg: this.chatText, room: this._id };
       // console.log(message);
       await this.socket.emit("chat", message);
-      // this.chatText = "";
+      this.chatText = "";
       await this.$refs.txt.focus();
     }
   }
