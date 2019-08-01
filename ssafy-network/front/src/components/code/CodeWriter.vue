@@ -3,29 +3,26 @@
     <v-toolbar flat color="grey lighten-5" style="width:80%; margin-left:auto; margin-right:auto;">
       <v-toolbar-title>글 작성하기</v-toolbar-title>
       <v-spacer></v-spacer>
-      <v-toolbar-items>
-        <v-btn dark flat @click="addArticle()">등록</v-btn>
-        <v-btn dark flat @click="close()">취소</v-btn>
-      </v-toolbar-items>
+        <v-btn color="grey darken-2" @click="addArticle()">등록</v-btn>
+        <router-link to="/code/board"><v-btn color="grey darken-2">취소</v-btn></router-link>
     </v-toolbar>
-    <v-layout>
-      <v-card>
-        <v-card-text>
-          <v-container grid-list-md style="width:80%; padding:100px;">
+    <!-- <v-layout> -->
+      <br>
+      <v-card grid-list-md style="width:80%; margin-left:auto; margin-right:auto;">
+        <v-card-text style="">
+          <v-container style="">
             <v-layout wrap column>
-              <v-flex xs12 sm6 md4>
+              <v-flex xs12>
                 <v-text-field
                   label="제목"
-                  v-model="article.title"
                   v-validate="'required'"
                   data-vv-name="title"
                   :error-messagges="errors.collect('title')"
                 ></v-text-field>
               </v-flex>
-              <v-flex xs12 sm6 md4>
+              <v-flex xs12>
                 <v-select
                   :items="languages"
-                  v-model="article.selectedLanguage"
                   label="선택 언어"
                   single-line
                   v-validate="'required'"
@@ -33,16 +30,14 @@
                   :error-messages="errors.collect('selectedLanguage')"
                 ></v-select>
               </v-flex>
-              <v-flex xs12 sm6 md4>
+              <v-flex xs12>
                 <codemirror
-                  v-model="article.source"
                   :options="option">
                 </codemirror>
               </v-flex>
-             <v-flex xs12 sm6 md4>
+             <v-flex xs12>
                <v-textarea
                  label="내용"
-                 v-model="article.content"
                  v-validate="'required'"
                  :error-messages="errors.collect('content')"
                  data-vv-name="content"
@@ -53,7 +48,7 @@
             </v-container>
           </v-card-text>
         </v-card>
-    </v-layout>
+    <!-- </v-layout> -->
   </div>
 </template>
 
@@ -139,6 +134,11 @@ export default {
   },
   data() {
     return {
+      languages: [
+        { text: "JavaScript" },
+        { text: "Python" },
+        { text: "Vue" },
+      ],
       cmOptionsJs: {
         autoCloseBrackets: true,
         tabSize: 4,
@@ -190,6 +190,8 @@ export default {
         }
       },
     }
+  },
+  methods: {
   }
 }
 </script>
