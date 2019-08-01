@@ -52,15 +52,15 @@
               <span class="headline">User Profile</span>
             </v-card-title>
             <v-card-text>
-                <v-layout wrap>
-                  <v-flex xs12>
-                    <v-text-field label="Password*" type="password" required v-model="typepassword"></v-text-field>
-                  </v-flex>
-                </v-layout>
+              <v-layout wrap>
+                <v-flex xs12>
+                  <v-text-field label="Password*" type="password" required v-model="typepassword" @keyup.enter="joinsecret"></v-text-field>
+                </v-flex>
+              </v-layout>
             </v-card-text>
             <v-card-actions>
               <v-spacer></v-spacer>
-              <v-btn color="blue darken-1" text @click="joinsecret">submit</v-btn>
+              <v-btn color="blue darken-1" text @click.stop="joinsecret">submit</v-btn>
             </v-card-actions>
           </v-container>
         </v-card>
@@ -84,7 +84,7 @@ export default {
       searchoption: "title",
       searchoptions: ["title", "owner"],
       dialog: false,
-      typepassword: '',
+      typepassword: "",
       secretjoinflag: null
     };
   },
@@ -127,16 +127,13 @@ export default {
         })
         .then(res => {
           this.items = res.data;
-          // console.log(this.items);
-
-          // console.log("res", res.data);
         });
     },
     joinchat(roomId, idx) {
       if (this.items[idx].password) {
         // console.log(idx)
-        this.secretjoinflag = idx
         this.dialog = true;
+        this.secretjoinflag = idx;
       } else {
         this.$router.push({ name: "room", params: { _id: roomId } });
       }
@@ -144,8 +141,19 @@ export default {
     newSocialRoom() {
       this.$router.push({ name: "new" });
     },
-    joinsecret () {
-
+    joinsecret() {
+      if (
+        this.items[this.secretjoinflag].password ===
+        this.typepassword.toString()
+      ) {
+        this.$router.push({
+          name: "room",
+          params: { _id: this.items[this.secretjoinflag]._id }
+        });
+      } else {
+        alert("비밀번호가 틀렸습니다.");
+        this.typepassword = "";
+      }
     }
   },
   mounted() {
