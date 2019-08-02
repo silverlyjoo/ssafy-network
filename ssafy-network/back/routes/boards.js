@@ -14,7 +14,7 @@ var decode = require('../decode');
  *      - name: token
  *        in: path
  *        description: "토큰"
- *        required: true
+ *        required: trues
  *        type: string
  *      responses:
  *       200:
@@ -146,6 +146,46 @@ router.put('/', function (req, res) {
   })
 });
 
+/**
+ * @swagger
+ *  /boards/hit:
+ *    put:
+ *      tags:
+ *      - Board
+ *      description: 게시글 조회수 업데이트
+ *      parameters:
+ *      - in: body
+ *        name: updateHit
+ *        description: "게시글 조회수 업데이트"
+ *        schema:
+ *          type: object
+ *          properties:
+ *            _id:
+ *              type: string
+ *              required: true
+ *            token:
+ *              type: string
+ *              required: true
+ *      responses:
+ *       200:
+ *        description: "result = true 일 경우 정상적으로 작동"
+ */
+router.put('/hit', function (req, res) {
+    var info = decode(req.body.token);
+    if (!info) {
+        return res.json({ result: false });
+    }
+    Board.update({_id: req.body._id}, {$inc:{hit:1}}, function (err, output) {
+        if (err) {
+            res.status(500).json({ error: 'database failure' });
+        }
+        console.log(output);
+        if (!output.n) {
+            return res.json({ result: false });
+        }
+        res.json({ result: true });
+    });
+});
 /**
  * @swagger
  *  /boards:

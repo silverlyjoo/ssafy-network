@@ -87,7 +87,7 @@ router.post('/', function (req, res) {
     });
 });
   
-  /**
+/**
  * @swagger
  *  /rooms:
  *    delete:
