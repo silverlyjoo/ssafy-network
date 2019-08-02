@@ -6,6 +6,7 @@ import Homeroute from '@/router/Main/Homeroute.js';
 import Coderoute from '@/router/Main/Coderoute.js';
 import Socialroute from '@/router/Main/Socialroute.js';
 import Noteroute from '@/router/Main/Noteroute.js';
+import Notice from '@/router/Main/Notice.js';
 
 export default {
     path: '/easteregg',
@@ -16,7 +17,8 @@ export default {
         Coderoute,
         Socialroute,
         Noteroute,
-        ...Adminroute
+        ...Adminroute,
+        Notice
       ]
 }
 
