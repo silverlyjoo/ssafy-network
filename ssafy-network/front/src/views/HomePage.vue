@@ -84,8 +84,8 @@ export default {
   text-align: right;
 }
 .textleft{
-margin-top:20%;
+  margin-top:20%;
   margin-left:10%;
-   text-align: left;
+  text-align: left;
 }
 </style>
