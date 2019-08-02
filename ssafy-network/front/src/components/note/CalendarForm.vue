@@ -45,7 +45,7 @@
                       data-vv-name="startDate"
                     ></v-text-field>
                   </template>
-                  <v-date-picker v-model="event.startDate" @input="startDatePick = false"></v-date-picker>
+                  <v-date-picker v-model="event.startDate"  @input="startDatePick = false"></v-date-picker>
                 </v-menu>
               </v-flex>
               <v-flex xs12 sm6 md4>
@@ -69,6 +69,7 @@
                       v-validate="'required'"
                       :error-messages="errors.collect('endDate')"
                       data-vv-name="endDate"
+                      ref ="endDate"
                     ></v-text-field>
                   </template>
                   <v-date-picker v-model="event.endDate" @input="endDatePick = false"></v-date-picker>
@@ -157,6 +158,15 @@ export default {
           alert("값이 유효한지 체크해주세요.");
           return;
         }else{
+          var x = new Date(this.event.startDate);
+          var y = new Date(this.event.endDate);
+
+          if(x > y){
+            alert("날짜가 올바르지 않습니다.");
+            this.$refs.endDate.focus();
+            this.event.endDate = "";
+            return;
+          }else{
           //추가 
           fetch(this.$store.state.dbserver + "/calendars",{method: "POST",
           headers: {
@@ -182,6 +192,7 @@ export default {
           }
           this.close();
         });
+          }
          
         }
       });

@@ -1,7 +1,7 @@
 <template>
-  <v-container >
-    <v-layout column class="ma-2">
-      <v-flex text-xs-center class="ma-3"><h1>WM Project</h1></v-flex>
+  <v-container class="ma-0 pa-0" >
+    <v-layout column >
+      <!-- <v-flex text-xs-center class="ma-3"><h1>WM Project</h1></v-flex> -->
        <v-flex
           v-for="(item, i) in items"
           :key="i"
@@ -9,20 +9,26 @@
           flat
         >
           <v-card
-            :color="item.color"
             dark
             class="pa-4"
           >
-          <v-layout row wrap>
-            <v-flex xs6>
-              <v-img :src="item.src" height="500px" contain></v-img>
+          <v-layout row wrap fill-height>
+            <v-flex fill-height>
+              <v-img :src="item.src" height="500px" contain>
+                <v-container
+                    fill-height
+                    fluid
+                    pa-2
+                  >
+                    <v-layout fill-height>
+                      <v-flex xs12 align-end flexbox>
+                        <span class="headline white--text" v-text="item.title"></span>
+                      </v-flex>
+                    </v-layout>
+                  </v-container>
+              </v-img>
             </v-flex>
-            <v-flex xs6>
-              <v-card-title primary-title>
-                <div class="headline">{{item.title}}</div>
-                <div>{{item.artist}}</div>
-              </v-card-title>
-            </v-flex>
+            
           </v-layout>
           </v-card>
         </v-flex>
@@ -36,6 +42,9 @@
 </template>
 
 <script>
+import note from '@/assets/note.jpg';
+import code from '@/assets/code.jpg';
+import social from '@/assets/social.jpeg';
 export default {
   name: "HomePage",
   data() {
@@ -44,16 +53,21 @@ export default {
        items: [
         {
           color: '#1F7087',
-          src: 'https://cdn.vuetifyjs.com/images/cards/foster.jpg',
-          title: 'Supermodel',
+          src: note,
+          title: '정리 작성',
           artist: 'Foster the People',
         },
         {
           color: '#952175',
-          src: 'https://cdn.vuetifyjs.com/images/cards/halcyon.png',
+          src: code,
           title: 'Halcyon Days',
           artist: 'Ellie Goulding',
-        },
+        },{
+          color: '#111111',
+          src: social,
+          title: 'Halcyon Days',
+          artist: 'Ellie Goulding',
+        }
         ],
     };
   }
