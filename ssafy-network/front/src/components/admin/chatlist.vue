@@ -1,26 +1,23 @@
 <template>
   <v-container>
-    <v-list subheader>
-      <v-subheader>chatlist</v-subheader>
-      <v-list-tile
-        v-for="room in roomList"
-        :key="room.title"
-        avatar
-      >
-        <v-list-tile-content>
-          <v-list-tile-title v-html="room.title"></v-list-tile-title>
-        </v-list-tile-content>
-        <v-list-tile-content>
-          <v-list-tile-title v-html="room.max"></v-list-tile-title>
-        </v-list-tile-content>
-        <v-list-tile-content>
-          <v-list-tile-title v-html="room.owner"></v-list-tile-title>
-        </v-list-tile-content>
-        <v-list-tile-content>
-          <v-list-tile-title v-html="room.createdAt"></v-list-tile-title>
-        </v-list-tile-content>
-      </v-list-tile>
-    </v-list>
+    <v-data-table
+      v-model="selected"
+      :headers="headers"
+      :items="roomList"
+      item-key="title"
+      select-all
+      class="elevation-1"
+    >
+      <template v-slot:items="props">
+        <td>
+          <v-checkbox v-model="props.selected" primary hide-details></v-checkbox>
+        </td>
+        <td>{{ props.item.title }}</td>
+        <td class="text-xs-right">{{ props.item.max }}</td>
+        <td class="text-xs-right">{{ props.item.owner }}</td>
+        <td class="text-xs-right">{{ props.item.createdAt }}</td>
+      </template>
+    </v-data-table>
   </v-container>
 </template>
 
@@ -32,21 +29,36 @@ export default {
       max: "",
       owner: "",
       createdAt: "",
-      roomList: []
+      roomList: [],
+      selected: [],
+      headers: [
+        {
+          text: "방 제목",
+          align: "left",
+          sortable: false,
+          value: "title"
+        },
+        { text: "최대 인원수",  align: "center", value: "max" },
+        { text: "방장",  align: "center", sortable: false, value: "owner" },
+        { text: "생성 날짜", align: "center", value: "createdAt" }
+      ]
     };
   },
-  mounted(){
+  mounted() {
     this.getRoomList();
   },
   methods: {
     getRoomList() {
-      fetch(this.$store.state.dbserver + "/rooms/" + this.$session.get("token"), {
-        method: "GET",
-        headers: {
-          "Access-Control-Allow-Origin": "*",
-          "Content-Type": "application/json"
+      fetch(
+        this.$store.state.dbserver + "/rooms/" + this.$session.get("token"),
+        {
+          method: "GET",
+          headers: {
+            "Access-Control-Allow-Origin": "*",
+            "Content-Type": "application/json"
+          }
         }
-      })
+      )
         .then(res => res.json())
         .then(data => {
           if (data) {
@@ -58,7 +70,7 @@ export default {
         .catch(error => console.log(error))
         .finally();
     },
-    updateRoom(){
+    updateRoom() {
       fetch(this.$store.state.dbserver + "/rooms", {
         method: "PUT",
         headers: {
@@ -103,13 +115,22 @@ export default {
         });
     },
     searchRooms() {
-      fetch(this.$store.state.dbserver + "/search/rooms/" +'max'+'/'+'10'+'/'+ this.$session.get("token"), {
-        method: "GET",
-        headers: {
-          "Access-Control-Allow-Origin": "*",
-          "Content-Type": "application/json"
+      fetch(
+        this.$store.state.dbserver +
+          "/search/rooms/" +
+          "max" +
+          "/" +
+          "10" +
+          "/" +
+          this.$session.get("token"),
+        {
+          method: "GET",
+          headers: {
+            "Access-Control-Allow-Origin": "*",
+            "Content-Type": "application/json"
+          }
         }
-      })
+      )
         .then(res => res.json())
         .then(data => {
           if (data) {

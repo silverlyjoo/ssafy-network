@@ -211,7 +211,7 @@ export default {
         this.changeContent = newContent;
         this.$store.state.heightflag= true;
     },
-        content:"",
+        content:this.content,
       }),
       name :"",
       changeContent:""
@@ -257,68 +257,14 @@ export default {
   },
   mounted(){
       this.name = this.title;
-      this.editor.setContent(this.content);
+      this.changeContent = this.content;
   }
 }
 </script>
 
 
+
 <style lang="scss">
-.menubar{
-  
-  margin-bottom: 1rem;
-  transition: visibility 0.2s 0.4s, opacity 0.2s 0.4s;
-
-  &.is-hidden {
-    visibility: hidden;
-    opacity: 0;
-  }
-
-  &.is-focused {
-    visibility: visible;
-    opacity: 1;
-    transition: visibility 0.2s, opacity 0.2s;
-  }
-
-  &__button {
-    font-weight: bold;
-    background: transparent;
-    border: 0;
-    color: black;
-    padding: 0.2rem 0.5rem;
-    margin-right: 0.2rem;
-    border-radius: 3px;
-    cursor: pointer;
-
-    &:hover {
-      background-color: rgba(black, 0.05);
-    }
-
-    &.is-active {
-      background-color: rgba(black, 0.1);
-    }
-  }
-
-  span#{&}__button {
-    font-size: 13.3333px;
-  }
-}
-.button {
-  font-weight: bold;
-  display: inline-flex;
-  background: transparent;
-  border: 0;
-  color: black;
-  padding: 0.2rem 0.5rem;
-  margin-right: 0.2rem;
-  border-radius: 3px;
-  cursor: pointer;
-  background-color: rgba(black, 0.1);
-
-  &:hover {
-    background-color: rgba(black, 0.15);
-  }
-}
 pre {
   &::before {
     content: attr(data-language);
@@ -373,6 +319,61 @@ pre {
     .hljs-strong {
       font-weight: 700;
     }
+  }
+}
+.menubar{
+  
+  margin-bottom: 1rem;
+  transition: visibility 0.2s 0.4s, opacity 0.2s 0.4s;
+
+  &.is-hidden {
+    visibility: hidden;
+    opacity: 0;
+  }
+
+  &.is-focused {
+    visibility: visible;
+    opacity: 1;
+    transition: visibility 0.2s, opacity 0.2s;
+  }
+
+  &__button {
+    font-weight: bold;
+    background: transparent;
+    border: 0;
+    color: black;
+    padding: 0.2rem 0.5rem;
+    margin-right: 0.2rem;
+    border-radius: 3px;
+    cursor: pointer;
+
+    &:hover {
+      background-color: rgba(black, 0.05);
+    }
+
+    &.is-active {
+      background-color: rgba(black, 0.1);
+    }
+  }
+
+  span#{&}__button {
+    font-size: 13.3333px;
+  }
+}
+.button {
+  font-weight: bold;
+  display: inline-flex;
+  background: transparent;
+  border: 0;
+  color: black;
+  padding: 0.2rem 0.5rem;
+  margin-right: 0.2rem;
+  border-radius: 3px;
+  cursor: pointer;
+  background-color: rgba(black, 0.1);
+
+  &:hover {
+    background-color: rgba(black, 0.15);
   }
 }
 .editor {
@@ -494,3 +495,4 @@ pre {
   }
 }
 </style>
+
