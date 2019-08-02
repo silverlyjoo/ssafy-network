@@ -59,6 +59,7 @@ export default {
   created() {},
   mounted() {
     this.ConnectSocket();
+    this.$refs.txt.focus();
   },
   destroyed() {
     this.disconnect();
