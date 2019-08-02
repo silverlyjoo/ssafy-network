@@ -13,14 +13,19 @@
       <v-menu bottom left content-class="dropdown-menu" offset-y transition="slide-y-transition">
         <v-btn icon slot="activator">
           <v-badge color="red" overlap>
-            <template slot="badge">{{ notifications.length }}</template>
+            <template slot="badge">{{ unreadnoti }}</template>
             <v-icon class="toolbartext" color="white">notifications</v-icon>
           </v-badge>
         </v-btn>
         <v-card>
           <v-list dense>
-            <v-list-tile v-for="notification in notifications" :key="notification" @click="onClick">
-              <v-list-tile-title v-text="notification" />
+            <v-list-tile v-for="notification in notifications" :key="notification.id" @click="onClick" class="pa-0">
+              <v-list-tile-title v-if="notification.unread.indexOf(id) !== -1" v-text="notification.content" class="unreads"/>
+              <v-list-tile-title v-else v-text="notification.content"/>
+            </v-list-tile>
+            <v-list-tile class="pa-0" @click="goNotice">
+              <v-list-tile-title>더보기</v-list-tile-title>
+              
             </v-list-tile>
           </v-list>
         </v-card>
@@ -44,19 +49,41 @@ export default {
   data() {
     return {
       notifications: [
-        "메세지 11",
-        "메세지 22",
-        "메세지 33",
-        "메세지 44",
-        "메세지 55"
       ],
       token: this.$session.get("token"),
       id: this.$session.get("id"),
       dbserver : this.$store.state.dbserver,
-      selfmembership: ''
+      selfmembership: '',
+      unreadnoti: null
     };
   },
   methods: {
+    goNotice () {
+      this.$router.push({name: 'notice'})
+    },
+    getNotification () {
+      let noticeUrl = this.dbserver;
+      caxios(noticeUrl)
+      .request({
+        url: `/notices/${this.id}/${this.token}`,
+        method: 'get',
+        baseURL : noticeUrl
+      })
+      .then(res => {
+        // console.log(res.data)
+        this.notifications = res.data
+        return res
+      })
+      .then(res => {
+        let unreads = 0
+        for (let i=0; i<res.data.length; i++) {
+          if (res.data[i].unread.indexOf(this.id) !== -1) {
+            unreads++
+          }
+        }
+        this.unreadnoti = unreads
+      })
+    },
     isAdmin() {
       let memberUrl = this.dbserver;
       caxios(memberUrl)
@@ -82,7 +109,8 @@ export default {
     }
   },
   mounted () {
-    this.isAdmin()
+    this.isAdmin(),
+    this.getNotification()
   },
 };
 </script>
@@ -101,5 +129,8 @@ export default {
 .adminicon {
   color: rgb(255, 142, 142) !important;
   text-shadow: 1px 1px 3px rgb(129, 129, 129);
+}
+.unreads {
+  background: rgba(194, 194, 194, 0.384);
 }
 </style>
