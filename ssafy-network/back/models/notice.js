@@ -2,10 +2,15 @@ const mongoose = require('mongoose');
 var moment = require('moment');
 
 const noticeSchema = new mongoose.Schema({
+    title : {
+        type: String,
+        required: true,
+    },
     content : {
         type: String,
         required: true,
     },
+    writer: String,
     read : Array,
     unread : Array,
     createdAt:{
