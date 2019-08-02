@@ -18,7 +18,7 @@
       style="width:80%; margin-left:auto; margin-right:auto;"
     >
       <template v-slot:items="props">
-        <td class="text-xs-center"><router-link to="/board/detail/" style="text-decoration: none !important; color:black;">{{ props.item.title }}</router-link></td>
+        <td class="text-xs-center"><router-link :to='{name : "CodeDetail" , params:{data : props.item }}' style="text-decoration: none !important; color:black;">{{ props.item.title }}</router-link></td>
         <td class="text-xs-center">{{ props.item.writer }}</td>
         <td class="text-xs-center">{{ props.item.createdAt }}</td>
         <td class="text-xs-center">{{ props.item.hit }}</td>
@@ -77,17 +77,6 @@ export default {
     this.getArticles();
     this.getDay();
   },
-
-  language(to, from) {
-    if (to == "JavaScript") {
-      this.option = this.cmOptionsJs;
-    } else if (to == "Python") {
-      this.option = this.cmOptionsPy;
-    } else if (to == "Vue") {
-      this.option = this.cmOptionsVue;
-    }
-  },
-
   methods: {
    
     getArticles() {
