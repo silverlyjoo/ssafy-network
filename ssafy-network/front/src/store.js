@@ -13,7 +13,7 @@ export default new Vuex.Store({
     NoteCheck: false,
     chatmsg : [],
     notetreefoldflag: false,
-    heightflag:false,
+    heightflag:false
   },
   mutations: {
 

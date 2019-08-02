@@ -19,13 +19,18 @@
         </v-btn>
         <v-card>
           <v-list dense>
-            <v-list-tile v-for="notification in notifications" :key="notification.id" @click="onClick" class="pa-0">
-              <v-list-tile-title v-if="notification.unread.indexOf(id) !== -1" v-text="notification.content" class="unreads"/>
-              <v-list-tile-title v-else v-text="notification.content"/>
+            <v-list-tile
+              v-for="(notification, idx) in notifications"
+              :key="notification.id"
+              @click="noticedetail(notification, idx)"
+              class="pa-0"
+              v-if="notification.unread.indexOf(id) !== -1"
+            >
+              <v-list-tile-title v-text="notification.title" class="font-weight-bold"/>
+              <!-- <v-list-tile-title v-else v-text="notification.title" class="unreads" /> -->
             </v-list-tile>
             <v-list-tile class="pa-0" @click="goNotice">
               <v-list-tile-title>더보기</v-list-tile-title>
-              
             </v-list-tile>
           </v-list>
         </v-card>
@@ -40,6 +45,21 @@
         <v-icon class="toolbartext" color="white">mdi-exit-to-app</v-icon>
       </v-btn>
     </v-toolbar-items>
+
+    <v-dialog v-model="noticedialog" max-width="400">
+      <v-card>
+        <v-card-title class="headline">{{ detail.title }}</v-card-title>
+        <v-card-title class="subtitle-1">작성자 : {{ detail.writer }}</v-card-title>
+
+        <v-card-text>{{ detail.content}}</v-card-text>
+
+        <v-card-actions>
+          <v-spacer></v-spacer>
+
+          <v-btn text @click="noticedialog = false">ok</v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
   </v-toolbar>
 </template>
 
@@ -48,41 +68,69 @@ import caxios from "@/plugins/createaxios.js";
 export default {
   data() {
     return {
-      notifications: [
-      ],
+      notifications: [],
       token: this.$session.get("token"),
       id: this.$session.get("id"),
-      dbserver : this.$store.state.dbserver,
-      selfmembership: '',
-      unreadnoti: null
+      dbserver: this.$store.state.dbserver,
+      selfmembership: "",
+      unreadnoti: null,
+      noticedialog: false,
+      detail: {
+        title: null,
+        content: null,
+        writer: null,
+        createdAt: null,
+        _id: null
+      }
     };
   },
   methods: {
-    goNotice () {
-      this.$router.push({name: 'notice'})
-    },
-    getNotification () {
+    getNotification() {
       let noticeUrl = this.dbserver;
       caxios(noticeUrl)
-      .request({
-        url: `/notices/${this.id}/${this.token}`,
-        method: 'get',
-        baseURL : noticeUrl
-      })
-      .then(res => {
-        // console.log(res.data)
-        this.notifications = res.data
-        return res
-      })
-      .then(res => {
-        let unreads = 0
-        for (let i=0; i<res.data.length; i++) {
-          if (res.data[i].unread.indexOf(this.id) !== -1) {
-            unreads++
+        .request({
+          url: `/notices/${this.id}/${this.token}`,
+          method: "get",
+          baseURL: noticeUrl
+        })
+        .then(res => {
+          // console.log(res.data)
+          this.notifications = res.data;
+          return res;
+        })
+        .then(res => {
+          let unreads = 0;
+          for (let i = 0; i < res.data.length; i++) {
+            if (res.data[i].unread.indexOf(this.id) !== -1) {
+              unreads++;
+            }
           }
+          this.unreadnoti = unreads;
+        });
+    },
+    read() {
+      let noticeUrl = this.dbserver;
+      caxios(noticeUrl).request({
+        url: `/notices`,
+        method: "PUT",
+        baseURL: noticeUrl,
+        data: {
+          token: this.token,
+          _id: this.detail._id,
+          id: this.id
         }
-        this.unreadnoti = unreads
-      })
+      });
+    },
+    async noticedetail(notice, idx) {
+      let ididx = this.notifications[idx].unread.indexOf(this.id)
+      await (this.noticedialog = true);
+      await (this.detail = notice);
+      await this.read();
+      await this.notifications[idx].unread.splice(ididx, 1);
+      await this.unreadnoti--;
+    },
+    goNotice() {
+      this.$router.push({ name: "notice" });
     },
     isAdmin() {
       let memberUrl = this.dbserver;
@@ -93,7 +141,7 @@ export default {
           baseURL: memberUrl
         })
         .then(res => {
-          this.selfmembership = res.data.membership
+          this.selfmembership = res.data.membership;
         });
     },
     logout() {
@@ -103,15 +151,11 @@ export default {
     },
     goCalendar() {
       this.$router.push("/note/calendar");
-    },
-    onClick() {
-      alert("1!");
     }
   },
-  mounted () {
-    this.isAdmin(),
-    this.getNotification()
-  },
+  mounted() {
+    this.isAdmin(), this.getNotification();
+  }
 };
 </script>
 <style>

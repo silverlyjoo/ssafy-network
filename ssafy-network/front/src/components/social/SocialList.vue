@@ -10,16 +10,15 @@
             <v-flex xs6 class>
               <v-text-field v-model="chatroomsearchkeyword"></v-text-field>
             </v-flex>
-            <v-flex xs1 class="flexcenter">
-              <button @click="searchRooms" class="buttonsize">
-                <i class="fas fa-search"></i>
-              </button>
-            </v-flex>
-            <v-flex xs1 class="flexcenter">
-              <button @click="newSocialRoom" class="buttonsize">
-                <i class="fas fa-plus"></i>
-              </button>
-            </v-flex>
+            <button @click="searchRooms" class="buttonsize">
+              <i class="fas fa-search"></i>
+            </button>
+            <button @click="getRooms" class="buttonsize">
+              <i class="fas fa-redo"></i>
+            </button>
+            <button @click="newSocialRoom" class="buttonsize">
+              <i class="fas fa-plus"></i>
+            </button>
           </v-layout>
         </v-card>
         <v-card class="my-4">
@@ -56,7 +55,13 @@
             <v-card-text>
               <v-layout wrap>
                 <v-flex xs12>
-                  <v-text-field label="Password*" type="password" required v-model="typepassword" @keyup.enter="joinsecret"></v-text-field>
+                  <v-text-field
+                    label="Password*"
+                    type="password"
+                    required
+                    v-model="typepassword"
+                    @keyup.enter="joinsecret"
+                  ></v-text-field>
                 </v-flex>
               </v-layout>
             </v-card-text>
@@ -120,6 +125,7 @@ export default {
         .finally();
     },
     getRooms() {
+      this.chatroomsearchkeyword = "";
       let roomURL = this.dbserver;
       caxios(roomURL)
         .request({
@@ -129,7 +135,7 @@ export default {
         })
         .then(res => {
           this.items = res.data;
-          this.items.sort(function (a, b) {
+          this.items.sort(function(a, b) {
             if (new Date(a.createdAt) < new Date(b.createdAt)) {
               return 1;
             }
@@ -137,7 +143,7 @@ export default {
               return -1;
             }
             return 0;
-          })
+          });
         });
     },
     joinchat(roomId, idx) {
