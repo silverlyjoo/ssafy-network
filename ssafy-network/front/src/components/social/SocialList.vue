@@ -10,16 +10,15 @@
             <v-flex xs6 class>
               <v-text-field v-model="chatroomsearchkeyword"></v-text-field>
             </v-flex>
-            <v-flex xs1 class="flexcenter">
-              <button @click="searchRooms" class="buttonsize">
-                <i class="fas fa-search"></i>
-              </button>
-            </v-flex>
-            <v-flex xs1 class="flexcenter">
-              <button @click="newSocialRoom" class="buttonsize">
-                <i class="fas fa-plus"></i>
-              </button>
-            </v-flex>
+            <button @click="searchRooms" class="buttonsize">
+              <i class="fas fa-search"></i>
+            </button>
+            <button @click="getRooms" class="buttonsize">
+              <i class="fas fa-redo"></i>
+            </button>
+            <button @click="newSocialRoom" class="buttonsize">
+              <i class="fas fa-plus"></i>
+            </button>
           </v-layout>
         </v-card>
         <v-card class="my-4">
@@ -30,10 +29,12 @@
               :key="item.title"
               avatar
               @click="joinchat(item._id, idx)"
+              class="mb-3"
             >
               <v-list-tile-content>
                 <v-list-tile-title v-html="item.title"></v-list-tile-title>
                 <v-list-tile-title v-html="item.owner"></v-list-tile-title>
+                <v-list-tile-title v-html="item.createdAt"></v-list-tile-title>
               </v-list-tile-content>
 
               <v-list-tile-action v-if="item.password">
@@ -49,12 +50,18 @@
         <v-card>
           <v-container>
             <v-card-title>
-              <span class="headline">User Profile</span>
+              <span class="headline">Join secret room</span>
             </v-card-title>
             <v-card-text>
               <v-layout wrap>
                 <v-flex xs12>
-                  <v-text-field label="Password*" type="password" required v-model="typepassword" @keyup.enter="joinsecret"></v-text-field>
+                  <v-text-field
+                    label="Password*"
+                    type="password"
+                    required
+                    v-model="typepassword"
+                    @keyup.enter="joinsecret"
+                  ></v-text-field>
                 </v-flex>
               </v-layout>
             </v-card-text>
@@ -118,6 +125,7 @@ export default {
         .finally();
     },
     getRooms() {
+      this.chatroomsearchkeyword = "";
       let roomURL = this.dbserver;
       caxios(roomURL)
         .request({
@@ -127,6 +135,15 @@ export default {
         })
         .then(res => {
           this.items = res.data;
+          this.items.sort(function(a, b) {
+            if (new Date(a.createdAt) < new Date(b.createdAt)) {
+              return 1;
+            }
+            if (new Date(a.createdAt) > new Date(b.createdAt)) {
+              return -1;
+            }
+            return 0;
+          });
         });
     },
     joinchat(roomId, idx) {

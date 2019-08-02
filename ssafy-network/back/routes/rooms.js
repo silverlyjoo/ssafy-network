@@ -30,7 +30,7 @@ router.get('/:token', function (req, res) {
         return res.status(500).send({ error: 'database failure' });
     }
     res.json(rooms);
-    }).sort({ title: 1 });
+    });
 });
   
 /**
@@ -87,7 +87,7 @@ router.post('/', function (req, res) {
     });
 });
   
-  /**
+/**
  * @swagger
  *  /rooms:
  *    delete:

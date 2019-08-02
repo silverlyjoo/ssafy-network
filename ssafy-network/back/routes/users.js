@@ -41,6 +41,49 @@ router.get('/:token', function (req, res) {
 
 /**
  * @swagger
+ *  /users/admin/{id}/{token}:
+ *    get:
+ *      tags:
+ *      - User
+ *      description: 관리자 아이디로 유저정보 반환.
+ *      parameters:
+ *      - name: id
+ *        in: path
+ *        description: "아이디"
+ *        required: true
+ *        type: string
+ *      - name: token
+ *        in: path
+ *        description: "토큰"
+ *        required: true
+ *        type: string
+ *      responses:
+ *       200:
+ *        description: 관리자 정보를 반환
+ */
+router.get('/admin/:id/:token', function (req, res) {
+  var info = decode(req.params.token);
+  if (!info) {
+    return res.json({ result: false, message: "유효하지 않은 토큰입니다" });
+  }
+  if (info.membership == "관리자") {
+    User.findOne({ id: req.params.id }, function (err, user) {
+      if (err) {
+        return res.status(500).json({ error: err });
+      }
+      if (!user) {
+        return res.status(404).json({ error: 'user not found' });
+      }
+      res.json(user);
+    })
+  }
+  else{
+    res.json({ result: false, message: "권한이 없습니다" });
+  }
+});
+
+/**
+ * @swagger
  *  /users/{id}/{token}:
  *    get:
  *      tags:
@@ -281,7 +324,7 @@ router.post('/', function (req, res) {
  *        description: "result = true 일 경우 정상적으로 작동"
  */
 router.put('/', function (req, res) {
-  var info = decode(req.params.token);
+  var info = decode(req.body.token);
   if (!info) {
     return res.json({ result: false });
   }

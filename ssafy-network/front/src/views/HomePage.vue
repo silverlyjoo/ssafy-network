@@ -1,59 +1,73 @@
 <template>
-  <v-container >
-    <v-layout column class="ma-2">
-      <v-flex text-xs-center class="ma-3"><h1>WM Project</h1></v-flex>
+  <v-container class="ma-0 pa-0" fluid>
+    <v-layout column class="ma-0">
+      <!-- <v-flex text-xs-center class="ma-3"><h1>WM Project</h1></v-flex> -->
        <v-flex
           v-for="(item, i) in items"
           :key="i"
           xs12
           flat
+           min-height="400"
         >
           <v-card
-            :color="item.color"
-            dark
-            class="pa-4"
+            class="mx-auto"
+            min-height="400"
           >
-          <v-layout row wrap>
-            <v-flex xs6>
-              <v-img :src="item.src" height="500px" contain></v-img>
-            </v-flex>
-            <v-flex xs6>
-              <v-card-title primary-title>
-                <div class="headline">{{item.title}}</div>
-                <div>{{item.artist}}</div>
-              </v-card-title>
-            </v-flex>
-          </v-layout>
-          </v-card>
-        </v-flex>
-    <v-flex>
-    <v-content>
-      <router-view></router-view>
-    </v-content>
-    </v-flex>
+              <v-img :src="item.src" min-height="400" height="600px" wdith="100%" >
+                <v-container
+                    fluid
+                    pa-2
+                  >
+                    <v-layout>
+                      <v-flex xs12 align-end flexbox :class="item.cssType">
+                        <span class="display-1 white--text" v-text="item.title" ></span>
+                        <br/>
+                        <span class="title white--text" v-text="item.content" ></span>
+                      </v-flex>
+                    </v-layout>
+                  </v-container>
+              </v-img>
+        </v-card>
+      </v-flex>
+      <v-flex>
+        <v-content>
+          <router-view></router-view>
+        </v-content>
+      </v-flex>
     </v-layout>
   </v-container>
 </template>
 
 <script>
+import note from '@/assets/note.jpg';
+import code from '@/assets/code.jpg';
+import social from '@/assets/social.jpeg';
 export default {
   name: "HomePage",
   data() {
     return {
       session: true,
-       items: [
+      items: [
         {
           color: '#1F7087',
-          src: 'https://cdn.vuetifyjs.com/images/cards/foster.jpg',
-          title: 'Supermodel',
-          artist: 'Foster the People',
+          src: note,
+          title: 'Task 정리 및 스케줄 관리',
+          content: '폴더 구조로 정리 가능 ',
+          cssType: 'textright'
         },
         {
           color: '#952175',
-          src: 'https://cdn.vuetifyjs.com/images/cards/halcyon.png',
-          title: 'Halcyon Days',
-          artist: 'Ellie Goulding',
-        },
+          src: code,
+          title: '코드 리뷰 & QnA',
+          content: '코드 에디터를 통한 질문 등록 및 게시판 형태',
+          cssType: 'textleft'
+        },{
+          color: '#111111',
+          src: social,
+          title: 'Social 채팅',
+          content: '멀티 채팅 가능',
+          cssType: 'textright'
+        }
         ],
     };
   }
@@ -63,5 +77,15 @@ export default {
 .home {
   background: rgb(10, 0, 56);
   color: rgb(218, 234, 248);
+}
+.textright{
+  margin-top:20%;
+  margin-right:10%;
+  text-align: right;
+}
+.textleft{
+  margin-top:20%;
+  margin-left:10%;
+  text-align: left;
 }
 </style>
