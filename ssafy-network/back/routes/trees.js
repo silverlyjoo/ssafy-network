@@ -6,23 +6,24 @@ var Folder = require('../models/folder');
 var decode = require('../decode');
 
 
-async function dfs(p_id,ItemTree){
-    Folder.find({parent_id: p_id} , async function(err, folder){
-        Txt.find({parent_id: p_id}, function(err, txt){
-            for (let i = 0; i < txt.length; i++) {
-                ItemTree.push(txt[i]);
-            }
-        });
+async function dfs(p_id, ItemTree){
+    var txt = await Txt.find({parent_id: p_id});
+    if(txt){
+        for (let i = 0; i < txt.length; i++) {
+            ItemTree.push(txt[i]);
+        }
+    }
+    var folder = await Folder.find({parent_id: p_id});
+    if(folder){
         for (let i = 0; i < folder.length; i++) {
             dfs(folder[i]._id,folder[i].children);
             ItemTree.push(folder[i]);
         }
-    });
-    ItemTree.sort(function(a, b){
+    }
+    ItemTree.sort((a, b) => {
         return a.file < b.file ? -1 : a.file > b.file ? 1 : 0;
     });
 }
-
 
 /**
  * @swagger
@@ -52,12 +53,12 @@ router.get('/:id/:token', function (req, res) {
         return res.json({ result: false });
     }
     var ItemTree = [];
-    Supertree.findOne({id: req.params.id} ,async function(err, tree){
+    Supertree.findOne({id: req.params.id} , function(err, tree){
         if(err){
             res.json({result: false})
         }
         dfs(tree._id,ItemTree);
-
+        
         setTimeout(function() {
             console.log(ItemTree);
             
