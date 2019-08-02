@@ -61,7 +61,7 @@ export default {
           text: "작성일",
           align: "center",
           sortable: true,
-          value: "writer",
+          value: "createdAt",
         },
         {
           text: "조회수",

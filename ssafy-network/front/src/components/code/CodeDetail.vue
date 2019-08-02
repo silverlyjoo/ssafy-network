@@ -124,7 +124,7 @@ export default {
       },
       languages: [
         { text: "JavaScript" },
-        { text: "python" },
+        { text: "Python" },
         { text: "Vue" },
       ],
       headers: [
