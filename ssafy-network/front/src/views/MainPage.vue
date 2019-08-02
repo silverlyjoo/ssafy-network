@@ -78,7 +78,7 @@ export default {
   overflow: auto;
 }
 .routingbody{
-  
+  width:100%;
 }
 .nav {
   width: 100%;

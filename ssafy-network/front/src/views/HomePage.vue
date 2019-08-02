@@ -1,35 +1,32 @@
 <template>
-  <v-container class="ma-0 pa-0" >
-    <v-layout column >
+  <v-container class="ma-0 pa-0" fluid>
+    <v-layout column class="ma-0">
       <!-- <v-flex text-xs-center class="ma-3"><h1>WM Project</h1></v-flex> -->
        <v-flex
           v-for="(item, i) in items"
           :key="i"
           xs12
           flat
+           min-height="400"
         >
           <v-card
-            dark
-            class="pa-4"
+            class="mx-auto"
+            min-height="400"
           >
-          <v-layout row wrap fill-height>
-            <v-flex fill-height>
-              <v-img :src="item.src" height="500px" contain>
+              <v-img :src="item.src" min-height="400" height="600px" wdith="100%" >
                 <v-container
-                    fill-height
                     fluid
                     pa-2
                   >
-                    <v-layout fill-height>
-                      <v-flex xs12 align-end flexbox>
-                        <span class="headline white--text" v-text="item.title"></span>
+                    <v-layout>
+                      <v-flex xs12 align-end flexbox :class="item.cssType">
+                        <span class="display-1 white--text" v-text="item.title" ></span>
+                        <br/>
+                        <span class="title white--text" v-text="item.content" ></span>
                       </v-flex>
                     </v-layout>
                   </v-container>
               </v-img>
-            </v-flex>
-            
-          </v-layout>
         </v-card>
       </v-flex>
       <v-flex>
@@ -54,19 +51,22 @@ export default {
         {
           color: '#1F7087',
           src: note,
-          title: '정리 작성',
-          artist: 'Foster the People',
+          title: 'Task 정리 및 스케줄 관리',
+          content: '폴더 구조로 정리 가능 ',
+          cssType: 'textright'
         },
         {
           color: '#952175',
           src: code,
-          title: 'Halcyon Days',
-          artist: 'Ellie Goulding',
+          title: '코드 리뷰 & QnA',
+          content: '코드 에디터를 통한 질문 등록 및 게시판 형태',
+          cssType: 'textleft'
         },{
           color: '#111111',
           src: social,
-          title: 'Halcyon Days',
-          artist: 'Ellie Goulding',
+          title: 'Social 채팅',
+          content: '멀티 채팅 가능',
+          cssType: 'textright'
         }
         ],
     };
@@ -77,5 +77,15 @@ export default {
 .home {
   background: rgb(10, 0, 56);
   color: rgb(218, 234, 248);
+}
+.textright{
+  margin-top:20%;
+  margin-right:10%;
+  text-align: right;
+}
+.textleft{
+margin-top:20%;
+  margin-left:10%;
+   text-align: left;
 }
 </style>
