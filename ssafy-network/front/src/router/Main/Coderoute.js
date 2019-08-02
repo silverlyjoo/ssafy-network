@@ -14,8 +14,8 @@ export default {
             component: CodeWriter,
         },
         {
-            path: 'board/detail',
-            name: 'codedetail',
+            path: 'detail',
+            name: 'CodeDetail',
             component: CodeDetail,
         },
         {
