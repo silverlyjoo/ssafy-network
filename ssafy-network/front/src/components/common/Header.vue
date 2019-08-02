@@ -23,6 +23,10 @@
               <v-list-tile-title v-if="notification.unread.indexOf(id) !== -1" v-text="notification.content" class="unreads"/>
               <v-list-tile-title v-else v-text="notification.content"/>
             </v-list-tile>
+            <v-list-tile class="pa-0" @click="goNotice">
+              <v-list-tile-title>더보기</v-list-tile-title>
+              
+            </v-list-tile>
           </v-list>
         </v-card>
       </v-menu>
@@ -54,6 +58,9 @@ export default {
     };
   },
   methods: {
+    goNotice () {
+      this.$router.push({name: 'notice'})
+    },
     getNotification () {
       let noticeUrl = this.dbserver;
       caxios(noticeUrl)
