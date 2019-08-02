@@ -18,7 +18,7 @@
       style="width:80%; margin-left:auto; margin-right:auto;"
     >
       <template v-slot:items="props">
-        <td class="text-xs-center"><router-link :to='{name : "CodeDetail" , params:{data : props.item }}' style="text-decoration: none !important; color:black;">{{ props.item.title }}</router-link></td>
+        <td @click="addHit()" class="text-xs-center"><router-link :to='{name : "CodeDetail" , params:{data : props.item }}' style="text-decoration: none !important; color:black;" @click="addHit()">{{ props.item.title }}</router-link></td>
         <td class="text-xs-center">{{ props.item.writer }}</td>
         <td class="text-xs-center">{{ props.item.createdAt }}</td>
         <td class="text-xs-center">{{ props.item.hit }}</td>
@@ -105,6 +105,25 @@ export default {
         mm = "0" + mm;
       }
       this.today = yyyy + "-" + mm + "-" + dd;
+    },
+    addHit() {
+      fetch(this.$store.state.dbserver + "/boards/hit", {
+        method: "PUT",
+        headers: {
+            "Access-Control-Allow-Origin": "*",
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          _id : this.articles[0]._id,
+          token : this.$session.get("token"),
+        })
+      })
+      .then(res => res.json())
+      .then(data => {
+        if(data.result == true) {
+          this.getArticles();
+        }
+      });
     },
   }
 };

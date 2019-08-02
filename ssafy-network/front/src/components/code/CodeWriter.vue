@@ -233,7 +233,7 @@ export default {
           });
         }
       })
-    }
+    },
   },
   watch:{
     'article.selectedLanguage'(to, from){
