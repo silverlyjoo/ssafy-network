@@ -1,7 +1,7 @@
 <template>
-  <v-container fluid fill-height>
+  <v-container fill-height>
     <v-layout align-center justify-center>
-      <v-flex xs12 sm10>
+      <v-flex xs12 md10>
         <v-card class="elevation-12 pa-4">
           <v-card-title>
             <h1>회원가입</h1>

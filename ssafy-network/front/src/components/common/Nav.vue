@@ -8,8 +8,8 @@
           <div class="navBtn" @click="foldnote">
             <router-link to="/index" style="text-decoration: none !important">
               <v-layout align-center class="pa-2 mb-3">
-                <v-flex xs7 text-xs-center>
-                  <span class="navtext navtcolor">HOME</span>
+                <v-flex text-xs-center>
+                  <h4 class="toolbartext title">SSAFY WM</h4>
                 </v-flex>
               </v-layout>
             </router-link>
@@ -102,5 +102,9 @@ export default {
   flex-direction: column;
   justify-content: space-around;
   
+}
+.toolbartext {
+  text-shadow: 1px 1px 5px black;
+  color: white;
 }
 </style>

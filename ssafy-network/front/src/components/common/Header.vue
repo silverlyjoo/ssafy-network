@@ -4,7 +4,6 @@
   </div>-->
 
   <v-toolbar flat color="transparent" class="subtoolbar">
-    <h4 class="toolbartext title">SSAFY WM</h4>
     <v-spacer />
     <v-toolbar-items>
       <v-btn icon @click="goCalendar()" class="toolbartext">
