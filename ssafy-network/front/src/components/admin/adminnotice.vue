@@ -45,6 +45,7 @@
       </template>
     </v-data-table>
     <v-btn @click="deleteNotice">삭제</v-btn>
+    <v-btn to="/admin/nwrite">새 공지</v-btn>
   </v-container>
 </template>
 
@@ -96,9 +97,7 @@ export default {
           baseURL: noticeUrl
         })
         .then(res => {
-          console.log(res.data);
           this.desserts = res.data;
-          return res;
         });
     },
     deleteNotice() {
