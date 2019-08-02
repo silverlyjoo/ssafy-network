@@ -91,7 +91,6 @@ export default {
   },
   methods: {
     close() {
-      this.dialog = false;
       this.article.title = "";
       this.article.source = "";
       this.article.content = "";
@@ -99,29 +98,36 @@ export default {
       this.$validator.reset();
     },
     addArticle() {
-      fetch(this.$store.state.dbserver + "/boards",{method: "POST",
-        headers: {
-        "Access-Control-Allow-Origin": "*",
-        "Content-Type": "application/json"
-        },
-        body: JSON.stringify({
-          token: this.$session.get("token"),
-          language: this.article.language,
-          writer: this.article.writer,
-          title: this.article.title,
-          source: this.article.source,
-          content: this.article.content
-        })
-        }).then(res => res.json())
-    .then(data => {
-        if(data.result == true){
-        alert("게시글이 등록되었습니다.");
-        }else{
-        alert("게시글을 등록할 수 없습니다...");
+      this.$validator.validateAll().then(res => {
+        if (!res) {
+          alert("값이 유효한지 체크해주세요.");
+          return;
+        } else {
+          fetch(this.$store.state.dbserver + "/boards",{method: "POST",
+            headers: {
+            "Access-Control-Allow-Origin": "*",
+            "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+              token: this.$session.get("token"),
+              language: this.article.language,
+              writer: this.article.writer,
+              title: this.article.title,
+              source: this.article.source,
+              content: this.article.content
+            })
+            }).then(res => res.json())
+          .then(data => {
+            if(data.result == true){
+            alert("게시글이 등록되었습니다.");
+            }else{
+            alert("게시글을 등록할 수 없습니다...");
+            }
+            this.close();
+          });
         }
-        this.close();
-    });
+      })
     }
-  },
+  }
 }
 </script>

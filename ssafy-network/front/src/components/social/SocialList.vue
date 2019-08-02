@@ -2,29 +2,69 @@
   <v-container>
     <v-layout row justify-center>
       <v-flex xs11>
-        <v-card class="px-3 sociallist-header">
-          <v-select v-model="searchoption" :items="searchoptions"></v-select>
-          <v-text-field v-model="chatroomsearchkeyword"></v-text-field>
-          <v-btn small style="width:5px;" @click="searchRooms">
-            <i class="fas fa-search"></i>
-          </v-btn>
-          <v-btn small to="/social/new">New chat</v-btn>
+        <v-card class="sociallist-header">
+          <v-layout justify-space-around align-center>
+            <v-flex xs3 class="pr-1 pl-2">
+              <v-select v-model="searchoption" :items="searchoptions"></v-select>
+            </v-flex>
+            <v-flex xs6 class>
+              <v-text-field v-model="chatroomsearchkeyword"></v-text-field>
+            </v-flex>
+            <v-flex xs1 class="flexcenter">
+              <button @click="searchRooms" class="buttonsize">
+                <i class="fas fa-search"></i>
+              </button>
+            </v-flex>
+            <v-flex xs1 class="flexcenter">
+              <button @click="newSocialRoom" class="buttonsize">
+                <i class="fas fa-plus"></i>
+              </button>
+            </v-flex>
+          </v-layout>
         </v-card>
-        <v-card class="my-4 chatlistbox">
+        <v-card class="my-4">
           <v-list subheader>
             <v-subheader>Recent chat</v-subheader>
-            <v-list-tile v-for="item in items" :key="item.title" avatar @click="joinchat(item._id)">
+            <v-list-tile
+              v-for="(item, idx) in items"
+              :key="item.title"
+              avatar
+              @click="joinchat(item._id, idx)"
+            >
               <v-list-tile-content>
                 <v-list-tile-title v-html="item.title"></v-list-tile-title>
                 <v-list-tile-title v-html="item.owner"></v-list-tile-title>
               </v-list-tile-content>
-              <v-list-tile-action>
-                <v-icon :color="item.active ? 'teal' : 'grey'">chat_bubble</v-icon>
+
+              <v-list-tile-action v-if="item.password">
+                <i class="fas fa-lock lockicon"></i>
               </v-list-tile-action>
             </v-list-tile>
           </v-list>
         </v-card>
       </v-flex>
+    </v-layout>
+    <v-layout justify-center>
+      <v-dialog v-model="dialog" max-width="290">
+        <v-card>
+          <v-container>
+            <v-card-title>
+              <span class="headline">User Profile</span>
+            </v-card-title>
+            <v-card-text>
+              <v-layout wrap>
+                <v-flex xs12>
+                  <v-text-field label="Password*" type="password" required v-model="typepassword" @keyup.enter="joinsecret"></v-text-field>
+                </v-flex>
+              </v-layout>
+            </v-card-text>
+            <v-card-actions>
+              <v-spacer></v-spacer>
+              <v-btn color="blue darken-1" text @click.stop="joinsecret">submit</v-btn>
+            </v-card-actions>
+          </v-container>
+        </v-card>
+      </v-dialog>
     </v-layout>
   </v-container>
 </template>
@@ -41,19 +81,31 @@ export default {
       token: this.$session.get("token"),
       chatserver: this.$store.state.chatserver,
       chatroomsearchkeyword: "",
-      searchoption:"title",
-      searchoptions: ["title", "max", "owner"],
+      searchoption: "title",
+      searchoptions: ["title", "owner"],
+      dialog: false,
+      typepassword: "",
+      secretjoinflag: null
     };
   },
   methods: {
     searchRooms() {
-      fetch(this.$store.state.dbserver + "/search/rooms/" +this.searchoption+'/'+this.chatroomsearchkeyword+'/'+ this.$session.get("token"), {
-        method: "GET",
-        headers: {
-          "Access-Control-Allow-Origin": "*",
-          "Content-Type": "application/json"
+      fetch(
+        this.$store.state.dbserver +
+          "/search/rooms/" +
+          this.searchoption +
+          "/" +
+          this.chatroomsearchkeyword +
+          "/" +
+          this.$session.get("token"),
+        {
+          method: "GET",
+          headers: {
+            "Access-Control-Allow-Origin": "*",
+            "Content-Type": "application/json"
+          }
         }
-      })
+      )
         .then(res => res.json())
         .then(data => {
           if (data) {
@@ -75,13 +127,33 @@ export default {
         })
         .then(res => {
           this.items = res.data;
-          // console.log("res", res.data);
         });
     },
-    joinchat(roomId) {
-      this.$router.push({ name: "room", params: { _id: roomId } });
-
-      console.log(roomId);
+    joinchat(roomId, idx) {
+      if (this.items[idx].password) {
+        // console.log(idx)
+        this.dialog = true;
+        this.secretjoinflag = idx;
+      } else {
+        this.$router.push({ name: "room", params: { _id: roomId } });
+      }
+    },
+    newSocialRoom() {
+      this.$router.push({ name: "new" });
+    },
+    joinsecret() {
+      if (
+        this.items[this.secretjoinflag].password ===
+        this.typepassword.toString()
+      ) {
+        this.$router.push({
+          name: "room",
+          params: { _id: this.items[this.secretjoinflag]._id }
+        });
+      } else {
+        alert("비밀번호가 틀렸습니다.");
+        this.typepassword = "";
+      }
     }
   },
   mounted() {
@@ -91,11 +163,21 @@ export default {
 </script>
 
 <style>
-.chatlistbox {
-  height: 45rem;
-}
 .sociallist-header {
   display: flex;
   align-items: center;
+}
+.buttonsize {
+  width: 30px;
+  height: 30px;
+  background: rgb(231, 231, 231);
+  box-shadow: 1px 2px 2px rgb(143, 143, 143);
+}
+.flexcenter {
+  display: flex;
+  justify-content: center;
+}
+.lockicon {
+  color: rgb(177, 177, 177);
 }
 </style>

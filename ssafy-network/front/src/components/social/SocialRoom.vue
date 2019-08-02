@@ -73,7 +73,9 @@ export default {
       this.socket = io(this.chatserver);
       this.socket.emit("join", { _id: this._id, nickname: this.nickname });
       this.socket.on("chatlist", data => {
-        this.chatdata = this.chatdata.concat(data)
+        if (!this.chatdata.length) {
+          this.chatdata = data
+        }
         // console.log(data)
       });
       this.socket.on("broadcast", data => {

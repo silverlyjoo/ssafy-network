@@ -3,57 +3,54 @@
     <v-toolbar flat color="grey lighten-5" style="width:80%; margin-left:auto; margin-right:auto;">
       <v-toolbar-title>글 작성하기</v-toolbar-title>
       <v-spacer></v-spacer>
-      <v-toolbar-items>
-        <v-btn dark flat @click="addArticle()">등록</v-btn>
-        <v-btn dark flat @click="close()">취소</v-btn>
-      </v-toolbar-items>
+        <v-btn class="white--text" color="grey darken-2" @click="addArticle()">등록</v-btn>
+        <router-link to="/code/board" style="text-decoration: none !important"><v-btn class="white--text" color="grey darken-2">취소</v-btn></router-link>
     </v-toolbar>
-    <v-layout>
-      <v-card>
+    <!-- <v-layout> -->
+    <br>
+      <v-card grid-list-md style="width:80%; margin-left:auto; margin-right:auto;">
         <v-card-text>
-          <v-container grid-list-md style="width:80%; padding:100px;">
+          <v-container>
             <v-layout wrap column>
-              <v-flex xs12 sm6 md4>
+              <v-flex xs12>
                 <v-text-field
                   label="제목"
                   v-model="article.title"
                   v-validate="'required'"
+                  :error-messages="errors.collect('title')"
                   data-vv-name="title"
-                  :error-messagges="errors.collect('title')"
                 ></v-text-field>
               </v-flex>
-              <v-flex xs12 sm6 md4>
+              <v-flex xs12>
                 <v-select
                   :items="languages"
                   v-model="article.selectedLanguage"
                   label="선택 언어"
                   single-line
-                  v-validate="'required'"
-                  data-vv-name="selectedLanguage"
-                  :error-messages="errors.collect('selectedLanguage')"
                 ></v-select>
               </v-flex>
-              <v-flex xs12 sm6 md4>
+              <v-flex xs12>
                 <codemirror
                   v-model="article.source"
-                  :options="option">
+                  :options="cmOptionJs">
                 </codemirror>
               </v-flex>
-             <v-flex xs12 sm6 md4>
+              <br>
+             <v-flex xs12>
                <v-textarea
                  label="내용"
                  v-model="article.content"
                  v-validate="'required'"
                  :error-messages="errors.collect('content')"
                  data-vv-name="content"
-                 auto-grow value>
+                >
                 </v-textarea>
               </v-flex>
               </v-layout>
             </v-container>
           </v-card-text>
         </v-card>
-    </v-layout>
+    <!-- </v-layout> -->
   </div>
 </template>
 
@@ -135,11 +132,20 @@ export default {
   $_veeValidate: {
     validator: "new",
   },
-  props: {  
-  },
   data() {
     return {
-      cmOptionsJs: {
+      article: {
+        title: "",
+        source: "",
+        content: "",
+        selectedLanguage: "",
+      },
+      languages: [
+        { text: "JavaScript" },
+        { text: "Python" },
+        { text: "Vue" },
+      ],
+      cmOptionJs: {
         autoCloseBrackets: true,
         tabSize: 4,
         styleActiveLine: false,
@@ -161,7 +167,7 @@ export default {
         theme: "monokai",
         extraKeys: { Ctrl: "autocomplete" }
       },
-      cmOptionsPy: {
+      cmOptionPy: {
         autoCloseBrackets: true,
         tabSize: 4,
         styleActiveLine: true,
@@ -170,7 +176,7 @@ export default {
         mode: "text/x-python",
         theme: "mbo"
       },
-      cmOptionsVue: {
+      cmOptionVue: {
         autoCloseBrackets: true,
         tabSize: 4,
         foldGutter: true,
@@ -189,6 +195,43 @@ export default {
           }
         }
       },
+    }
+  },
+  methods: {
+    goBoard() {
+      this.$router.push("/code/board");
+    },
+    addArticle() {
+      this.$validator.validateAll().then(res => {
+        if (!res) {
+          alert("작성하지 않은 란이 있는지 확인해주세요.");
+          return;
+        } else {
+          fetch(this.$store.state.dbserver + "/boards", { method: "POST",
+            headers: {
+            "Access-Control-Allow-Origin": "*",
+            "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+              token: this.$session.get("token"),
+              language: this.article.selectedLanguage,
+              writer: this.$session.get("nickname"),
+              title: this.article.title,
+              source: this.article.source,
+              content: this.article.content
+            })
+            }).then(res => res.json())
+          .then(data => {
+            if(data.result == true){
+              alert("게시글이 등록되었습니다.");
+              this.$router.push("/code/board");
+            }else{
+            alert("게시글을 등록할 수 없습니다...");
+            }
+            // this.goBoard();
+          });
+        }
+      })
     }
   }
 }
