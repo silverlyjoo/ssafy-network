@@ -59,6 +59,7 @@
                     label="Password*"
                     type="password"
                     required
+                    ref="chtpwd"
                     v-model="typepassword"
                     @keyup.enter="joinsecret"
                   ></v-text-field>
@@ -146,11 +147,12 @@ export default {
           });
         });
     },
-    joinchat(roomId, idx) {
+    async joinchat(roomId, idx) {
       if (this.items[idx].password) {
         // console.log(idx)
-        this.dialog = true;
-        this.secretjoinflag = idx;
+        await (this.dialog = true);
+        await this.$refs.chtpwd.focus();
+        await (this.secretjoinflag = idx);
       } else {
         this.$router.push({ name: "room", params: { _id: roomId } });
       }
