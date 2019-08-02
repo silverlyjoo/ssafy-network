@@ -24,12 +24,10 @@
               :key="notification.id"
               @click="noticedetail(notification, idx)"
               class="pa-0"
+              v-if="notification.unread.indexOf(id) !== -1"
             >
-              <v-list-tile-title
-                v-if="notification.read.indexOf(id) !== -1"
-                v-text="notification.title"
-              />
-              <v-list-tile-title v-else v-text="notification.title" class="unreads" />
+              <v-list-tile-title v-text="notification.title" class="font-weight-bold"/>
+              <!-- <v-list-tile-title v-else v-text="notification.title" class="unreads" /> -->
             </v-list-tile>
             <v-list-tile class="pa-0" @click="goNotice">
               <v-list-tile-title>더보기</v-list-tile-title>
@@ -124,11 +122,12 @@ export default {
       });
     },
     async noticedetail(notice, idx) {
+      let ididx = this.notifications[idx].unread.indexOf(this.id)
       await (this.noticedialog = true);
       await (this.detail = notice);
       await this.read();
-      await this.notifications[idx].read.push(this.id);
-      await this.unreadnoti--
+      await this.notifications[idx].unread.splice(ididx, 1);
+      await this.unreadnoti--;
     },
     goNotice() {
       this.$router.push({ name: "notice" });
