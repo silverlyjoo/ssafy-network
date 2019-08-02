@@ -11,6 +11,7 @@ var boardsRouter = require('./routes/boards');
 var calendarsRouter = require('./routes/calendars');
 var treesRouter = require('./routes/trees');
 var searchRouter = require('./routes/search');
+var noticesRouter = require('./routes/notices');
 
 var app = express();
 var db = require('./db');
@@ -36,6 +37,7 @@ app.use('/rooms', roomsRouter);
 app.use('/boards', boardsRouter);
 app.use('/calendars', calendarsRouter);
 app.use('/trees', treesRouter);
-app.use('/search',searchRouter);
+app.use('/notices', noticesRouter);
+app.use('/search', searchRouter);
 
 module.exports = app;

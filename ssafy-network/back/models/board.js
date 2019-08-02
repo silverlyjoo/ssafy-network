@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+var moment = require('moment');
 
 const boardSchema = new mongoose.Schema({
     language: String,
@@ -14,8 +15,8 @@ const boardSchema = new mongoose.Schema({
     content: String,
     hit: Number,
     createdAt:{
-        type: Date,
-        default: Date.now,
+        type: String,
+        default: moment().format("YYYY-MM-DD HH:mm:ss"),
     },
 });
 

@@ -30,13 +30,13 @@
             </v-flex>
             
           </v-layout>
-          </v-card>
-        </v-flex>
-    <v-flex>
-    <v-content>
-      <router-view></router-view>
-    </v-content>
-    </v-flex>
+        </v-card>
+      </v-flex>
+      <v-flex>
+        <v-content>
+          <router-view></router-view>
+        </v-content>
+      </v-flex>
     </v-layout>
   </v-container>
 </template>
@@ -50,7 +50,7 @@ export default {
   data() {
     return {
       session: true,
-       items: [
+      items: [
         {
           color: '#1F7087',
           src: note,

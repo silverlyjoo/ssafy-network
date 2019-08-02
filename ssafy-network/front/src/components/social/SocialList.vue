@@ -30,10 +30,12 @@
               :key="item.title"
               avatar
               @click="joinchat(item._id, idx)"
+              class="mb-3"
             >
               <v-list-tile-content>
                 <v-list-tile-title v-html="item.title"></v-list-tile-title>
                 <v-list-tile-title v-html="item.owner"></v-list-tile-title>
+                <v-list-tile-title v-html="item.createdAt"></v-list-tile-title>
               </v-list-tile-content>
 
               <v-list-tile-action v-if="item.password">
@@ -49,7 +51,7 @@
         <v-card>
           <v-container>
             <v-card-title>
-              <span class="headline">User Profile</span>
+              <span class="headline">Join secret room</span>
             </v-card-title>
             <v-card-text>
               <v-layout wrap>
@@ -127,6 +129,15 @@ export default {
         })
         .then(res => {
           this.items = res.data;
+          this.items.sort(function (a, b) {
+            if (new Date(a.createdAt) < new Date(b.createdAt)) {
+              return 1;
+            }
+            if (new Date(a.createdAt) > new Date(b.createdAt)) {
+              return -1;
+            }
+            return 0;
+          })
         });
     },
     joinchat(roomId, idx) {
