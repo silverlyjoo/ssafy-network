@@ -2,6 +2,10 @@
   <div class="pa-5">
     <v-toolbar flat color="grey lighten-5" style="width:80%; margin-left:auto; margin-right:auto;">
       <v-toolbar-title>글 읽기</v-toolbar-title>
+      <v-spacer></v-spacer>
+        <router-link to="/code/board" style="text-decoration: none !important"><v-btn class="white--text" color="grey darken-2">목록</v-btn></router-link>
+        <v-btn class="white--text" color="grey darken-2">수정</v-btn>
+        <router-link to="/code/board" style="text-decoration: none !important"><v-btn class="white--text" color="grey darken-2">삭제</v-btn></router-link>
     </v-toolbar>
     <!-- <v-layout> -->
     <br>
@@ -12,34 +16,31 @@
               <v-flex xs12>
                 <v-text-field
                   label="제목"
-                  v-model="article.title"
-                  v-validate="'required'"
-                  :error-messages="errors.collect('title')"
-                  data-vv-name="title"
+                  readonly
+                  v-model="data.title"
                 ></v-text-field>
               </v-flex>
               <v-flex xs12>
                 <v-select
                   :items="languages"
-                  v-model="article.selectedLanguage"
                   label="선택 언어"
                   single-line
+                  readonly
+                  v-model="data.language"
                 ></v-select>
               </v-flex>
               <v-flex xs12>
                 <codemirror
-                  v-model="article.source"
-                  :options="cmOptionJs">
+                  :options="cmOptionJs"
+                  v-model="data.source">
                 </codemirror>
               </v-flex>
               <br>
              <v-flex xs12>
                <v-textarea
                  label="내용"
-                 v-model="article.content"
-                 v-validate="'required'"
-                 :error-messages="errors.collect('content')"
-                 data-vv-name="content"
+                 readonly
+                 v-model="data.content"
                 >
                 </v-textarea>
               </v-flex>
@@ -53,10 +54,15 @@
 
 
 <script>
+
+
 export default {
-  name: "CodeBoard",
+  name: "CodeDetail",
   $_veeValidate: {
     validator: "new",
+  },
+  props:{
+    data : {type:Object}
   },
   data() {
     return {
@@ -65,6 +71,62 @@ export default {
       articles: [],
       loading: true,
       pagination:{},
+      cmOptionJs: {
+        autoCloseBrackets: true,
+        tabSize: 4,
+        styleActiveLine: false,
+        lineNumbers: true,
+        styleSelectedText: false,
+        line: true,
+        foldGutter: true,
+         readOnly:true,
+        gutters: ["CodeMirror-linenumbers", "CodeMirror-foldgutter"],
+        mode: "text/javascript",
+        // hint.js options
+        hintOptions: {
+          // 当匹配只有一项的时候是否自动补全
+          completeSingle: false
+        },
+        //快捷键 可提供三种模式 sublime、emacs、vim
+        keyMap: "sublime",
+        matchBrackets: true,
+        showCursorWhenSelecting: true,
+        theme: "monokai",
+        extraKeys: { Ctrl: "autocomplete" }
+      },
+      cmOptionPy: {
+        autoCloseBrackets: true,
+        tabSize: 4,
+        styleActiveLine: true,
+        lineNumbers: true,
+        line: true,
+        mode: "text/x-python",
+        theme: "mbo"
+      },
+      cmOptionVue: {
+        autoCloseBrackets: true,
+        tabSize: 4,
+        foldGutter: true,
+        styleActiveLine: true,
+        lineNumbers: true,
+        line: true,
+        keyMap: "sublime",
+        mode: "text/x-vue",
+        theme: "base16-dark",
+        extraKeys: {
+          F11(cm) {
+            cm.setOption("fullScreen", !cm.getOption("fullScreen"));
+          },
+          Esc(cm) {
+            if (cm.getOption("fullScreen")) cm.setOption("fullScreen", false);
+          }
+        }
+      },
+      languages: [
+        { text: "JavaScript" },
+        { text: "python" },
+        { text: "Vue" },
+      ],
       headers: [
         {
           text: "제목",
@@ -95,49 +157,10 @@ export default {
   },
 
   mounted() {
-    this.getArticles();
-    this.getDay();
+    
   },
-
-  language(to, from) {
-    if (to == "JavaScript") {
-      this.option = this.cmOptionsJs;
-    } else if (to == "Python") {
-      this.option = this.cmOptionsPy;
-    } else if (to == "Vue") {
-      this.option = this.cmOptionsVue;
-    }
-  },
-
   methods: {
    
-    getArticles() {
-      fetch(this.$store.state.dbserver + "/boards/" + this.$session.get("token"), {
-        method: "GET",
-        hearders: {
-          "Access-Control-Allow-Origin": "*",
-          "Content-Type": "application/json"
-        }
-      }).then(res => res.json())
-      .then(data => {
-        this.articles = data;
-        this.loading = false;
-      })
-    },
-    getDay() {
-      var today = new Date();
-      var dd = today.getDate();
-      var mm = today.getMonth() + 1; // 1월이 0 !
-      var yyyy = today.getFullYear();
-      if ( dd < 10 ) {
-        dd = "0" + dd;
-      }
-      this.month = mm;
-      if (mm < 10) {
-        mm = "0" + mm;
-      }
-      this.today = yyyy + "-" + mm + "-" + dd;
-    },
   }
 };
 </script>

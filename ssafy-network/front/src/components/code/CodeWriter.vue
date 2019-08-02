@@ -32,7 +32,7 @@
               <v-flex xs12>
                 <codemirror
                   v-model="article.source"
-                  :options="cmOptionJs">
+                  :options="customOption">
                 </codemirror>
               </v-flex>
               <br>
@@ -145,6 +145,7 @@ export default {
         { text: "Python" },
         { text: "Vue" },
       ],
+      customOption:{},
       cmOptionJs: {
         autoCloseBrackets: true,
         tabSize: 4,
@@ -233,6 +234,21 @@ export default {
         }
       })
     }
+  },
+  watch:{
+    'article.selectedLanguage'(to, from){
+      if (to == "JavaScript") {
+      this.customOption = this.cmOptionJs;
+    } else if (to == "Python") {
+      this.customOption = this.cmOptionPy;
+    } else if (to == "Vue") {
+      this.customOption = this.cmOptionVue;
+    }
+    }
+  },
+  mounted(){
+    this.article.selectedLanguage ="JavaScript";
+    this.customOption = this.cmOptionJs;
   }
 }
 </script>

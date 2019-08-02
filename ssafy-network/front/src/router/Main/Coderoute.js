@@ -17,11 +17,13 @@ export default {
             path: 'detail',
             name: 'CodeDetail',
             component: CodeDetail,
+            props:true,
         },
         {
             path: 'board',
             name: 'CodeBoard',
             component: CodeBoard,
+            props:true,
         },
     ]
 }
