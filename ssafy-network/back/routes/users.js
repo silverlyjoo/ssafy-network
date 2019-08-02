@@ -4,7 +4,7 @@ var User = require('../models/user');
 var Supertree = require('../models/supertree');
 var encode = require('../encode');
 var decode = require('../decode');
- 
+
 
 /**
  * @swagger
@@ -77,7 +77,7 @@ router.get('/admin/:id/:token', function (req, res) {
       res.json(user);
     })
   }
-  else{
+  else {
     res.json({ result: false, message: "권한이 없습니다" });
   }
 });
@@ -209,7 +209,7 @@ router.get('/login/:id/:pwd', function (req, res) {
       return res.json(false);
     }
     var token = encode(user);
-    console.log(user,token);
+    console.log(user, token);
     res.json({
       token: token,
       nickname: user.nickname
@@ -274,12 +274,12 @@ router.post('/', function (req, res) {
     var super_tree = new Supertree();
     super_tree.id = req.body.id;
     super_tree.item = [];
-  
+
     super_tree.save(function (err) {
-      if(err){
+      if (err) {
         console.log(err);
         return;
-      }    
+      }
     });
 
     res.json({ result: true });
@@ -318,7 +318,7 @@ router.post('/', function (req, res) {
  *            year:
  *              type: integer
  *            membership:
- *              type: integer
+ *              type: string
  *      responses:
  *       200:
  *        description: "result = true 일 경우 정상적으로 작동"
@@ -341,6 +341,55 @@ router.put('/', function (req, res) {
 });
 
 
+/**
+ * @swagger
+ *  /users/membership:
+ *    put:
+ *      tags:
+ *      - User
+ *      description: 유저 정보를 업데이트
+ *      parameters:
+ *      - in: body
+ *        name: updateUser
+ *        description: "유저 정보 업데이트"
+ *        schema:
+ *          type: object
+ *          properties:
+ *            token:
+ *              type: string
+ *              required: true
+ *            _id:
+ *              type: string
+ *              required: true
+ *            membership:
+ *              type: string
+ *              required: true
+ *      responses:
+ *       200:
+ *        description: "result = true 일 경우 정상적으로 작동"
+ */
+router.put('/membership', function (req, res) {
+  var info = decode(req.body.token);
+  if (!info) {
+    return res.json({ result: false });
+  }
+  if (info.membership == "관리자") {
+    User.update({ _id: req.body._id }, { $set: { membership: req.body.membership } }, function (err, output) {
+      if (err) {
+        res.status(500).json({ error: 'database failure' });
+      }
+      console.log(output);
+      if (!output.n) {
+        return res.json({ result: false });
+      }
+      res.json({ result: true });
+    })
+  }
+  else{
+    res.json({result: false, message: "권한이 없습니다"})
+    return;
+  }
+});
 
 
 /**
@@ -367,18 +416,18 @@ router.put('/', function (req, res) {
  *       200:
  *        description: "result = true 일 경우 정상적으로 작동"
  */
-router.delete('/',function(req,res){
+router.delete('/', function (req, res) {
   var info = decode(req.body.token);
   if (!info) {
-      return res.json({ result: false });
+    return res.json({ result: false });
   }
   User.remove({ _id: req.body._id }, function (err, output) {
-      if (err) {
-        return res.status(500).json({ error: "database failure" });
-      }
-      console.log(output);
-      res.json({ result: true });
-    })
+    if (err) {
+      return res.status(500).json({ error: "database failure" });
+    }
+    console.log(output);
+    res.json({ result: true });
+  })
 });
 
 module.exports = router;

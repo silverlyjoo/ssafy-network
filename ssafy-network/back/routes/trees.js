@@ -308,8 +308,6 @@ router.post('/folder', function (req, res) {
  *            name:
  *              type: string
  *              required: true
- *            content:
- *              type: string
  *      responses:
  *       200:
  *        description: "result = true 일 경우 정상적으로 작동"
