@@ -119,7 +119,10 @@ export default {
       await (this.noticedialog = true);
       await (this.detail = notice);
       await this.read();
-      await this.notifications[idx].unread.splice(ididx, 1);
+      // console.log(this.notifications[idx])
+      // await this.notifications[idx].unread.splice(ididx, 1);
+      // console.log(this.notifications[idx])
+      await this.getNotification();
       await this.unreadnoti--;
     },
     goNotice() {
