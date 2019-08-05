@@ -26,7 +26,7 @@
             <v-subheader>Recent chat</v-subheader>
             <v-list-tile
               v-for="(item, idx) in items"
-              :key="item.title"
+              :key="idx"
               avatar
               @click="joinchat(item._id, idx)"
               class="mb-3"
@@ -37,6 +37,12 @@
                 <v-list-tile-title v-html="item.createdAt"></v-list-tile-title>
               </v-list-tile-content>
 
+              <v-list-tile-action
+                v-if="item.owner === nickname"
+                @click.stop="deleteroom(item._id, idx)"
+              >
+                <i class="fas fa-trash-alt deleteicon"></i>
+              </v-list-tile-action>
               <v-list-tile-action v-if="item.password">
                 <i class="fas fa-lock lockicon"></i>
               </v-list-tile-action>
@@ -87,6 +93,7 @@ export default {
       items: [],
       dbserver: this.$store.state.dbserver,
       token: this.$session.get("token"),
+      nickname: this.$session.get("nickname"),
       chatserver: this.$store.state.chatserver,
       chatroomsearchkeyword: "",
       searchoption: "title",
@@ -97,6 +104,19 @@ export default {
     };
   },
   methods: {
+    deleteroom(roomId, idx) {
+      let roomUrl = this.dbserver;
+      caxios(roomUrl).request({
+        url: "/rooms/",
+        method: "DELETE",
+        baseURL: roomUrl,
+        data: {
+          _id: roomId,
+          token: this.token
+        }
+      });
+      this.$delete(this.items, idx);
+    },
     searchRooms() {
       fetch(
         this.$store.state.dbserver +
@@ -198,5 +218,8 @@ export default {
 }
 .lockicon {
   color: rgb(177, 177, 177);
+}
+.deleteicon {
+  color: rgb(255, 138, 138);
 }
 </style>
