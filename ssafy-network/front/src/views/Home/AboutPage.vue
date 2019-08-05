@@ -36,7 +36,7 @@
         </template>
         <v-card class="elevation-2">
           <v-card-title class="headline">김경태</v-card-title>
-          <v-card-text>Back 담당</v-card-text>
+          <v-card-text>Back 담당, 로스트아크 랭커 , 팀 내 깐족거림 담당 , 이광수만큼 말이 많음... ,  </v-card-text>
         </v-card>
       </v-timeline-item>
       <v-timeline-item color="blue lighten-2" large >
