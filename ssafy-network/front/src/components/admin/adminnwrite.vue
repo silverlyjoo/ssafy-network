@@ -1,15 +1,24 @@
 <template>
   <v-container>
     <v-card class="my-4">
-      <v-flex xs12 sm6 md3>
-        <v-text-field label="Regular"></v-text-field>
-      </v-flex>
-      <v-flex xs12 sm6 md3>
-        <v-text-field label="Regular"></v-text-field>
-      </v-flex>
-      <v-flex xs12 sm6 md3>
-        <v-text-field label="Regular"></v-text-field>
-      </v-flex>
+      <v-container>
+        <v-flex xs12>
+          <v-text-field required label="Title" v-model="title"></v-text-field>
+        </v-flex>
+        <v-flex xs12>
+          <v-select
+            v-model="unread"
+            :items="userlist"
+            :menu-props="{ maxHeight: '700' }"
+            label="Userlist"
+            multiple
+          ></v-select>
+        </v-flex>
+        <v-flex xs12>
+          <v-textarea auto-grow label="content" v-model="content"></v-textarea>
+        </v-flex>
+        <v-btn @click="newNotice">Send</v-btn>
+      </v-container>
     </v-card>
   </v-container>
 </template>
@@ -27,6 +36,7 @@ export default {
       title: null,
       content: null,
       unread: []
+      // notice: null
     };
   },
   computed: {
@@ -39,7 +49,7 @@ export default {
         unread: this.unread
       };
 
-      return;
+      return object
     }
   },
   methods: {
@@ -53,14 +63,20 @@ export default {
         })
         .then(res => {
           for (let i = 0; i < res.data.length; i++) {
-            this.userlist.push(res.data[i].nickname);
+            this.userlist.push(res.data[i].id);
           }
-          console.log(res.data);
+          console.log(this.userlist);
         });
     },
     newNotice() {
-      //   let noticeUrl = this.dbserver;
-      //   caxios(noticeUrl).request({});
+        let noticeUrl = this.dbserver;
+        caxios(noticeUrl).request({
+          url: `/notices`,
+          method: "POST",
+          baseURL: noticeUrl,
+          data: this.notice
+        });
+        // this.$router.push({path:'/admin/notice'})
     }
   },
   mounted() {
