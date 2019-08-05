@@ -4,8 +4,8 @@
       <v-toolbar-title>글 수정하기</v-toolbar-title>
       <v-spacer></v-spacer>
       <v-btn class="white--text" color="grey darken-2" @click="updateArticle()">수정</v-btn>
-      <router-link to="/code/board" style="text-decoration: none !important">
-        <v-btn class="white--text" color="grey darken-2">취소</v-btn>
+      <router-link :to='{name : "CodeDetail" , params:{data : articleData }}' style="text-decoration: none !important; color:black;">
+        <v-btn class="white--text" color="grey darken-2" @click="backDetail()">취소</v-btn>
       </router-link>
     </v-toolbar>
     <!-- <v-layout> -->
@@ -222,6 +222,9 @@ export default {
             });
         }
       });
+    },
+    backDetail() {
+
     }
   },
   watch: {

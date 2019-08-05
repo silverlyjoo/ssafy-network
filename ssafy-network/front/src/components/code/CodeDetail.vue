@@ -67,7 +67,29 @@
       <v-spacer></v-spacer>
       <v-btn class="white--text" color="grey darken-2" @click="CommentForm()">댓글쓰기</v-btn>
     </v-toolbar>
-    <Comment :comments="comments" style="width:80%; margin-left:auto; margin-right:auto;"></Comment>
+    
+    <!-- v-if 와 v-else로 할 수 없을까? -->
+
+    <!-- 댓글 있으면 그냥 목록 띄우기 -->
+    <Comment
+      v-if="comments != null"
+      :comments="comments"
+      style="width:80%; margin-left:auto; margin-right:auto;"
+    ></Comment>
+
+    <!-- 댓글 없을 때 띄우는 화면 -->
+    <!-- <template>
+      <v-layout column>
+        <v-flex>
+          <v-card class="pa-3" grid-list-md style="width:80%; margin-left:auto; margin-right:auto;">
+            <v-alert :value="true" color="grey darken-2" icon="info">댓글이 하나도 없습니다</v-alert>
+          </v-card>
+        </v-flex>
+      </v-layout>
+    </template> -->
+    <!--  -->
+
+
     <v-dialog v-model="showComment" persistent max-width="400">
       <v-card>
         <v-card-title class="headline">댓글 작성</v-card-title>
@@ -176,10 +198,6 @@ export default {
       languages: [{ text: "JavaScript" }, { text: "Python" }, { text: "Vue" }]
     };
   },
-
-  mounted() {
-    this.getComments();
-  },
   methods: {
     codeUpdateForm() {
       this.$router.push({ name: "CodeUpdate", params: { article: this.data } });
@@ -241,6 +259,9 @@ export default {
             .then(res => res.json())
             .then(data => {
               if (data.result == true) {
+                console.log(data)
+                console.log("---")
+                console.log(data.result)
                 alert("댓글이 등록되었습니다.");
               } else {
                 alert("댓글을 등록할 수 없습니다.");
@@ -252,12 +273,7 @@ export default {
     },
     getComments() {
       fetch(
-        this.$store.state.dbserver +
-          "/comments/" +
-          this.data._id +
-          "/" +
-          this.$session.get("token"),
-        {
+        this.$store.state.dbserver + "/comments/" + this.data._id + "/" + this.$session.get("token"), {
           method: "GET",
           headers: {
             "Access-Control-Allow-Origin": "*",
