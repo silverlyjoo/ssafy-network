@@ -258,8 +258,8 @@ router.post('/', function (req, res) {
   user.id = req.body.id;
   user.pwd = req.body.pwd;
   user.nickname = req.body.nickname;
-  user.region = req.body.region;
-  user.year = req.body.year;
+  user.department = req.body.department;
+  user.position = req.body.position;
   user.membership = req.body.membership;
 
   console.log(req.body);
@@ -429,5 +429,6 @@ router.delete('/', function (req, res) {
     res.json({ result: true });
   })
 });
+
 
 module.exports = router;

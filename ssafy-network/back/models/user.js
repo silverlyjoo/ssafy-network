@@ -11,10 +11,9 @@ const userSchema = new mongoose.Schema({
         required: true,
     },
     nickname :  String,
-    region : String,
-    year : Number,
+    department : String,
+    position : String,
     membership :  String,
-    
 });
 
 module.exports = mongoose.model('User',userSchema);

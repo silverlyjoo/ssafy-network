@@ -2,6 +2,7 @@ var express = require('express');
 var Notice = require('../models/notice');
 var decode = require('../decode');
 var router = express.Router();
+var moment = require('moment');
 
 /**
  * @swagger
@@ -32,7 +33,7 @@ router.get('/:token', function (req, res) {
                 return;
             }
             res.json(notices);
-        });
+        }).sort({createdAt:-1});
     }
     else{
         console.log("권한이 없습니다");
@@ -123,7 +124,8 @@ router.post('/', function (req, res) {
     notice.writer = req.body.writer;
     notice.read = [];
     notice.unread = req.body.unread;
-    
+    notice.createdAt = moment().format("YYYY-MM-DD HH:mm:ss");
+
     notice.save(function(err){
         if(err){
             console.log(err);
