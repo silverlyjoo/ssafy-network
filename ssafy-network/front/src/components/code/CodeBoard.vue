@@ -43,7 +43,7 @@ export default {
       totalArticles: 0,
       articles: [],
       loading: true,
-      pagination:{},
+      pagination:{'sortBy': 'createdAt', 'descending': true},
       headers: [
         {
           text: "제목",
