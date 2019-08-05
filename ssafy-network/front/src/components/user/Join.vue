@@ -65,22 +65,22 @@
                 <span v-if="NickNameCheck" style="color:blue;">중복체크 완료</span>
               </v-flex>
               <v-select
-                v-model="region"
-                label="지역"
-                :items="regions"
+                v-model="department"
+                label="부서"
+                :items="departments"
                 v-validate="'required'"
-                data-vv-name="region"
-                :error-messages="errors.collect('region')"
+                data-vv-name="Department"
+                :error-messages="errors.collect('Department')"
                 required
                 attach="#menulist"
               ></v-select>
               <v-select
-                v-model="year"
-                label="기수"
-                :items="years"
+                v-model="position"
+                label="직책"
+                :items="positions"
                 v-validate="'required'"
-                data-vv-name="Year"
-                :error-messages="errors.collect('Year')"
+                data-vv-name="Position"
+                :error-messages="errors.collect('Position')"
                 required
                 attach="#menulist"
               ></v-select>
@@ -108,10 +108,10 @@ export default {
       pwdCheck: "",
       name: "",
       nickname: "",
-      region: "",
-      year: "",
-      regions: ["서울", "대전", "구미", "광주"],
-      years: [1, 2],
+      department: "",
+      position: "",
+      departments: ["인사", "영업", "개발", "기획"],
+      positions: ["사원","주임","대리","과장","차장","부장","이사","상무","전무","부사장","사장","회장"],
       IDCheck: false,
       NickNameCheck: false
     };
@@ -139,8 +139,8 @@ export default {
             id: this.id,
             pwd: this.pwd,
             nickname: this.nickname,
-            region: this.region,
-            year: this.year,
+            department: this.department,
+            position: this.position,
             membership: 0
           })
         })

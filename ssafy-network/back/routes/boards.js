@@ -2,6 +2,7 @@ var express = require('express');
 var router = express.Router();
 var Board = require('../models/board');
 var decode = require('../decode');
+var moment = require('moment');
 
 /**
  * @swagger
@@ -30,7 +31,7 @@ router.get('/:token', function (req, res) {
           return res.status(500).send({ error: 'database failure' });
       }
       res.json(boards);
-  });
+  }).sort({createdAt:-1});
 });
 
 /**
@@ -78,6 +79,7 @@ router.post('/', function (req, res) {
   board.source = req.body.source;
   board.content = req.body.content;
   board.hit = 0;
+  board.createdAt = moment().format("YYYY-MM-DD HH:mm:ss");
 
   console.log(req.body);
 
