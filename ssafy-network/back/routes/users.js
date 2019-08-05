@@ -242,12 +242,12 @@ router.get('/login/:id/:pwd', function (req, res) {
  *              required: true
  *            nickname:
  *              type: string
- *            region:
+ *            department:
  *              type: string
- *            year:
- *              type: integer
+ *            position:
+ *              type: string
  *            membership:
- *              type: integer
+ *              type: string
  *      responses:
  *       200:
  *        description: "result = true 일 경우 정상적으로 작동"
