@@ -1,5 +1,5 @@
 <template>
-  <v-layout>
+  <v-layout column>
     <v-flex v-for="com in comments" :key="com.title" >
       <v-card class="pa-3">
         <v-layout row wrap>
@@ -20,13 +20,12 @@
       <v-card>
         <v-card-title class="headline">댓글 수정</v-card-title>
         <v-card-text>
-          <v-text-field v-model="selectedItem.title" label="제목"></v-text-field>
           <v-text-field v-model="selectedItem.comment" label="내용"></v-text-field>
         </v-card-text>
         <v-card-actions>
           <v-spacer></v-spacer>
-          <v-btn color="green darken-1" text @click="closeUpdateForm()">취소</v-btn>
-          <v-btn color="green darken-1" text @click="updateComment()">수정</v-btn>
+          <v-btn class="white--text" color="grey darken-2" text @click="closeUpdateForm()">취소</v-btn>
+          <v-btn class="white--text" color="grey darken-2" text @click="updateComment()">수정</v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>
@@ -36,8 +35,8 @@
         <v-card-text>댓글을 삭제 하시겠습니까?</v-card-text>
         <v-card-actions>
           <v-spacer></v-spacer>
-          <v-btn color="green darken-1" text @click="closeDeleteForm()">취소</v-btn>
-          <v-btn color="green darken-1" text @click="deleteComment()">수정</v-btn>
+          <v-btn class="white--text" color="grey darken-2" text @click="closeDeleteForm()">취소</v-btn>
+          <v-btn class="white--text" color="grey darken-2" text @click="deleteComment()">삭제</v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>
@@ -75,10 +74,16 @@ export default {
     },
     updateComment() {
       // fetch 로 데이터 전송후 closeForm 호출해야함
+      fetch({
+        
+      })
     },
     deleteComment() {
       // fetch 로 데이터 전송후 closeForm 호출해야함
     }
+  },
+  updated(){
+    this.$store.state.heightflag = true;
   }
 };
 </script>
