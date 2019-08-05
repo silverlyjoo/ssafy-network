@@ -2,6 +2,7 @@ var express = require('express');
 var router = express.Router();
 var Room = require('../models/room');
 var decode = require('../decode');
+var moment = require('moment');
 
 /**
  * @swagger
@@ -76,7 +77,8 @@ router.post('/', function (req, res) {
     room.max = req.body.max;
     room.owner = req.body.owner;
     room.password = req.body.password;
-  
+    room.createdAt = moment().format("YYYY-MM-DD HH:mm:ss");
+
     console.log(req.body);
   
     room.save(function (err) {
@@ -116,13 +118,24 @@ router.delete('/',function(req,res){
     if (!info) {
         return res.json({ result: false });
     }
-    Room.remove({ _id: req.body._id }, function (err, output) {
+    if(info.membership == "관리자"){
+      Room.remove({ _id: req.body._id }, function (err, output) {
         if (err) {
           return res.status(500).json({ error: "database failure" });
         }
         console.log(output);
         res.json({ result: true });
       })
+    }
+    else{
+      Room.remove({ _id: req.body._id , owner: info.nickname}, function (err, output) {
+        if (err) {
+          return res.status(500).json({ error: "database failure" });
+        }
+        console.log(output);
+        res.json({ result: true });
+      })
+    }
 });
 
 module.exports = router;

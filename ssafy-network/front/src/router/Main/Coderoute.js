@@ -2,6 +2,7 @@ import CodePage from '@/views/CodePage.vue'
 import CodeBoard from '@/components/code/CodeBoard.vue'
 import CodeWriter from '@/components/code/CodeWriter.vue'
 import CodeDetail from '@/components/code/CodeDetail.vue'
+import CodeUpdate from '@/components/code/CodeUpdate.vue'
 
 export default {
     path: '/code',
@@ -25,5 +26,11 @@ export default {
             component: CodeBoard,
             props:true,
         },
+        {
+            path: 'update',
+            name: 'CodeUpdate',
+            component: CodeUpdate,
+            props: true,
+        }
     ]
 }

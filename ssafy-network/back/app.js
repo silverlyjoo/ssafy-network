@@ -8,6 +8,7 @@ var cors = require('cors');
 var usersRouter = require('./routes/users');
 var roomsRouter = require('./routes/rooms');
 var boardsRouter = require('./routes/boards');
+var commentsRouter = require('./routes/comments');
 var calendarsRouter = require('./routes/calendars');
 var treesRouter = require('./routes/trees');
 var searchRouter = require('./routes/search');
@@ -16,10 +17,6 @@ var noticesRouter = require('./routes/notices');
 var app = express();
 var db = require('./db');
 var swagger = require('./swagger');
-
-// view engine setup
-// app.set('views', path.join(__dirname, 'views'));
-// app.set('view engine', 'pug');
 
 app.use(logger('dev'));
 app.use(express.json());
@@ -35,6 +32,7 @@ app.use(swagger);
 app.use('/users', usersRouter);
 app.use('/rooms', roomsRouter);
 app.use('/boards', boardsRouter);
+app.use('/comments', commentsRouter);
 app.use('/calendars', calendarsRouter);
 app.use('/trees', treesRouter);
 app.use('/notices', noticesRouter);

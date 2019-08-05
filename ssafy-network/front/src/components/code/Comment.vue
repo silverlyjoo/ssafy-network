@@ -1,17 +1,19 @@
 <template>
-  <v-layout justify-center>
-    <v-flex v-for="com in comments" :key="com.title">
-      <v-card class="mx-auto">
-        <v-card-title>{{com.title}}</v-card-title>
-        <v-card-text>{{com.writer}}</v-card-text>
-        <v-card-actions>
-          <v-btn @click="updateForm(com)">
-            <v-icon>edit</v-icon>
-          </v-btn>
-          <v-btn @click="deleteForm(com)">
-            <v-icon>delete</v-icon>
-          </v-btn>
-        </v-card-actions>
+  <v-layout>
+    <v-flex v-for="com in comments" :key="com.title" >
+      <v-card class="pa-3">
+        <v-layout row wrap>
+        <v-flex justify-left>
+          <v-icon>subdirectory_arrow_right</v-icon>
+          {{com.comment}}
+        </v-flex>
+        <v-flex justify-end text-xs-right>
+          <v-icon>person_outline</v-icon>
+          {{com.writer}} &nbsp;&nbsp;&nbsp;
+          <v-icon @click="updateForm(com)">edit</v-icon>
+          <v-icon @click="deleteForm(com)">delete</v-icon>
+        </v-flex>
+        </v-layout>
       </v-card>
     </v-flex>
     <v-dialog v-model="showUpdate" persistent max-width="400">
@@ -45,7 +47,7 @@
 <script>
 export default {
   props: {
-    comments: []
+    comments: {}
   },
   data() {
     return {

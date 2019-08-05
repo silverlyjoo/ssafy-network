@@ -17,6 +17,15 @@
           </div>
         </v-container>
       </v-card>
+
+      <v-card class="userwindow">
+        <v-container class="chats">
+          <div v-for="user in userlist" :key="user.id" class="chat">
+              <span class="subheading">{{ user }}</span>
+          </div>
+        </v-container>
+      </v-card>
+
       <v-card class="chatInput">
         <v-container>
           <v-form>
@@ -85,7 +94,7 @@ export default {
         // console.log('chatdata', data)
       });
       this.socket.on("userlist", data => {
-        // console.log(data)
+        this.userlist = data;
       });
     },
     disconnect() {
@@ -109,8 +118,15 @@ export default {
   /* width: 500px; */
 }
 .chatwindow {
-  width: 100%;
+  width: 80%;
   height: 68vh;
+}
+.userwindow{
+  width: 20%;
+  height: 68vh;
+  position: absolute;
+  left: 80%;
+  top: 42px;
 }
 .me {
   color: blue;
