@@ -1,10 +1,16 @@
 <template>
   <v-container>
+    <h1>admin page</h1>
+        <v-btn to="/admin/user">유저관리</v-btn>
+        <v-btn to="/admin/chat">채팅방관리</v-btn>
+        <v-btn to="/admin/notice">공지사항관리</v-btn>
+        <router-view></router-view>
+
     <v-data-table
       v-model="selected"
       :headers="headers"
       :items="roomList"
-      item-key="title"
+      item-key="_id"
       select-all
       class="elevation-1"
     >
@@ -13,9 +19,9 @@
           <v-checkbox v-model="props.selected" primary hide-details></v-checkbox>
         </td>
         <td>{{ props.item.title }}</td>
-        <td class="text-xs-right">{{ props.item.max }}</td>
-        <td class="text-xs-right">{{ props.item.owner }}</td>
-        <td class="text-xs-right">{{ props.item.createdAt }}</td>
+        <td class="text-xs-center">{{ props.item.max }}</td>
+        <td class="text-xs-center">{{ props.item.owner }}</td>
+        <td class="text-xs-center">{{ props.item.createdAt }}</td>
       </template>
     </v-data-table>
   </v-container>

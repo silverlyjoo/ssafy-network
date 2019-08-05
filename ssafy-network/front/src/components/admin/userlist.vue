@@ -1,51 +1,37 @@
 <template>
   <v-container>
-    <v-btn @click="updateUser">회원</v-btn>
+    <h1>admin page</h1>
+    <v-btn to="/admin/user">유저관리</v-btn>
+    <v-btn to="/admin/chat">채팅방관리</v-btn>
+    <v-btn to="/admin/notice">공지사항관리</v-btn>
+    <router-view></router-view>
+
     <v-data-table
       v-model="selected"
       :headers="headers"
       :items="desserts"
-      :pagination.sync="pagination"
-      select-all
       item-key="_id"
+      select-all
       class="elevation-1"
     >
-      <template v-slot:headers="props">
-        <tr>
-          <th>
-            <v-checkbox
-              :input-value="props.all"
-              :indeterminate="props.indeterminate"
-              primary
-              hide-details
-              @click.stop="toggleAll"
-            ></v-checkbox>
-          </th>
-          <th
-            v-for="header in props.headers"
-            :key="header.text"
-            :class="['column sortable', pagination.descending ? 'desc' : 'asc', header.value === pagination.sortBy ? 'active' : '']"
-            @click="changeSort(header.value)"
-          >
-            <v-icon small>arrow_upward</v-icon>
-            {{ header.text }}
-          </th>
-        </tr>
-      </template>
       <template v-slot:items="props">
-        <tr :active="props.selected" @click="props.selected = !props.selected">
-          <td>
-            <v-checkbox :input-value="props.selected" primary hide-details></v-checkbox>
-          </td>
-          <td>{{ props.item.nickname }}</td>
-          <td class="text-xs-center">{{ props.item.id }}</td>
-          <td class="text-xs-center">{{ props.item.name }}</td>
-          <td class="text-xs-center">{{ props.item.region }}</td>
-          <td class="text-xs-center">{{ props.item.year }}</td>
-          <td class="text-xs-center">{{ props.item.membership }}</td>
-        </tr>
+        <td>
+          <v-checkbox v-model="props.selected" primary hide-details></v-checkbox>
+        </td>
+        <td>{{ props.item.nickname }}</td>
+        <td class="text-xs-left">{{ props.item.id }}</td>
+        <td class="text-xs-left">{{ props.item.name }}</td>
+        <td class="text-xs-left">{{ props.item.department }}</td>
+        <td class="text-xs-left">{{ props.item.position }}</td>
+        <td class="text-xs-left">{{ props.item.membership }}</td>
       </template>
     </v-data-table>
+    <v-select v-model="department" label="부서" :items="departments" required style="max-width:20vh;"></v-select>
+    <v-btn @click="updateUserDepartment">부서 변경</v-btn>
+    <v-select v-model="position" label="직책" :items="positions" required style="max-width:20vh;"></v-select>
+    <v-btn @click="updateUserPosition">직책 변경</v-btn>
+    <v-select v-model="membership" label="등급" :items="memberships" required style="max-width:20vh;"></v-select>
+    <v-btn @click="updateUserMembership">등급 변경</v-btn>
   </v-container>
 </template>
 
@@ -59,6 +45,12 @@ export default {
       pagination: {
         sortBy: "name"
       },
+      department:"개발",
+      departments:["인사", "영업", "개발", "기획"],
+      position:"사원",
+      positions:["사원","주임","대리","과장","차장","부장","이사","상무","전무","부사장","사장","회장"],
+      membership: "회원",
+      memberships: ["비회원", "회원", "관리자"],
       selected: [],
       headers: [
         {
@@ -68,8 +60,8 @@ export default {
         },
         { text: "아이디", value: "id" },
         { text: "이름", value: "name" },
-        { text: "지역", value: "region" },
-        { text: "기수", value: "year" },
+        { text: "부서", value: "department" },
+        { text: "직책", value: "position" },
         { text: "등급", value: "membership" }
       ],
       desserts: []
@@ -101,7 +93,53 @@ export default {
         .catch(error => console.log(error))
         .finally();
     },
-    updateUser() {
+    updateUserDepartment() {
+      for (let index = 0; index < this.selected.length; index++) {
+        fetch(this.$store.state.dbserver + "/users/department", {
+          method: "PUT",
+          headers: {
+            "Access-Control-Allow-Origin": "*",
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({
+            token: this.$session.get("token"),
+            _id: this.selected[index]._id,
+            department: this.department
+          })
+        }).then(res => res.json())
+        .then(data => {
+          if (data.result == true) {
+            this.getUserList();
+          } else {
+            alert("수정 실패");
+          }
+        });
+      }
+    },
+    updateUserPosition() {
+      for (let index = 0; index < this.selected.length; index++) {
+        fetch(this.$store.state.dbserver + "/users/position", {
+          method: "PUT",
+          headers: {
+            "Access-Control-Allow-Origin": "*",
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({
+            token: this.$session.get("token"),
+            _id: this.selected[index]._id,
+            position: this.position
+          })
+        }).then(res => res.json())
+        .then(data => {
+          if (data.result == true) {
+            this.getUserList();
+          } else {
+            alert("수정 실패");
+          }
+        });
+      }
+    },
+    updateUserMembership() {
       for (let index = 0; index < this.selected.length; index++) {
         fetch(this.$store.state.dbserver + "/users/membership", {
           method: "PUT",
@@ -112,10 +150,11 @@ export default {
           body: JSON.stringify({
             token: this.$session.get("token"),
             _id: this.selected[index]._id,
-            membership: "회원"
+            membership: this.membership
           })
-        }).then(res => {
-          if (res.data.result) {
+        }).then(res => res.json())
+        .then(data => {
+          if (data.result == true) {
             this.getUserList();
           } else {
             alert("수정 실패");

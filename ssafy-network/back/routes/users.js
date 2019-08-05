@@ -340,6 +340,106 @@ router.put('/', function (req, res) {
   })
 });
 
+/**
+ * @swagger
+ *  /users/department:
+ *    put:
+ *      tags:
+ *      - User
+ *      description: 부서 변경
+ *      parameters:
+ *      - in: body
+ *        name: updatedepartment
+ *        description: "부서 변경"
+ *        schema:
+ *          type: object
+ *          properties:
+ *            token:
+ *              type: string
+ *              required: true
+ *            _id:
+ *              type: string
+ *              required: true
+ *            department:
+ *              type: string
+ *              required: true
+ *      responses:
+ *       200:
+ *        description: "result = true 일 경우 정상적으로 작동"
+ */
+router.put('/department', function (req, res) {
+  var info = decode(req.body.token);
+  if (!info) {
+    return res.json({ result: false });
+  }
+  if (info.membership == "관리자") {
+    User.update({ _id: req.body._id }, { $set: { department: req.body.department } }, function (err, output) {
+      if (err) {
+        res.status(500).json({ error: 'database failure' });
+      }
+      console.log(output);
+      if (!output.n) {
+        return res.json({ result: false });
+      }
+      res.json({ result: true });
+    })
+  }
+  else{
+    res.json({result: false, message: "권한이 없습니다"})
+    return;
+  }
+});
+
+/**
+ * @swagger
+ *  /users/position:
+ *    put:
+ *      tags:
+ *      - User
+ *      description: 직책 변경
+ *      parameters:
+ *      - in: body
+ *        name: updateposition
+ *        description: "직책 변경"
+ *        schema:
+ *          type: object
+ *          properties:
+ *            token:
+ *              type: string
+ *              required: true
+ *            _id:
+ *              type: string
+ *              required: true
+ *            position:
+ *              type: string
+ *              required: true
+ *      responses:
+ *       200:
+ *        description: "result = true 일 경우 정상적으로 작동"
+ */
+router.put('/position', function (req, res) {
+  var info = decode(req.body.token);
+  if (!info) {
+    return res.json({ result: false });
+  }
+  if (info.membership == "관리자") {
+    User.update({ _id: req.body._id }, { $set: { position: req.body.position } }, function (err, output) {
+      if (err) {
+        res.status(500).json({ error: 'database failure' });
+      }
+      console.log(output);
+      if (!output.n) {
+        return res.json({ result: false });
+      }
+      res.json({ result: true });
+    })
+  }
+  else{
+    res.json({result: false, message: "권한이 없습니다"})
+    return;
+  }
+});
+
 
 /**
  * @swagger
