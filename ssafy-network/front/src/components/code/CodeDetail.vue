@@ -4,8 +4,8 @@
       <v-toolbar-title>글 읽기</v-toolbar-title>
       <v-spacer></v-spacer>
         <router-link to="/code/board" style="text-decoration: none !important"><v-btn class="white--text" color="grey darken-2">목록</v-btn></router-link>
-        <v-btn class="white--text" color="grey darken-2">수정</v-btn>
-        <router-link to="/code/board" style="text-decoration: none !important"><v-btn class="white--text" color="grey darken-2">삭제</v-btn></router-link>
+        <v-btn class="white--text" color="grey darken-2" @click="updateArticle()">수정</v-btn>
+        <router-link to="/code/board" style="text-decoration: none !important" @click="deleteArticle()"><v-btn class="white--text" color="grey darken-2">삭제</v-btn></router-link>
     </v-toolbar>
     <!-- <v-layout> -->
     <br>
@@ -66,6 +66,8 @@ export default {
   },
   data() {
     return {
+      connected_id: "",
+      wrtier_id: "",
       today: "",
       totalArticles: 0,
       articles: [],
@@ -160,7 +162,33 @@ export default {
     
   },
   methods: {
-   
+    updateArticle() {
+      fetch(this.$store.state.dbserver + "/boards", {
+        method: "PUT",
+        headers: {
+          "Access-Control-Allow-Origin": "*",
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          _id: this.data._id,
+          token: this.$session.get("token"),
+          language: this.data.selectedLanguage,
+          title: this.data.title,
+          source: this.data.source,
+          content: this.data.content
+        })
+      })
+      .then(res => res.json())
+      .then(data => {
+        if(data.result == true) {
+          alert("글이 수정되었습니다.")
+          this.$router.push("/code/writer")
+        } else {
+          alert("글을 수정할 수 없습니다.")
+        }
+        this.$validator.reset();
+      })
+    }
   }
 };
 </script>
