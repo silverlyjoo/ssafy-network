@@ -1,13 +1,6 @@
 <template>
-  <div class="pa-5">
-    <v-toolbar flat color="grey lighten-5" style="width:80%; margin-left:auto; margin-right:auto;">
-      <v-toolbar-title>글 작성하기</v-toolbar-title>
-      <v-spacer></v-spacer>
-        <v-btn class="white--text" color="grey darken-2" @click="addArticle()">등록</v-btn>
-        <router-link to="/code/board" style="text-decoration: none !important"><v-btn class="white--text" color="grey darken-2">취소</v-btn></router-link>
-    </v-toolbar>
-    <!-- <v-layout> -->
-    <br>
+  <v-layout class="pa-5" column>
+    <v-flex>
       <v-card grid-list-md style="width:80%; margin-left:auto; margin-right:auto;">
         <v-card-text>
           <v-container>
@@ -15,47 +8,35 @@
               <v-flex xs12>
                 <v-text-field
                   label="제목"
-                  v-model="article.title"
-                  v-validate="'required'"
-                  :error-messages="errors.collect('title')"
-                  data-vv-name="title"
+                  v-model="notetitle"
+                  v-validate="'required|min:2'"
+                  data-vv-name="제목"
+                  :error-messages="errors.collect('제목')"
                 ></v-text-field>
               </v-flex>
               <v-flex xs12>
-                <v-select
-                  :items="languages"
-                  v-model="article.selectedLanguage"
-                  label="선택 언어"
-                  single-line
-                ></v-select>
+                <v-select :items="languages" v-model="notelanguage" label="선택 언어" single-line></v-select>
               </v-flex>
               <v-flex xs12>
-                <codemirror
-                  v-model="article.source"
-                  :options="customOption">
-                </codemirror>
+                <codemirror v-model="notesource" :options="customOption"></codemirror>
               </v-flex>
-              <br>
-             <v-flex xs12>
-               <v-textarea
-                 label="내용"
-                 v-model="article.content"
-                 v-validate="'required'"
-                 :error-messages="errors.collect('content')"
-                 data-vv-name="content"
-                >
-                </v-textarea>
+              <br />
+              <v-flex xs12>
+                <v-textarea label="내용" v-model="notecontent"></v-textarea>
               </v-flex>
-              </v-layout>
-            </v-container>
-          </v-card-text>
-        </v-card>
-    <!-- </v-layout> -->
-  </div>
+            </v-layout>
+          </v-container>
+        </v-card-text>
+      </v-card>
+    </v-flex>
+    <v-flex class="text-xs-right ma-5">
+      <v-btn @click="close()">취소</v-btn>
+      <v-btn @click="writeNoteCode()">작성</v-btn>
+    </v-flex>
+  </v-layout>
 </template>
 
 <script>
-
 // 코드미러 임폴트
 
 import "codemirror/mode/javascript/javascript.js";
@@ -128,24 +109,22 @@ import "codemirror/addon/fold/xml-fold.js";
 // 여기까지
 
 export default {
-  name: "CodeWriter",
+  name: "CodeNoteEditor",
   $_veeValidate: {
-    validator: "new",
+    validator: "new"
+  },
+  props: {
+    _id: { type: String },
+    title: { type: String }
   },
   data() {
     return {
-      article: {
-        title: "",
-        source: "",
-        content: "",
-        selectedLanguage: "",
-      },
-      languages: [
-        { text: "JavaScript" },
-        { text: "Python" },
-        { text: "Vue" },
-      ],
-      customOption:{},
+      notetitle: "",
+      notesource: "",
+      notecontent: "",
+      notelanguage: "",
+      languages: [{ text: "JavaScript" }, { text: "Python" }, { text: "Vue" }],
+      customOption: {},
       cmOptionJs: {
         autoCloseBrackets: true,
         tabSize: 4,
@@ -192,60 +171,64 @@ export default {
             if (cm.getOption("fullScreen")) cm.setOption("fullScreen", false);
           }
         }
-      },
-    }
+      }
+    };
   },
   methods: {
-    goBoard() {
-      this.$router.push("/code/board");
-    },
-    addArticle() {
+    writeNoteCode() {
       this.$validator.validateAll().then(res => {
         if (!res) {
-          alert("작성하지 않은 란이 있는지 확인해주세요.");
+          alert("값이 유효한지 체크해주세요.");
           return;
-        } else {
-          fetch(this.$store.state.dbserver + "/boards", { method: "POST",
-            headers: {
+        }
+        fetch(this.$store.state.dbserver + "/trees/txt", {
+          method: "PUT",
+          headers: {
             "Access-Control-Allow-Origin": "*",
             "Content-Type": "application/json"
-            },
-            body: JSON.stringify({
-              token: this.$session.get("token"),
-              language: this.article.selectedLanguage,
-              writer: this.$session.get("nickname"),
-              title: this.article.title,
-              source: this.article.source,
-              content: this.article.content
-            })
-            }).then(res => res.json())
+          },
+          body: JSON.stringify({
+            _id: this._id,
+            token: this.$session.get("token"),
+            name: this.notetitle,
+            content: this.notecontent,
+            editor: "code",
+            language: this.notelanguage,
+            source: this.notesource
+          })
+        })
+          .then(res => res.json())
           .then(data => {
-            if(data.result == true){
-              alert("게시글이 등록되었습니다.");
-              this.$router.push("/code/board");
-            }else{
-            alert("게시글을 등록할 수 없습니다...");
+            if (data.result == true) {
+              alert("작성 성공");
+              this.$store.state.NoteCheck = true;
+            } else {
+              alert("작성 실패..");
             }
-            // this.goBoard();
+            this.$router.push("/note/detail/" + this._id);
           });
-        }
-      })
+      });
     },
+    close() {
+      this.$router.push("/note/detail/" + this._id);
+    }
   },
-  watch:{
-    'article.selectedLanguage'(to, from){
+  watch: {
+    notelanguage(to, from) {
       if (to == "JavaScript") {
-      this.customOption = this.cmOptionJs;
-    } else if (to == "Python") {
-      this.customOption = this.cmOptionPy;
-    } else if (to == "Vue") {
-      this.customOption = this.cmOptionVue;
-    }
+        this.customOption = this.cmOptionJs;
+      } else if (to == "Python") {
+        this.customOption = this.cmOptionPy;
+      } else if (to == "Vue") {
+        this.customOption = this.cmOptionVue;
+      }
     }
   },
-  mounted(){
-    this.article.selectedLanguage ="JavaScript";
+  mounted() {
+    this.notetitle = this.title;
+    this.notelanguage = "JavaScript";
     this.customOption = this.cmOptionJs;
   }
-}
+};
 </script>
+

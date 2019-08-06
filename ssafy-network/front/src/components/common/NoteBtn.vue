@@ -312,6 +312,7 @@ export default {
     },
     addRootNoteOpen() {
       this.showRootNote = true;
+      this.NoteTitle = "";
       fetch(
         this.$store.state.dbserver +
           "/trees/super/" +
@@ -421,6 +422,7 @@ export default {
     },
     addRootFolderOpen() {
       this.showRootFolder = true;
+      this.FolderTitle = "";
       fetch(
         this.$store.state.dbserver +
           "/trees/super/" +

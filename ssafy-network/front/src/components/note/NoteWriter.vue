@@ -6,19 +6,19 @@
     </v-flex>
     <v-flex>
       <MarkdownEditor v-if="!choiceEditor" :_id="_id" :title="title"></MarkdownEditor>
-      <CodeEditor v-if="choiceEditor" :_id="_id" :title="title"></CodeEditor>
+      <CodeNoteEditor v-if="choiceEditor" :_id="_id" :title="title"></CodeNoteEditor>
     </v-flex>
   </v-layout>
 </template>
 
 <script>
-import CodeEditor from "@/components/note/CodeEditor.vue";
+import CodeNoteEditor from "@/components/note/CodeNoteEditor.vue";
 import MarkdownEditor from "@/components/note/MarkdownEditor.vue";
 
 export default {
   name: "NoteWriter",
   components: {
-    CodeEditor,
+    CodeNoteEditor,
     MarkdownEditor
   },
   props: {

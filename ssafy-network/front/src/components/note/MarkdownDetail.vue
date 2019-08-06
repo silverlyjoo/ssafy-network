@@ -2,142 +2,12 @@
 <template>
 <v-container >
   <div style="margin-top: 20px; margin-left:30px;">
-    <h1><v-text-field v-model="name"></v-text-field></h1>
+    <h1>{{title}}</h1>
   </div>
-   <div class="editor" >
-    <editor-menu-bar :editor="editor" v-slot="{ commands, isActive}">
-      <div class="menubar">
-        <button
-          class="menubar__button"
-          @click="showImagePrompt(commands.image)"
-        >
-          <Icon name="image" />
-        </button>
-
-        <button
-          class="menubar__button"
-          :class="{ 'is-active': isActive.bold() }"
-          @click="commands.bold"
-        >
-          <icon name="bold" />
-        </button>
-
-        <button
-          class="menubar__button"
-          :class="{ 'is-active': isActive.italic() }"
-          @click="commands.italic"
-        >
-          <icon name="italic" />
-        </button>
-
-        <button
-          class="menubar__button"
-          :class="{ 'is-active': isActive.strike() }"
-          @click="commands.strike"
-        >
-          <icon name="strike" />
-        </button>
-
-        <button
-          class="menubar__button"
-          :class="{ 'is-active': isActive.underline() }"
-          @click="commands.underline"
-        >
-          <icon name="underline" />
-        </button>
-
-        <button
-          class="menubar__button"
-          :class="{ 'is-active': isActive.paragraph() }"
-          @click="commands.paragraph"
-        >
-          <icon name="paragraph" />
-        </button>
-
-        <button
-          class="menubar__button"
-          :class="{ 'is-active': isActive.heading({ level: 1 }) }"
-          @click="commands.heading({ level: 1 })"
-        >
-          H1
-        </button>
-
-        <button
-          class="menubar__button"
-          :class="{ 'is-active': isActive.heading({ level: 2 }) }"
-          @click="commands.heading({ level: 2 })"
-        >
-           H2
-        </button>
-
-        <button
-          class="menubar__button"
-          :class="{ 'is-active': isActive.heading({ level: 3 }) }"
-          @click="commands.heading({ level: 3 })"
-        >
-           H3
-        </button>
-
-        <button
-          class="menubar__button"
-          :class="{ 'is-active': isActive.bullet_list() }"
-          @click="commands.bullet_list"
-        >
-          <icon name="ul" />
-        </button>
-
-        <button
-          class="menubar__button"
-          :class="{ 'is-active': isActive.ordered_list() }"
-          @click="commands.ordered_list"
-        >
-          <icon name="ol" />
-        </button>
-
-        <button
-          class="menubar__button"
-          :class="{ 'is-active': isActive.blockquote() }"
-          @click="commands.blockquote"
-        >
-          <icon name="quote" />
-        </button>
-
-        <button
-          class="menubar__button"
-          :class="{ 'is-active': isActive.code_block() }"
-          @click="commands.code_block"
-        >
-          <icon name="code" />
-        </button>
-
-        <button
-          class="menubar__button"
-          @click="commands.horizontal_rule"
-        >
-          <icon name="hr" />
-        </button>
-
-        <button
-          class="menubar__button"
-          @click="commands.undo"
-        >
-          <icon name="undo" />
-        </button>
-
-        <button
-          class="menubar__button"
-          @click="commands.redo"
-        >
-          <icon name="redo" />
-        </button>
-
-      </div>
-    </editor-menu-bar>
-
+   <div class="editor">
     <editor-content class="editor__content" :editor="editor"/>
   </div>
   <v-flex text-xs-right>
-  <v-btn @click="close()">취소</v-btn>
   <v-btn @click="updateNote()">수정</v-btn>
   </v-flex>
   </v-container>
@@ -160,6 +30,7 @@ import {
   TodoItem,
   TodoList,
   Bold,
+  Code,
   Italic,
   Link,
   Strike,
@@ -176,13 +47,31 @@ export default {
     Icon
   },
   props:{
-    _id:{type:String},
-    title:{type:String},
-    content:{type:String}
+      data:{type:Object}
   },
   data() {
     return {
-      editor : new Editor({
+      editor: {type:Object},
+        title:"",
+        content:"",
+    }
+  },
+  beforeDestroy() {
+    this.editor.destroy()
+  },
+  methods: {
+    updateNote(){
+      this.$router.push({name:"markdownupdate",params:{_id:this.data._id , title:this.title , content:this.content} })
+    },
+    close(){
+       this.$router.push("/note/calendar")
+    },
+    settingEditor(){
+      
+     this.content=this.data.content;
+               this.title=this.data.name;
+               this.editor = new Editor({
+                   editable: false,
         extensions: [new CodeBlockHighlight({
             languages: {
               javascript,
@@ -202,66 +91,26 @@ export default {
           new TodoList(),
           new Link(),
           new Bold(),
+          new Code(),
           new Italic(),
           new Strike(),
           new Underline(),
           new History(),
-        ], onUpdate: ({ getHTML }) => {
-            const newContent = getHTML()
-        this.changeContent = newContent;
-        this.$store.state.heightflag= true;
-    },
-        content:this.content,
-      }),
-      name :"",
-      changeContent:""
+        ],
+        content: this.data.content,
+      });     
+    }
+  },created(){
+    this.settingEditor();
+  },
+  watch:{
+    data(to,from){
+     this.settingEditor();
     }
   },
-  beforeDestroy() {
-    this.editor.destroy()
-  },
-  methods: {
-    showImagePrompt(command) {
-      const src = prompt('Enter the url of your image here')
-      if (src !== null) {
-        command({ src })
-      }
-    },
-    updateNote(){
-        fetch(this.$store.state.dbserver + "/trees/txt", {
-            method: "PUT",
-            headers: {
-              "Access-Control-Allow-Origin": "*",
-              "Content-Type": "application/json"
-            },
-            body: JSON.stringify({
-              _id : this._id,
-              token : this.$session.get("token"),
-              name : this.name,
-              content : this.changeContent
-            })
-          })
-            .then(res => res.json())
-            .then(data => {
-                if(data.result == true){
-                    alert("수정 성공");
-                    this.$store.state.NoteCheck = true;
-                    this.$router.push("/note/detail/"+this._id);
-                }else{
-                    alert("수정 실패..");
-                }
-            });
-    },close(){
-      this.$router.push("/note/detail/" + this._id);
-    }
-  },
-  mounted(){
-      this.name = this.title;
-      this.changeContent = this.content;
-  }
+
 }
 </script>
-
 
 
 <style lang="scss">
@@ -495,4 +344,3 @@ pre {
   }
 }
 </style>
-

@@ -126,7 +126,7 @@
     </div>
     <v-flex text-xs-right>
       <v-btn @click="close()">취소</v-btn>
-      <v-btn @click="writeNote()">작성</v-btn>
+      <v-btn @click="updateNote()">수정</v-btn>
     </v-flex>
   </v-container>
 </template>
@@ -138,7 +138,7 @@ import {
   CodeBlockHighlight,
   Image,
   Blockquote,
-  // CodeBlock,
+  CodeBlock,
   HardBreak,
   Heading,
   HorizontalRule,
@@ -148,7 +148,6 @@ import {
   TodoItem,
   TodoList,
   Bold,
-  // Code,
   Italic,
   Link,
   Strike,
@@ -159,7 +158,7 @@ import javascript from "highlight.js/lib/languages/javascript";
 import css from "highlight.js/lib/languages/css";
 
 export default {
-  name: "MarkdownEditor",
+  name: "MarkdownUpdate",
   $_veeValidate: {
     validator: "new"
   },
@@ -170,12 +169,11 @@ export default {
   },
   props: {
     _id: { type: String },
-    title: { type: String }
+    title: { type: String },
+    content: { type: String }
   },
   data() {
     return {
-      changeContent: "",
-      name: "",
       editor: new Editor({
         extensions: [
           new CodeBlockHighlight({
@@ -187,7 +185,7 @@ export default {
           new Image(),
           new Blockquote(),
           new BulletList(),
-          // new CodeBlock(),
+          new CodeBlock(),
           new HardBreak(),
           new Heading({ levels: [1, 2, 3] }),
           new HorizontalRule(),
@@ -197,7 +195,6 @@ export default {
           new TodoList(),
           new Link(),
           new Bold(),
-          // new Code(),
           new Italic(),
           new Strike(),
           new Underline(),
@@ -206,16 +203,19 @@ export default {
         onUpdate: ({ getHTML }) => {
           const newContent = getHTML();
           this.changeContent = newContent;
+          this.$store.state.heightflag = true;
         },
-        content: ""
-      })
+        content: this.content
+      }),
+      name: "",
+      changeContent: ""
     };
   },
   beforeDestroy() {
     this.editor.destroy();
   },
   methods: {
-    writeNote() {
+    updateNote() {
       this.$validator.validateAll().then(res => {
         if (!res) {
           alert("값이 유효한지 체크해주세요.");
@@ -238,81 +238,31 @@ export default {
           .then(res => res.json())
           .then(data => {
             if (data.result == true) {
-              alert("작성 성공");
+              alert("수정 성공");
+               this.$validator.reset();
               this.$store.state.NoteCheck = true;
+              this.$router.push("/note/detail/" + this._id);
             } else {
-              alert("작성 실패..");
+              alert("수정 실패..");
             }
-            this.$router.push("/note/detail/" + this._id);
           });
       });
     },
     close() {
+       this.$validator.reset();
       this.$router.push("/note/detail/" + this._id);
     }
   },
-  created() {
+  mounted() {
     this.name = this.title;
+    this.changeContent = this.content;
   }
 };
 </script>
 
 
+
 <style lang="scss">
-.menubar {
-  margin-bottom: 1rem;
-  transition: visibility 0.2s 0.4s, opacity 0.2s 0.4s;
-
-  &.is-hidden {
-    visibility: hidden;
-    opacity: 0;
-  }
-
-  &.is-focused {
-    visibility: visible;
-    opacity: 1;
-    transition: visibility 0.2s, opacity 0.2s;
-  }
-
-  &__button {
-    font-weight: bold;
-    background: transparent;
-    border: 0;
-    color: black;
-    padding: 0.2rem 0.5rem;
-    margin-right: 0.2rem;
-    border-radius: 3px;
-    cursor: pointer;
-
-    &:hover {
-      background-color: rgba(black, 0.05);
-    }
-
-    &.is-active {
-      background-color: rgba(black, 0.1);
-    }
-  }
-
-  span#{&}__button {
-    font-size: 13.3333px;
-  }
-}
-.button {
-  font-weight: bold;
-  display: inline-flex;
-  background: transparent;
-  border: 0;
-  color: black;
-  padding: 0.2rem 0.5rem;
-  margin-right: 0.2rem;
-  border-radius: 3px;
-  cursor: pointer;
-  background-color: rgba(black, 0.1);
-
-  &:hover {
-    background-color: rgba(black, 0.15);
-  }
-}
 pre {
   &::before {
     content: attr(data-language);
@@ -369,7 +319,60 @@ pre {
     }
   }
 }
+.menubar {
+  margin-bottom: 1rem;
+  transition: visibility 0.2s 0.4s, opacity 0.2s 0.4s;
 
+  &.is-hidden {
+    visibility: hidden;
+    opacity: 0;
+  }
+
+  &.is-focused {
+    visibility: visible;
+    opacity: 1;
+    transition: visibility 0.2s, opacity 0.2s;
+  }
+
+  &__button {
+    font-weight: bold;
+    background: transparent;
+    border: 0;
+    color: black;
+    padding: 0.2rem 0.5rem;
+    margin-right: 0.2rem;
+    border-radius: 3px;
+    cursor: pointer;
+
+    &:hover {
+      background-color: rgba(black, 0.05);
+    }
+
+    &.is-active {
+      background-color: rgba(black, 0.1);
+    }
+  }
+
+  span#{&}__button {
+    font-size: 13.3333px;
+  }
+}
+.button {
+  font-weight: bold;
+  display: inline-flex;
+  background: transparent;
+  border: 0;
+  color: black;
+  padding: 0.2rem 0.5rem;
+  margin-right: 0.2rem;
+  border-radius: 3px;
+  cursor: pointer;
+  background-color: rgba(black, 0.1);
+
+  &:hover {
+    background-color: rgba(black, 0.15);
+  }
+}
 .editor {
   position: relative;
   max-width: 50rem;
@@ -493,3 +496,4 @@ pre {
   }
 }
 </style>
+
