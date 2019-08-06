@@ -26,19 +26,16 @@
         <td class="text-xs-left">{{ props.item.membership }}</td>
       </template>
     </v-data-table>
-    <v-layout row>
-      <v-flex xs4>
+    <v-layout justify-center text-xs-center row>
         <v-select v-model="department" label="부서" :items="departments" required style="max-width:20vh;"></v-select>
         <v-btn @clck="updateUserDepartment">부서 변경</v-btn>
-      </v-flex>
-      <v-flex xs4>
+        <v-spacer></v-spacer>
         <v-select v-model="position" label="직책" :items="positions" required style="max-width:20vh;"></v-select>
         <v-btn @click="updateUserPosition">직책 변경</v-btn>
-      </v-flex>
-      <v-flex xs4>
+        <v-spacer></v-spacer>
         <v-select v-model="membership" label="등급" :items="memberships" required style="max-width:20vh;"></v-select>
         <v-btn @click="updateUserMembership">등급 변경</v-btn>
-      </v-flex>
+        <v-spacer></v-spacer>
     </v-layout>
   </v-container>
 </template>
