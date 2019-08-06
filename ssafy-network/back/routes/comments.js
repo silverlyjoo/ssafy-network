@@ -37,7 +37,7 @@ router.get('/:parent_id/:token', function (req, res) {
         }
         
         res.json(comments);
-    }).sort({createdAt: -1});
+    }).sort({createdAt: 1});
 });
   
 

@@ -20,7 +20,7 @@
 
       <v-card class="userwindow">
         <v-container class="chats">
-          <div v-for="user in userlist" :key="user.id" class="chat">
+          <div v-for="user in userlist" :key="user.id">
               <span class="subheading">{{ user }}</span>
           </div>
         </v-container>

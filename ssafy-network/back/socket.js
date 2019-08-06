@@ -12,7 +12,7 @@ module.exports = (server) => {
           console.log(data.nickname+"님이 입장하셨습니다.");
           socket.join(data._id);
 
-          Room.update({ _id : data._id }, { $push: { userList: data.nickname } }, function (err, output) {
+          Room.update({ _id : data._id }, { $addToSet: { userList: data.nickname } }, function (err, output) {
             if (err) {
               console.log(err);
             }
