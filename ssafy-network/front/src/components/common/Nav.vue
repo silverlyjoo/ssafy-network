@@ -5,9 +5,9 @@
         <aside class="navgo">
 
 
-          <div class="navBtn" @click="foldnote">
+          <div class="navBtn mb-3" @click="foldnote">
             <router-link to="/index" style="text-decoration: none !important">
-              <v-layout align-center class="pa-2 mb-3">
+              <v-layout align-center class="pa-2">
                 <v-flex text-xs-center>
                   <h4 class="toolbartext title">SSAFY WM</h4>
                 </v-flex>
@@ -19,9 +19,9 @@
 
           <NoteBtn></NoteBtn>
 
-          <div class="navBtn" @click="foldnote">
+          <div class="navBtn mb-3" @click="foldnote">
             <router-link to="/code/board" style="text-decoration: none !important">
-              <v-layout align-center class="pa-2 mb-3">
+              <v-layout align-center class="pa-2">
                 <v-flex xs7 text-xs-center>
                   <span class="navtext navtcolor">CODE</span>
                 </v-flex>
@@ -29,11 +29,38 @@
             </router-link>
           </div>
 
-          <div class="navBtn" @click="foldnote">
+          <div class="navBtn mb-3" @click="foldnote">
             <router-link to="/social/list" style="text-decoration: none !important">
-              <v-layout align-center class="pa-2 mb-3">
+              <v-layout align-center class="pa-2">
                 <v-flex xs7 text-xs-center>
                   <span class="navtext navtcolor">SOCIAL</span>
+                </v-flex>
+              </v-layout>
+            </router-link>
+          </div>
+          <div class="navBtn mb-3" @click="foldnote">
+            <router-link to="/email" style="text-decoration: none !important">
+              <v-layout align-center class="pa-2">
+                <v-flex xs7 text-xs-center>
+                  <span class="navtext navtcolor">E-MAIL</span>
+                </v-flex>
+              </v-layout>
+            </router-link>
+          </div>
+          <div class="navBtn mb-3" @click="foldnote">
+            <router-link to="/address" style="text-decoration: none !important">
+              <v-layout align-center class="pa-2">
+                <v-flex xs7 text-xs-center>
+                  <span class="navtext navtcolor">ADDRESS</span>
+                </v-flex>
+              </v-layout>
+            </router-link>
+          </div>
+          <div class="navBtn mb-3" @click="foldnote">
+            <router-link to="/vote" style="text-decoration: none !important">
+              <v-layout align-center class="pa-2">
+                <v-flex xs7 text-xs-center>
+                  <span class="navtext navtcolor">VOTE</span>
                 </v-flex>
               </v-layout>
             </router-link>
