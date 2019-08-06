@@ -239,6 +239,7 @@ export default {
           .then(data => {
             if (data.result == true) {
               alert("수정 성공");
+               this.$validator.reset();
               this.$store.state.NoteCheck = true;
               this.$router.push("/note/detail/" + this._id);
             } else {
@@ -248,6 +249,7 @@ export default {
       });
     },
     close() {
+       this.$validator.reset();
       this.$router.push("/note/detail/" + this._id);
     }
   },
