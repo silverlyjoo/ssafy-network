@@ -1,6 +1,8 @@
 import MainPage from '@/views/MainPage.vue'
 
-
+import Voteroute from '@/router/Main/Voteroute.js'
+import Emailroute from '@/router/Main/Emailroute.js'
+import Addressroute from '@/router/Main/Addressroute.js'
 import Adminroute from '@/router/Main/Adminroute.js';
 import Homeroute from '@/router/Main/Homeroute.js';
 import Coderoute from '@/router/Main/Coderoute.js';
@@ -18,7 +20,10 @@ export default {
         Socialroute,
         Noteroute,
         ...Adminroute,
-        Notice
+        Notice,
+        ...Addressroute,
+        ...Emailroute,
+        ...Voteroute
       ]
 }
 
