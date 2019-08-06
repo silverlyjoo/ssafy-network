@@ -116,6 +116,75 @@
 <script>
 import Comment from "@/components/code/Comment.vue";
 
+// 코드미러 임폴트
+
+import "codemirror/mode/javascript/javascript.js";
+import "codemirror/theme/base16-dark.css";
+import CodeMirror from "codemirror";
+import "codemirror/addon/edit/matchbrackets.js";
+
+// language
+// import 'codemirror/mode/c/c.js'
+// import 'codemirror/mode/c++/c++.js'
+import "codemirror/mode/django/django.js";
+// import 'codemirror/mode/html/html.js'
+// import 'codemirror/mode/java.js'
+import "codemirror/mode/javascript/javascript.js";
+import "codemirror/mode/python/python.js";
+import "codemirror/mode/vue/vue.js";
+
+// theme css
+import "codemirror/theme/monokai.css";
+import "codemirror/theme/base16-dark.css";
+import "codemirror/theme/base16-light.css";
+import "codemirror/theme/paraiso-light.css";
+import "codemirror/theme/cobalt.css";
+import "codemirror/theme/rubyblue.css";
+import "codemirror/theme/mbo.css";
+
+// require active-line.js
+import "codemirror/addon/selection/active-line.js";
+
+// closebrackets
+import "codemirror/addon/edit/closebrackets.js";
+
+// styleSelectedText
+import "codemirror/addon/selection/mark-selection.js";
+import "codemirror/addon/search/searchcursor.js";
+
+// hint
+import "codemirror/addon/hint/show-hint.js";
+import "codemirror/addon/hint/show-hint.css";
+import "codemirror/addon/hint/javascript-hint.js";
+import "codemirror/addon/selection/active-line.js";
+
+// highlightSelectionMatches
+import "codemirror/addon/scroll/annotatescrollbar.js";
+import "codemirror/addon/search/matchesonscrollbar.js";
+import "codemirror/addon/search/searchcursor.js";
+import "codemirror/addon/search/match-highlighter.js";
+
+// keyMap
+import "codemirror/mode/clike/clike.js";
+import "codemirror/addon/edit/matchbrackets.js";
+import "codemirror/addon/comment/comment.js";
+import "codemirror/addon/dialog/dialog.js";
+import "codemirror/addon/dialog/dialog.css";
+import "codemirror/addon/search/searchcursor.js";
+import "codemirror/addon/search/search.js";
+import "codemirror/keymap/sublime.js";
+import "codemirror/keymap/emacs.js";
+
+// foldGutter
+import "codemirror/addon/fold/foldgutter.css";
+import "codemirror/addon/fold/brace-fold.js";
+import "codemirror/addon/fold/comment-fold.js";
+import "codemirror/addon/fold/foldcode.js";
+import "codemirror/addon/fold/foldgutter.js";
+import "codemirror/addon/fold/indent-fold.js";
+import "codemirror/addon/fold/markdown-fold.js";
+import "codemirror/addon/fold/xml-fold.js";
+
 export default {
   name: "CodeDetail",
   $_veeValidate: {
@@ -157,10 +226,10 @@ export default {
         mode: "text/javascript",
         // hint.js options
         hintOptions: {
-          // 当匹配只有一项的时候是否自动补全
+        // 매칭이 하나만 있을 때 자동으로 완전하게 보정되는지 여부
           completeSingle: false
         },
-        //快捷键 可提供三种模式 sublime、emacs、vim
+        //세가지 모드를 제공할 수 있는 단축 키다. sublime、emacs、vim
         keyMap: "sublime",
         matchBrackets: true,
         showCursorWhenSelecting: true,
