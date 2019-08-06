@@ -217,6 +217,94 @@ router.get('/login/:id/:pwd', function (req, res) {
   });
 });
 
+/**
+ * @swagger
+ *  /users//department/{department}/position/{position}/{token}:
+ *    get:
+ *      tags:
+ *      - User
+ *      description: 부서 직책 정보를 통해 직원 반환
+ *      parameters:
+ *      - name: token
+ *        in: path
+ *        description: "토큰"
+ *        required: true
+ *        type: string
+ *      - name: department
+ *        in: path
+ *        description: "부서"
+ *        required: true
+ *        type: string
+ *      - name: position
+ *        in: path
+ *        description: "직책"
+ *        required: true
+ *        type: string
+ *      responses:
+ *       200:
+ *        description: 직원 반환
+ */
+router.get('/department/:department/position/:position/:token', function (req, res) {
+  var info = decode(req.params.token);
+  if (!info) {
+    return res.json({ result: false });
+  }
+  User.find({ department: req.params.department , position: req.params.position }, function (err, users) {
+    var nicknames = [];
+    if (err) {
+      return res.status(500).json({ error: err });
+    }
+    if (!users) {
+      return res.json({result:false});
+    }
+    for (let index = 0; index < users.length; index++) {
+      nicknames.push(users[index].nickname);
+      if(index + 1 == users.length){
+        res.json(nicknames);
+      }
+    }
+  });
+});
+
+/**
+ * @swagger
+ *  /users/login/{id}/{pwd}:
+ *    get:
+ *      tags:
+ *      - User
+ *      description: 로그인
+ *      parameters:
+ *      - name: id
+ *        in: path
+ *        description: "아이디"
+ *        required: true
+ *        type: string
+ *      - name: pwd
+ *        in: path
+ *        description: "비밀번호"
+ *        required: true
+ *        type: string
+ *      responses:
+ *       200:
+ *        description: 로그인
+ */
+router.get('/login/:id/:pwd', function (req, res) {
+  User.findOne({ id: req.params.id, pwd: req.params.pwd }, function (err, user) {
+    if (err) {
+      return res.status(500).json({ error: err });
+    }
+    if (!user) {
+      return res.json(false);
+    }
+    var token = encode(user);
+    console.log(user, token);
+    res.json({
+      token: token,
+      nickname: user.nickname
+    });
+  });
+});
+
 
 /**
  * @swagger

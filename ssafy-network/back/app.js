@@ -13,6 +13,8 @@ var calendarsRouter = require('./routes/calendars');
 var treesRouter = require('./routes/trees');
 var searchRouter = require('./routes/search');
 var noticesRouter = require('./routes/notices');
+var addressesRouter = require('./routes/addresses');
+var mailRouter = require('./routes/mails');
 
 var app = express();
 var db = require('./db');
@@ -37,5 +39,7 @@ app.use('/calendars', calendarsRouter);
 app.use('/trees', treesRouter);
 app.use('/notices', noticesRouter);
 app.use('/search', searchRouter);
+app.use('/addresses', addressesRouter);
+app.use('/mails', mailRouter);
 
 module.exports = app;
