@@ -66,21 +66,8 @@ export default {
     close(){
        this.$router.push("/note/calendar")
     },
-    async getNoteOne(){
-        await fetch(this.$store.state.dbserver + "/trees/txt/"+ this._id +"/"+this.$session.get("token"), {
-            method: "GET",
-            headers: {
-              "Access-Control-Allow-Origin": "*",
-              "Content-Type": "application/json"
-            }
-          })
-            .then(res => res.json())
-            .then(data => {
-              
-      });
-    }
-  },
-  created(){
+    settingEditor(){
+      
      this.content=this.data.content;
                this.title=this.data.name;
                this.editor = new Editor({
@@ -110,12 +97,18 @@ export default {
           new Underline(),
           new History(),
         ],
-        content: this.content,
+        content: this.data.content,
       });     
+    }
+  },created(){
+    this.settingEditor();
   },
-  updated(){
-    this.$store.state.heightflag=true;
-  }
+  watch:{
+    data(to,from){
+     this.settingEditor();
+    }
+  },
+
 }
 </script>
 

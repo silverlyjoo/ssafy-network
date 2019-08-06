@@ -246,7 +246,7 @@ export default {
                 }else{
                     alert("작성 실패..");
                 }
-                 this.$router.push("/note/detail/" + this._id);
+                this.$router.push("/note/detail/" + this._id);
             });
     },close(){
        this.$router.push("/note/detail/" + this._id);

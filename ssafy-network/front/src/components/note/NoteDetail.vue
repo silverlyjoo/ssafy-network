@@ -1,8 +1,8 @@
 <!-- tiptap 버전 -->
 <template>
   <v-container >
-    <MarkdownDetail v-if="!choiceEditor" :data="noteData" ></MarkdownDetail>
-    <CodeNoteDetail v-if="choiceEditor" :data="noteData" ></CodeNoteDetail>
+    <MarkdownDetail v-if="!choiceEditor && noteData != null" :data="noteData" ></MarkdownDetail>
+    <CodeNoteDetail v-if="choiceEditor && noteData != null" :data="noteData" ></CodeNoteDetail>
   </v-container>
 </template>
 
@@ -37,7 +37,7 @@ export default {
               if(data.result == false){
                 alert("잘못된 데이터 입니다.")
               }else{
-                data = this.noteData;
+                this.noteData = data;
                 if(data.editor == "markdown"){
                   this.choiceEditor = false;
                 }else{
