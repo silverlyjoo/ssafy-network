@@ -1,7 +1,8 @@
 import NotePage from '@/views/NotePage.vue'
 import NoteWriter from '@/components/note/NoteWriter.vue'
 import NoteDetail from '@/components/note/NoteDetail.vue'
-import NoteUpdate from '@/components/note/NoteUpdate.vue'
+import MarkdownUpdate from '@/components/note/MarkdownUpdate.vue'
+import CodeNoteUpdate from '@/components/note/CodeNoteUpdate.vue'
 import NoteCalendar from '@/components/note/NoteCalendar.vue'
 
 export default {
@@ -22,9 +23,14 @@ export default {
             props:true,
             
           }, {
-            path: 'update',
-            name: 'noteupdate',
-            component: NoteUpdate,
+            path: 'markupdate',
+            name: 'markdownupdate',
+            component: MarkdownUpdate,
+            props:true
+          }, {
+            path: 'codeupdate',
+            name: 'codeupdate',
+            component: CodeNoteUpdate,
             props:true
           },{
             path:'calendar',

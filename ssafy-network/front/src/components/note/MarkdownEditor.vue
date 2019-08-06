@@ -234,7 +234,8 @@ export default {
               _id : this._id,
               token : this.$session.get("token"),
               name : this.name,
-              content : this.changeContent
+              content : this.changeContent,
+              editor: "markdown"
             })
           })
             .then(res => res.json())
@@ -245,7 +246,7 @@ export default {
                 }else{
                     alert("작성 실패..");
                 }
-                 this.$router.push("/");
+                 this.$router.push("/note/detail/" + this._id);
             });
     },close(){
        this.$router.push("/note/detail/" + this._id);

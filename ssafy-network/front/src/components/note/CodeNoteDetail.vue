@@ -1,13 +1,6 @@
 <template>
-  <div class="pa-5">
-    <v-toolbar flat color="grey lighten-5" style="width:80%; margin-left:auto; margin-right:auto;">
-      <v-toolbar-title>글 작성하기</v-toolbar-title>
-      <v-spacer></v-spacer>
-        <v-btn class="white--text" color="grey darken-2" @click="addArticle()">등록</v-btn>
-        <router-link to="/code/board" style="text-decoration: none !important"><v-btn class="white--text" color="grey darken-2">취소</v-btn></router-link>
-    </v-toolbar>
-    <!-- <v-layout> -->
-    <br>
+     <v-layout class="pa-5" column>
+      <v-flex>
       <v-card grid-list-md style="width:80%; margin-left:auto; margin-right:auto;">
         <v-card-text>
           <v-container>
@@ -15,23 +8,22 @@
               <v-flex xs12>
                 <v-text-field
                   label="제목"
-                  v-model="article.title"
-                  v-validate="'required'"
-                  :error-messages="errors.collect('title')"
-                  data-vv-name="title"
+                  v-model="data.name"
+                  readonly
                 ></v-text-field>
               </v-flex>
               <v-flex xs12>
                 <v-select
                   :items="languages"
-                  v-model="article.selectedLanguage"
+                  v-model="data.language"
                   label="선택 언어"
+                  readonly
                   single-line
                 ></v-select>
               </v-flex>
               <v-flex xs12>
                 <codemirror
-                  v-model="article.source"
+                  v-model="data.source"
                   :options="customOption">
                 </codemirror>
               </v-flex>
@@ -39,10 +31,8 @@
              <v-flex xs12>
                <v-textarea
                  label="내용"
-                 v-model="article.content"
-                 v-validate="'required'"
-                 :error-messages="errors.collect('content')"
-                 data-vv-name="content"
+                 v-model="data.content"
+                 readonly
                 >
                 </v-textarea>
               </v-flex>
@@ -50,8 +40,12 @@
             </v-container>
           </v-card-text>
         </v-card>
-    <!-- </v-layout> -->
-  </div>
+        </v-flex>
+        <v-flex class="text-xs-right ma-5">
+          <v-btn @click="close()">취소</v-btn>
+          <v-btn @click="writeNoteCode()">작성</v-btn>
+        </v-flex>
+  </v-layout>
 </template>
 
 <script>
@@ -127,20 +121,15 @@ import "codemirror/addon/fold/xml-fold.js";
 
 // 여기까지
 
+
 export default {
-  name: "CodeWriter",
-  $_veeValidate: {
-    validator: "new",
-  },
-  data() {
-    return {
-      article: {
-        title: "",
-        source: "",
-        content: "",
-        selectedLanguage: "",
-      },
-      languages: [
+    name:"CodeNoteDetail",
+    props:{
+        data:{type:Object}
+    },
+    data(){
+        return{
+languages: [
         { text: "JavaScript" },
         { text: "Python" },
         { text: "Vue" },
@@ -154,6 +143,7 @@ export default {
         styleSelectedText: false,
         line: true,
         foldGutter: true,
+        readOnly:true,
         gutters: ["CodeMirror-linenumbers", "CodeMirror-foldgutter"],
         mode: "text/javascript",
         hintOptions: {
@@ -171,6 +161,7 @@ export default {
         styleActiveLine: true,
         lineNumbers: true,
         line: true,
+        readOnly:true,
         mode: "text/x-python",
         theme: "mbo"
       },
@@ -181,6 +172,7 @@ export default {
         styleActiveLine: true,
         lineNumbers: true,
         line: true,
+        readOnly:true,
         keyMap: "sublime",
         mode: "text/x-vue",
         theme: "base16-dark",
@@ -193,59 +185,17 @@ export default {
           }
         }
       },
-    }
-  },
-  methods: {
-    goBoard() {
-      this.$router.push("/code/board");
-    },
-    addArticle() {
-      this.$validator.validateAll().then(res => {
-        if (!res) {
-          alert("작성하지 않은 란이 있는지 확인해주세요.");
-          return;
-        } else {
-          fetch(this.$store.state.dbserver + "/boards", { method: "POST",
-            headers: {
-            "Access-Control-Allow-Origin": "*",
-            "Content-Type": "application/json"
-            },
-            body: JSON.stringify({
-              token: this.$session.get("token"),
-              language: this.article.selectedLanguage,
-              writer: this.$session.get("nickname"),
-              title: this.article.title,
-              source: this.article.source,
-              content: this.article.content
-            })
-            }).then(res => res.json())
-          .then(data => {
-            if(data.result == true){
-              alert("게시글이 등록되었습니다.");
-              this.$router.push("/code/board");
-            }else{
-            alert("게시글을 등록할 수 없습니다...");
-            }
-            // this.goBoard();
-          });
         }
-      })
     },
-  },
-  watch:{
-    'article.selectedLanguage'(to, from){
-      if (to == "JavaScript") {
+    mounted(){
+         if (this.data.language == "JavaScript") {
       this.customOption = this.cmOptionJs;
-    } else if (to == "Python") {
+    } else if (this.data.language == "Python") {
       this.customOption = this.cmOptionPy;
-    } else if (to == "Vue") {
+    } else if (this.data.language == "Vue") {
       this.customOption = this.cmOptionVue;
     }
     }
-  },
-  mounted(){
-    this.article.selectedLanguage ="JavaScript";
-    this.customOption = this.cmOptionJs;
-  }
 }
 </script>
+
