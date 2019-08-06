@@ -1,151 +1,139 @@
 <!-- tiptap 버전 -->
 <template>
-<v-container >
-  <div style="margin-top: 20px; margin-left:30px;">
-    <h1><v-text-field v-model="name"></v-text-field></h1>
-  </div>
-   <div class="editor" >
-    <editor-menu-bar :editor="editor" v-slot="{ commands, isActive}">
-      <div class="menubar">
-        <button
-          class="menubar__button"
-          @click="showImagePrompt(commands.image)"
-        >
-          <Icon name="image" />
-        </button>
+  <v-container>
+    <div style="margin-top: 20px; margin-left:30px;">
+      <h1>
+        <v-text-field
+          v-model="name"
+          v-validate="'required|min:2'"
+          data-vv-name="제목"
+          :error-messages="errors.collect('제목')"
+        ></v-text-field>
+      </h1>
+    </div>
+    <div class="editor">
+      <editor-menu-bar :editor="editor" v-slot="{ commands, isActive}">
+        <div class="menubar">
+          <button class="menubar__button" @click="showImagePrompt(commands.image)">
+            <Icon name="image" />
+          </button>
 
-        <button
-          class="menubar__button"
-          :class="{ 'is-active': isActive.bold() }"
-          @click="commands.bold"
-        >
-          <icon name="bold" />
-        </button>
+          <button
+            class="menubar__button"
+            :class="{ 'is-active': isActive.bold() }"
+            @click="commands.bold"
+          >
+            <icon name="bold" />
+          </button>
 
-        <button
-          class="menubar__button"
-          :class="{ 'is-active': isActive.italic() }"
-          @click="commands.italic"
-        >
-          <icon name="italic" />
-        </button>
+          <button
+            class="menubar__button"
+            :class="{ 'is-active': isActive.italic() }"
+            @click="commands.italic"
+          >
+            <icon name="italic" />
+          </button>
 
-        <button
-          class="menubar__button"
-          :class="{ 'is-active': isActive.strike() }"
-          @click="commands.strike"
-        >
-          <icon name="strike" />
-        </button>
+          <button
+            class="menubar__button"
+            :class="{ 'is-active': isActive.strike() }"
+            @click="commands.strike"
+          >
+            <icon name="strike" />
+          </button>
 
-        <button
-          class="menubar__button"
-          :class="{ 'is-active': isActive.underline() }"
-          @click="commands.underline"
-        >
-          <icon name="underline" />
-        </button>
+          <button
+            class="menubar__button"
+            :class="{ 'is-active': isActive.underline() }"
+            @click="commands.underline"
+          >
+            <icon name="underline" />
+          </button>
 
-        <button
-          class="menubar__button"
-          :class="{ 'is-active': isActive.paragraph() }"
-          @click="commands.paragraph"
-        >
-          <icon name="paragraph" />
-        </button>
+          <button
+            class="menubar__button"
+            :class="{ 'is-active': isActive.paragraph() }"
+            @click="commands.paragraph"
+          >
+            <icon name="paragraph" />
+          </button>
 
-        <button
-          class="menubar__button"
-          :class="{ 'is-active': isActive.heading({ level: 1 }) }"
-          @click="commands.heading({ level: 1 })"
-        >
-          H1
-        </button>
+          <button
+            class="menubar__button"
+            :class="{ 'is-active': isActive.heading({ level: 1 }) }"
+            @click="commands.heading({ level: 1 })"
+          >H1</button>
 
-        <button
-          class="menubar__button"
-          :class="{ 'is-active': isActive.heading({ level: 2 }) }"
-          @click="commands.heading({ level: 2 })"
-        >
-           H2
-        </button>
+          <button
+            class="menubar__button"
+            :class="{ 'is-active': isActive.heading({ level: 2 }) }"
+            @click="commands.heading({ level: 2 })"
+          >H2</button>
 
-        <button
-          class="menubar__button"
-          :class="{ 'is-active': isActive.heading({ level: 3 }) }"
-          @click="commands.heading({ level: 3 })"
-        >
-           H3
-        </button>
+          <button
+            class="menubar__button"
+            :class="{ 'is-active': isActive.heading({ level: 3 }) }"
+            @click="commands.heading({ level: 3 })"
+          >H3</button>
 
-        <button
-          class="menubar__button"
-          :class="{ 'is-active': isActive.bullet_list() }"
-          @click="commands.bullet_list"
-        >
-          <icon name="ul" />
-        </button>
+          <button
+            class="menubar__button"
+            :class="{ 'is-active': isActive.bullet_list() }"
+            @click="commands.bullet_list"
+          >
+            <icon name="ul" />
+          </button>
 
-        <button
-          class="menubar__button"
-          :class="{ 'is-active': isActive.ordered_list() }"
-          @click="commands.ordered_list"
-        >
-          <icon name="ol" />
-        </button>
+          <button
+            class="menubar__button"
+            :class="{ 'is-active': isActive.ordered_list() }"
+            @click="commands.ordered_list"
+          >
+            <icon name="ol" />
+          </button>
 
-        <button
-          class="menubar__button"
-          :class="{ 'is-active': isActive.blockquote() }"
-          @click="commands.blockquote"
-        >
-          <icon name="quote" />
-        </button>
+          <button
+            class="menubar__button"
+            :class="{ 'is-active': isActive.blockquote() }"
+            @click="commands.blockquote"
+          >
+            <icon name="quote" />
+          </button>
 
-        <button
-          class="menubar__button"
-          :class="{ 'is-active': isActive.code_block() }"
-          @click="commands.code_block"
-        >
-          <icon name="code" />
-        </button>
+          <button
+            class="menubar__button"
+            :class="{ 'is-active': isActive.code_block() }"
+            @click="commands.code_block"
+          >
+            <icon name="code" />
+          </button>
 
-        <button
-          class="menubar__button"
-          @click="commands.horizontal_rule"
-        >
-          <icon name="hr" />
-        </button>
+          <button class="menubar__button" @click="commands.horizontal_rule">
+            <icon name="hr" />
+          </button>
 
-        <button
-          class="menubar__button"
-          @click="commands.undo"
-        >
-          <icon name="undo" />
-        </button>
+          <button class="menubar__button" @click="commands.undo">
+            <icon name="undo" />
+          </button>
 
-        <button
-          class="menubar__button"
-          @click="commands.redo"
-        >
-          <icon name="redo" />
-        </button>
+          <button class="menubar__button" @click="commands.redo">
+            <icon name="redo" />
+          </button>
+        </div>
+      </editor-menu-bar>
 
-      </div>
-    </editor-menu-bar>
-
-    <editor-content class="editor__content" :editor="editor"/>
-  </div>
-  <v-flex text-xs-right>
-  <v-btn @click="close()">취소</v-btn>
-  <v-btn @click="updateNote()">수정</v-btn>
-  </v-flex>
+      <editor-content class="editor__content" :editor="editor" />
+    </div>
+    <v-flex text-xs-right>
+      <v-btn @click="close()">취소</v-btn>
+      <v-btn @click="updateNote()">수정</v-btn>
+    </v-flex>
   </v-container>
 </template>
 
 <script>
-import Icon from '@/components/note/Icon'
-import { Editor, EditorContent, EditorMenuBar } from 'tiptap'
+import Icon from "@/components/note/Icon";
+import { Editor, EditorContent, EditorMenuBar } from "tiptap";
 import {
   CodeBlockHighlight,
   Image,
@@ -164,30 +152,35 @@ import {
   Link,
   Strike,
   Underline,
-  History,
-} from 'tiptap-extensions'
-import javascript from 'highlight.js/lib/languages/javascript'
-import css from 'highlight.js/lib/languages/css'
+  History
+} from "tiptap-extensions";
+import javascript from "highlight.js/lib/languages/javascript";
+import css from "highlight.js/lib/languages/css";
 
 export default {
-    components: {
+  name: "MarkdownUpdate",
+  $_veeValidate: {
+    validator: "new"
+  },
+  components: {
     EditorContent,
     EditorMenuBar,
     Icon
   },
-  props:{
-    _id:{type:String},
-    title:{type:String},
-    content:{type:String}
+  props: {
+    _id: { type: String },
+    title: { type: String },
+    content: { type: String }
   },
   data() {
     return {
-      editor : new Editor({
-        extensions: [new CodeBlockHighlight({
+      editor: new Editor({
+        extensions: [
+          new CodeBlockHighlight({
             languages: {
               javascript,
-              css,
-            },
+              css
+            }
           }),
           new Image(),
           new Blockquote(),
@@ -205,61 +198,66 @@ export default {
           new Italic(),
           new Strike(),
           new Underline(),
-          new History(),
-        ], onUpdate: ({ getHTML }) => {
-            const newContent = getHTML()
-        this.changeContent = newContent;
-        this.$store.state.heightflag= true;
-    },
-        content:this.content,
+          new History()
+        ],
+        onUpdate: ({ getHTML }) => {
+          const newContent = getHTML();
+          this.changeContent = newContent;
+          this.$store.state.heightflag = true;
+        },
+        content: this.content
       }),
-      name :"",
-      changeContent:""
-    }
+      name: "",
+      changeContent: ""
+    };
   },
   beforeDestroy() {
-    this.editor.destroy()
+    this.editor.destroy();
   },
   methods: {
-    showImagePrompt(command) {
-      const src = prompt('Enter the url of your image here')
-      if (src !== null) {
-        command({ src })
-      }
-    },
-    updateNote(){
+    updateNote() {
+      this.$validator.validateAll().then(res => {
+        if (!res) {
+          alert("값이 유효한지 체크해주세요.");
+          return;
+        }
         fetch(this.$store.state.dbserver + "/trees/txt", {
-            method: "PUT",
-            headers: {
-              "Access-Control-Allow-Origin": "*",
-              "Content-Type": "application/json"
-            },
-            body: JSON.stringify({
-              _id : this._id,
-              token : this.$session.get("token"),
-              name : this.name,
-              content : this.changeContent
-            })
+          method: "PUT",
+          headers: {
+            "Access-Control-Allow-Origin": "*",
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({
+            _id: this._id,
+            token: this.$session.get("token"),
+            name: this.name,
+            content: this.changeContent,
+            editor: "markdown"
           })
-            .then(res => res.json())
-            .then(data => {
-                if(data.result == true){
-                    alert("수정 성공");
-                    this.$store.state.NoteCheck = true;
-                    this.$router.push("/note/detail/"+this._id);
-                }else{
-                    alert("수정 실패..");
-                }
-            });
-    },close(){
+        })
+          .then(res => res.json())
+          .then(data => {
+            if (data.result == true) {
+              alert("수정 성공");
+               this.$validator.reset();
+              this.$store.state.NoteCheck = true;
+              this.$router.push("/note/detail/" + this._id);
+            } else {
+              alert("수정 실패..");
+            }
+          });
+      });
+    },
+    close() {
+       this.$validator.reset();
       this.$router.push("/note/detail/" + this._id);
     }
   },
-  mounted(){
-      this.name = this.title;
-      this.changeContent = this.content;
+  mounted() {
+    this.name = this.title;
+    this.changeContent = this.content;
   }
-}
+};
 </script>
 
 
@@ -321,8 +319,7 @@ pre {
     }
   }
 }
-.menubar{
-  
+.menubar {
   margin-bottom: 1rem;
   transition: visibility 0.2s 0.4s, opacity 0.2s 0.4s;
 
@@ -380,7 +377,7 @@ pre {
   position: relative;
   max-width: 50rem;
   margin: 4rem auto 4rem auto;
-  
+
   &__content {
     padding: 20px;
     word-wrap: break-word;
@@ -392,21 +389,20 @@ pre {
     pre {
       padding: 0.7rem 1rem;
       border-radius: 5px;
-      background: black!important;
-      color: white!important;
+      background: black !important;
+      color: white !important;
       overflow-x: auto;
       code {
-        font-family: monospace!important;
+        font-family: monospace !important;
         font-weight: 100;
-         display: inline-block!important;
-        padding: 0 0.4rem!important;
-        border-radius: 5px!important;
-        font-size:1rem!important;
-        background: rgba(black, 0.1)!important;
-        color: rgba(white, 0.9)!important;
+        display: inline-block !important;
+        padding: 0 0.4rem !important;
+        border-radius: 5px !important;
+        font-size: 1rem !important;
+        background: rgba(black, 0.1) !important;
+        color: rgba(white, 0.9) !important;
       }
     }
-
 
     ul,
     ol {
@@ -446,7 +442,8 @@ pre {
       margin: 0;
       overflow: hidden;
 
-      td, th {
+      td,
+      th {
         min-width: 1em;
         border: 2px solid gray;
         padding: 3px 5px;
@@ -467,14 +464,19 @@ pre {
         z-index: 2;
         position: absolute;
         content: "";
-        left: 0; right: 0; top: 0; bottom: 0;
+        left: 0;
+        right: 0;
+        top: 0;
+        bottom: 0;
         background: rgba(200, 200, 255, 0.4);
         pointer-events: none;
       }
 
       .column-resize-handle {
         position: absolute;
-        right: -2px; top: 0; bottom: 0;
+        right: -2px;
+        top: 0;
+        bottom: 0;
         width: 4px;
         z-index: 20;
         background-color: #adf;
@@ -491,7 +493,6 @@ pre {
       cursor: ew-resize;
       cursor: col-resize;
     }
-
   }
 }
 </style>

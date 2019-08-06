@@ -1,16 +1,12 @@
 <template>
-     <v-layout class="pa-5" column>
-      <v-flex>
+  <v-layout class="pa-5" column>
+    <v-flex>
       <v-card grid-list-md style="width:80%; margin-left:auto; margin-right:auto;">
         <v-card-text>
           <v-container>
             <v-layout wrap column>
               <v-flex xs12>
-                <v-text-field
-                  label="제목"
-                  v-model="data.name"
-                  readonly
-                ></v-text-field>
+                <v-text-field label="제목" v-model="data.name" readonly></v-text-field>
               </v-flex>
               <v-flex xs12>
                 <v-select
@@ -22,34 +18,24 @@
                 ></v-select>
               </v-flex>
               <v-flex xs12>
-                <codemirror
-                  v-model="data.source"
-                  :options="customOption">
-                </codemirror>
+                <codemirror v-model="data.source" :options="customOption"></codemirror>
               </v-flex>
-              <br>
-             <v-flex xs12>
-               <v-textarea
-                 label="내용"
-                 v-model="data.content"
-                 readonly
-                >
-                </v-textarea>
+              <br />
+              <v-flex xs12>
+                <v-textarea label="내용" v-model="data.content" readonly></v-textarea>
               </v-flex>
-              </v-layout>
-            </v-container>
-          </v-card-text>
-        </v-card>
-        </v-flex>
-        <v-flex class="text-xs-right ma-5">
-          <v-btn @click="close()">취소</v-btn>
-          <v-btn @click="writeNoteCode()">작성</v-btn>
-        </v-flex>
+            </v-layout>
+          </v-container>
+        </v-card-text>
+      </v-card>
+    </v-flex>
+    <v-flex class="text-xs-right ma-5">
+      <v-btn @click="updateCodeNote()">수정</v-btn>
+    </v-flex>
   </v-layout>
 </template>
 
 <script>
-
 // 코드미러 임폴트
 
 import "codemirror/mode/javascript/javascript.js";
@@ -121,20 +107,15 @@ import "codemirror/addon/fold/xml-fold.js";
 
 // 여기까지
 
-
 export default {
-    name:"CodeNoteDetail",
-    props:{
-        data:{type:Object}
-    },
-    data(){
-        return{
-languages: [
-        { text: "JavaScript" },
-        { text: "Python" },
-        { text: "Vue" },
-      ],
-      customOption:{},
+  name: "CodeNoteDetail",
+  props: {
+    data: { type: Object }
+  },
+  data() {
+    return {
+      languages: [{ text: "JavaScript" }, { text: "Python" }, { text: "Vue" }],
+      customOption: {},
       cmOptionJs: {
         autoCloseBrackets: true,
         tabSize: 4,
@@ -143,7 +124,7 @@ languages: [
         styleSelectedText: false,
         line: true,
         foldGutter: true,
-        readOnly:true,
+        readOnly: true,
         gutters: ["CodeMirror-linenumbers", "CodeMirror-foldgutter"],
         mode: "text/javascript",
         hintOptions: {
@@ -161,7 +142,7 @@ languages: [
         styleActiveLine: true,
         lineNumbers: true,
         line: true,
-        readOnly:true,
+        readOnly: true,
         mode: "text/x-python",
         theme: "mbo"
       },
@@ -172,7 +153,7 @@ languages: [
         styleActiveLine: true,
         lineNumbers: true,
         line: true,
-        readOnly:true,
+        readOnly: true,
         keyMap: "sublime",
         mode: "text/x-vue",
         theme: "base16-dark",
@@ -184,18 +165,23 @@ languages: [
             if (cm.getOption("fullScreen")) cm.setOption("fullScreen", false);
           }
         }
-      },
-        }
-    },
-    mounted(){
-         if (this.data.language == "JavaScript") {
+      }
+    };
+  },
+  mounted() {
+    if (this.data.language == "JavaScript") {
       this.customOption = this.cmOptionJs;
     } else if (this.data.language == "Python") {
       this.customOption = this.cmOptionPy;
     } else if (this.data.language == "Vue") {
       this.customOption = this.cmOptionVue;
     }
+  },
+  methods: {
+    updateCodeNote() {
+        this.$router.push({name:"codenoteupdate",params:{"data":this.data} });
     }
-}
+  }
+};
 </script>
 

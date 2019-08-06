@@ -28,8 +28,8 @@ export default {
             component: MarkdownUpdate,
             props:true
           }, {
-            path: 'codeupdate',
-            name: 'codeupdate',
+            path: 'codenoteupdate',
+            name: 'codenoteupdate',
             component: CodeNoteUpdate,
             props:true
           },{
