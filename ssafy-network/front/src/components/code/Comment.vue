@@ -128,7 +128,7 @@ export default {
         }
         this.closeDeleteForm();
       })
-    }
+    },
   },
   updated(){
     this.$store.state.heightflag = true;

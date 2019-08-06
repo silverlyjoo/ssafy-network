@@ -18,7 +18,7 @@
         </template>
         <v-card class="elevation-2">
           <v-card-title class="headline">박성민</v-card-title>
-          <v-card-text>WM에서 Front를 담당하고 있습니다. 잘 부탁드립니다.</v-card-text>
+          <v-card-text>WM에서 Front-End 를 담당하고 있습니다. 현재 JavaScript, Vue.js 를 공부중이며, 적용하고 있습니다. 모르는 것이 있으면, 인정하고 고치려고 하는 개발자입니다. 잘 부탁드립니다.</v-card-text>
         </v-card>
       </v-timeline-item>
       <v-timeline-item color="yellow lighten-2" large>
