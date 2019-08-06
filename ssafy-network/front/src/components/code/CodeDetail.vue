@@ -259,9 +259,6 @@ export default {
             .then(res => res.json())
             .then(data => {
               if (data.result == true) {
-                console.log(data)
-                console.log("---")
-                console.log(data.result)
                 alert("댓글이 등록되었습니다.");
               } else {
                 alert("댓글을 등록할 수 없습니다.");
@@ -290,6 +287,12 @@ export default {
           }
         });
     }
+  },
+  mounted(){
+    this.getComments();
+  },
+  updated(){
+    this.$store.state.heightflag = true;
   }
 };
 </script>
