@@ -5,6 +5,8 @@ const txtSchema = new mongoose.Schema({
     name: String,
     file: String,
     content: String,
+    language: String,
     editor: String,
+    source: String,
 });
 module.exports = mongoose.model('Txt',txtSchema);

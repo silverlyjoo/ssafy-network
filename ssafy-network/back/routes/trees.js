@@ -323,6 +323,8 @@ router.post('/txt', function (req, res) {
     txt.file = "txt";
     txt.content = "";
     txt.editor = "markdown";
+    txt.language = "";
+    txt.source = "";
 
     console.log(req.body);
 
@@ -364,7 +366,10 @@ router.post('/txt', function (req, res) {
  *              required: true
  *            editor:
  *              type: string
- *              required: true
+ *            language:
+ *              type: string
+ *            source:
+ *              type: string
  *      responses:
  *       200:
  *        description: "result = true 일 경우 정상적으로 작동"
@@ -379,6 +384,8 @@ router.put('/txt', function (req, res) {
             name: req.body.name,
             content: req.body.content,
             editor: req.body.editor,
+            language: req.body.language,
+            source : req.body.source,
         }}, function (err, output) {
         if (err) {
             res.status(500).json({ error: 'database failure' });
