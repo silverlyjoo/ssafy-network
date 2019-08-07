@@ -26,23 +26,35 @@
         <v-container>
           <v-layout wrap column>
             <v-flex xs12>
-              <v-text-field label="제목" readonly v-model="data.title"></v-text-field>
+              <div style="font-family: 'Nanum Gothic', sans-serif;">
+                <span class="grey--text" style="py-5">제목</span><br>
+                <span style="font-size: 18px;">{{data.title}}</span>
+              </div><br>
+              <!-- <v-text-field label="제목" readonly v-model="data.title"></v-text-field> -->
             </v-flex>
             <v-flex xs12>
-              <v-select
+              <div style="font-family: 'Nanum Gothic', sans-serif;">
+                <span class="grey--text" style="py-5">선택 언어</span><br>
+                <span style="font-size: 18px;">{{data.language}}</span>
+              </div><br>
+              <!-- <v-select
                 :items="languages"
                 label="선택 언어"
                 single-line
                 readonly
                 v-model="data.language"
-              ></v-select>
+              ></v-select> -->
             </v-flex>
             <v-flex xs12>
               <codemirror :options="cmOptionJs" v-model="data.source"></codemirror>
             </v-flex>
             <br />
             <v-flex xs12>
-              <v-textarea label="내용" readonly v-model="data.content"></v-textarea>
+              <!-- <v-text-field label="내용" readonly v-model="data.content"></v-text-field> -->
+              <div style="font-family: 'Nanum Gothic', sans-serif;">
+                <span class="grey--text" style="py-5">내용</span><br>
+                <span style="font-size: 18px;">{{data.content}}</span>
+              </div><br>
             </v-flex>
           </v-layout>
         </v-container>
@@ -334,6 +346,8 @@ export default {
 </script>
 
 <style>
+@import url('https://fonts.googleapis.com/css?family=Nanum+Gothic&display=swap');
+
 .board-title {
   color: grey;
 }
