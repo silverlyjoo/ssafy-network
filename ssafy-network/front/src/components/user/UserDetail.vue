@@ -9,7 +9,7 @@
               class="profileImg ma-4"
               :aspect-ratio="1"
             ></v-img>
-            <v-card-title class="headline">{{ nickname }}</v-card-title>
+            <v-card-title class="headline">{{ userData.nickname }}</v-card-title>
           </v-responsive>
         </v-flex>
         <v-flex xs8>
@@ -33,7 +33,7 @@ export default {
       dbserver: this.$store.state.dbserver,
       token: this.$session.get("token"),
       id: this.$session.get("id"),
-      userData: null
+      userData: {nickname: null}
     };
   },
   methods: {
