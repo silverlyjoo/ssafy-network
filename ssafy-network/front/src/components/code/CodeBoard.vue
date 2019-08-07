@@ -1,12 +1,11 @@
 <template>
-  <div class="pa-5">
+  <div class="pa-5" >    
     <v-toolbar flat color="grey lighten-5" style="width:80%; margin-left:auto; margin-right:auto;">
       <v-toolbar-title>Code Review 게시판</v-toolbar-title>
       <v-spacer></v-spacer>
       <router-link to="/code/writer" style="text-decoration: none !important"><v-btn class="white--text" color="grey darken-2">글 쓰기</v-btn></router-link>
       <br><br><br>
     </v-toolbar>
-
     <br>
 
     <v-data-table
@@ -14,6 +13,7 @@
       :items="articles"
       :server-items-length="totalArticles"
       :pagination.sync="pagination"
+      :loading="loading"
       class="elevation-1"
       style="width:80%; margin-left:auto; margin-right:auto;"
     >
@@ -24,7 +24,7 @@
         <td class="text-xs-center">{{ props.item.hit }}</td>
       </template>
       <template slot="no-data">
-        <v-alert :value="true" color="grey darken-2" icon="info">게시글이 하나도 없습니다</v-alert>
+        <v-alert :value="true" color="grey darken-2" icon="info">게시글이 없습니다</v-alert>
       </template>
     </v-data-table>
   </div>
@@ -39,10 +39,10 @@ export default {
   },
   data() {
     return {
+      loading: true,
       today: "",
       totalArticles: 0,
       articles: [],
-      loading: true,
       pagination:{'sortBy': 'createdAt', 'descending': true},
       headers: [
         {
@@ -125,7 +125,7 @@ export default {
         }
       });
     },
-  }
+  },
 };
 </script>
 
