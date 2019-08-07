@@ -8,10 +8,10 @@ const addressSchema = new mongoose.Schema({
     position: String,
     represent: String,
     telephone: String,
-    cellphone: String,
     fax: String,
     content: String,
     bookmark:[],
+    writer: String,
 });
 
 module.exports = mongoose.model('Address',addressSchema);

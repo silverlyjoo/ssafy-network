@@ -219,7 +219,7 @@ router.get('/login/:id/:pwd', function (req, res) {
 
 /**
  * @swagger
- *  /users//department/{department}/position/{position}/{token}:
+ *  /users/department/{department}/position/{position}/{token}:
  *    get:
  *      tags:
  *      - User
@@ -334,8 +334,6 @@ router.get('/login/:id/:pwd', function (req, res) {
  *              type: string
  *            position:
  *              type: string
- *            membership:
- *              type: string
  *      responses:
  *       200:
  *        description: "result = true 일 경우 정상적으로 작동"
@@ -348,7 +346,7 @@ router.post('/', function (req, res) {
   user.nickname = req.body.nickname;
   user.department = req.body.department;
   user.position = req.body.position;
-  user.membership = req.body.membership;
+  user.membership = "비회원";
 
   console.log(req.body);
 
@@ -401,10 +399,10 @@ router.post('/', function (req, res) {
  *              type: string
  *            nickname:
  *              type: string
- *            region:
+ *            department:
  *              type: string
- *            year:
- *              type: integer
+ *            position:
+ *              type: string
  *            membership:
  *              type: string
  *      responses:

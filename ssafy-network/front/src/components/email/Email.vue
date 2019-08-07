@@ -160,7 +160,7 @@ export default {
         )
           .then(res => res.json())
           .then(data => {
-              this.people = data;
+            this.people = data;
           })
           .catch(error => console.log(error))
           .finally();
