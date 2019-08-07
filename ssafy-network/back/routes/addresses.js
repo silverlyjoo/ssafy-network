@@ -94,7 +94,7 @@ router.get('/:id/:token', function (req, res) {
  *              type: string
  *            telephone:
  *              type: string
- *            cellphone:
+ *            writer:
  *              type: string
  *            fax:
  *              type: string
@@ -114,7 +114,7 @@ router.post('/', function (req, res) {
     address.position = req.body.position;
     address.represent = req.body.represent;
     address.telephone = req.body.telephone;
-    address.cellphone = req.body.cellphone;
+    address.writer = req.body.writer;
     address.fax = req.body.fax;
     address.content = req.body.content;
     address.bookmark = [];
@@ -248,7 +248,7 @@ router.put('/cancel', function (req, res) {
  *              type: string
  *            telephone:
  *              type: string
- *            cellphone:
+ *            writer:
  *              type: string
  *            fax:
  *              type: string
@@ -263,14 +263,13 @@ router.put('/', function (req, res) {
     if (!info) {
         return res.json({ result: false });
     }
-    if (info.membership == "관리자") {
+    if (info.membership == "관리자" || info.nickname == req.body.writer) {
         Address.update({ _id: req.body._id }, {
             $set: {
                 company: req.body.company,
                 position: req.body.position,
                 represent: req.body.represent,
                 telephone: req.body.telephone,
-                cellphone: req.body.cellphone,
                 fax: req.body.fax,
             }
         }, function (err, output) {

@@ -63,7 +63,7 @@ export default {
         })
         .then(res => {
           for (let i = 0; i < res.data.length; i++) {
-            this.userlist.push(res.data[i].id);
+            this.userlist.push(res.data[i].nickname);
           }
           console.log(this.userlist);
         });
