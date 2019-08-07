@@ -31,8 +31,8 @@
           </v-flex>
           <v-flex xs2>
             <v-btn @click="nicknameCheck">중복체크</v-btn>
-            <span v-if="nicknamecheckflag">중복체그 완료</span>
-            <span v-else style="color: red">중복체그 필요</span>
+            <span v-if="nicknamecheckflag">중복체크 완료</span>
+            <span v-else style="color: red">중복체크 필요</span>
           </v-flex>
         </v-layout>
         <v-layout align-center>
@@ -134,15 +134,6 @@ export default {
           url: `/users/${this.id}/${this.token}`
         })
         .then(res => {
-          // console.log(res.data);
-          // this.userDataModel.department = res.data.department;
-          // this.userDataModel.id = res.data.id;
-          // this.userDataModel.membership = res.data.membership;
-          // this.userDataModel.name = res.data.name;
-          // this.userDataModel.nickname = res.data.nickname;
-          // this.userDataModel.position = res.data.position;
-          // this.userDataModel.pwd = res.data.pwd;
-          // this.userDataModel.token = this.token;
           this.postNickname = res.data.nickname;
           this.userDataModel = res.data;
           this.userDataModel["token"] = this.token;
@@ -152,6 +143,7 @@ export default {
       let url = this.dbserver;
       let changedata = this.userDataModel;
       changedata.pwd = this.newPassword;
+      // console.log(changedata)
       caxios(url).request({
         baseURL: url,
         method: "PUT",
