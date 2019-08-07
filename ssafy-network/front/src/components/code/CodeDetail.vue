@@ -56,18 +56,38 @@
                 <span style="font-size: 18px;">{{data.content}}</span>
               </div><br>
             </v-flex><br><br><br>
-            <v-divider></v-divider>
-            <v-layout row>
-              <v-icon text-xs-left class="py-3">subdirectory_arrow_right</v-icon> &nbsp; &nbsp; &nbsp;
+            <v-layout>
               <!-- <v-flex xs1 text-xs-left class="py-3">
+                <v-icon text-xs-left class="py-3">subdirectory_arrow_right</v-icon> &nbsp; &nbsp; &nbsp;
               </v-flex> -->
-              <v-flex xs10 text-xs-center>
-                <v-textarea></v-textarea>
-              </v-flex>
               <v-flex xs2 text-xs-center class="py-3">
-                <v-btn small color="grey darken-2" class="white--text">등록</v-btn>
+                <div class="py-5">
+                  <h3 class="py-2"><strong>{{$session.get("nickname")}}</strong></h3> &nbsp;&nbsp;&nbsp;
+                </div>
+              </v-flex>
+              <v-flex xs8 text-xs-center>
+                <v-textarea class="py-3"
+                  label="댓글"
+                  box
+                  v-model="comment"
+                  v-validate="'required|min:2'"
+                  data-vv-name="comment"
+                  :error-messages="errors.collect('comment')"
+                ></v-textarea>
+              </v-flex>
+              <v-flex xs2 text-xs-center class="py-4">
+                <div class="py-4">
+                  <v-btn
+                    large
+                    color="grey darken-2"
+                    class="white--text"
+                    @click="createComment()"
+                  >등록</v-btn>
+                </div>
               </v-flex>
             </v-layout>
+            <br>
+            <v-divider></v-divider>
             <Comment
               :_id="data._id"
               style="margin-left:auto; margin-right:auto;"
