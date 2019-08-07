@@ -56,7 +56,7 @@ export default {
         content:"",
     }
   },
-  beforeDestroy() {
+  beforedestroy() {
     this.editor.destroy()
   },
   methods: {
@@ -67,7 +67,6 @@ export default {
        this.$router.push("/note/calendar")
     },
     settingEditor(){
-      
      this.content=this.data.content;
                this.title=this.data.name;
                this.editor = new Editor({
@@ -102,10 +101,12 @@ export default {
     }
   },created(){
     this.settingEditor();
+  },updated(){
   },
   watch:{
     data(to,from){
-     this.settingEditor();
+      this.editor.destroy();
+      this.settingEditor();
     }
   },
 
