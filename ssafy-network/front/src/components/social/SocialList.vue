@@ -39,7 +39,7 @@
 
               <v-list-tile-action
                 v-if="item.owner === nickname"
-                @click.stop="deleteroom(item._id, idx)"
+                @click.stop="delconfirm('Do you really want to delete room?') ? deleteroom(item._id, idx) : ''"
               >
                 <i class="fas fa-trash-alt deleteicon"></i>
               </v-list-tile-action>
@@ -104,6 +104,9 @@ export default {
     };
   },
   methods: {
+    delconfirm(msg) {
+      return window.confirm(msg)
+    },
     deleteroom(roomId, idx) {
       let roomUrl = this.dbserver;
       caxios(roomUrl).request({
