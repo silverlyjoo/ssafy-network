@@ -45,7 +45,8 @@ export default {
       })
         .then(res => res.json())
         .then(data => {
-          if (data == false) {
+          console.log(data)
+          if (data.result == false || data == false) {
            alert("로그인 실패...");
             this.id = "";
             this.pwd = "";

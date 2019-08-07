@@ -94,6 +94,7 @@ export default {
       dbserver: this.$store.state.dbserver,
       token: this.$session.get("token"),
       nickname: this.$session.get("nickname"),
+      id: this.$session.get("id"),
       chatserver: this.$store.state.chatserver,
       chatroomsearchkeyword: "",
       searchoption: "title",
@@ -115,7 +116,8 @@ export default {
         baseURL: roomUrl,
         data: {
           _id: roomId,
-          token: this.token
+          token: this.token,
+          id: this.id
         }
       });
       this.$delete(this.items, idx);
