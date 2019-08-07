@@ -55,11 +55,31 @@
                 <span class="grey--text" style="py-5">내용</span><br>
                 <span style="font-size: 18px;">{{data.content}}</span>
               </div><br>
-            </v-flex>
+            </v-flex><br><br><br>
+            <v-divider></v-divider>
+            <v-layout row>
+              <v-icon text-xs-left class="py-3">subdirectory_arrow_right</v-icon> &nbsp; &nbsp; &nbsp;
+              <!-- <v-flex xs1 text-xs-left class="py-3">
+              </v-flex> -->
+              <v-flex xs10 text-xs-center>
+                <v-textarea></v-textarea>
+              </v-flex>
+              <v-flex xs2 text-xs-center class="py-3">
+                <v-btn small color="grey darken-2" class="white--text">등록</v-btn>
+              </v-flex>
+            </v-layout>
+            <Comment
+              :_id="data._id"
+              style="margin-left:auto; margin-right:auto;"
+              class="pa-0"
+            ></Comment>
           </v-layout>
         </v-container>
       </v-card-text>
+
+
     </v-card>
+
     <!-- </v-layout> -->
     <v-dialog v-model="dialog" persistent max-width="290">
       <v-card>
@@ -74,22 +94,15 @@
     </v-dialog>
     <br />
 
-    <v-toolbar flat color="grey lighten-5" style="width:80%; margin-left:auto; margin-right:auto;">
+
+    <!-- <v-toolbar flat color="grey lighten-5" style="width:80%; margin-left:auto; margin-right:auto;">
       <v-toolbar-title>댓글</v-toolbar-title>
       <v-spacer></v-spacer>
       <v-btn class="white--text" color="grey darken-2" @click="CommentForm()">댓글쓰기</v-btn>
-    </v-toolbar>
+    </v-toolbar> -->
     
-    <!-- v-if 와 v-else로 할 수 없을까? -->
 
-    <!-- 댓글 있으면 그냥 목록 띄우기 -->
-    <Comment
-      :_id="data._id"
-      style="width:80%; margin-left:auto; margin-right:auto;"
-      class="px-0"
-    ></Comment>
-
-    <v-dialog v-model="showComment" persistent max-width="400">
+    <!-- <v-dialog v-model="showComment" persistent max-width="400">
       <v-card>
         <v-card-title class="headline">댓글 작성</v-card-title>
         <v-card-text>
@@ -107,7 +120,7 @@
           <v-btn class="white--text" color="grey darken-2" text @click="createComment()">등록</v-btn>
         </v-card-actions>
       </v-card>
-    </v-dialog>
+    </v-dialog> -->
   </div>
 </template>
 
