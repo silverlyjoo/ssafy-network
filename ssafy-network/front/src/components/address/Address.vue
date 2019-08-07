@@ -17,8 +17,8 @@
             <td class="text-xs-left">{{ props.item.position }}</td>
             <td class="text-xs-left">{{ props.item.represent }}</td>
             <td class="text-xs-left">{{ props.item.telephone }}</td>
-            <td class="text-xs-left">{{ props.item.cellphone }}</td>
             <td class="text-xs-left">{{ props.item.fax }}</td>
+            <td class="text-xs-left">{{ props.item.writer }}</td>
           </tr>
         </template>
         <template v-slot:expand="props">
@@ -34,6 +34,50 @@
         </template>
       </v-data-table>
     </div>
+
+    <v-dialog v-model="dialog" persistent max-width="600px">
+      <template v-slot:activator="{ on }">
+        <v-btn color="primary" dark v-on="on">업체 등록</v-btn>
+      </template>
+      <v-card>
+        <v-card-title>
+          <span class="headline">업체 등록</span>
+        </v-card-title>
+        <v-card-text>
+          <v-container grid-list-md>
+            <v-layout wrap>
+              <v-flex xs12>
+                <v-text-field label="등록자" v-model="writer" readonly="readonly" required></v-text-field>
+              </v-flex>
+              <v-flex xs12>
+                <v-text-field label="업체명" v-model="company" required></v-text-field>
+              </v-flex>
+              <v-flex xs12>
+                <v-text-field label="직책" v-model="position"></v-text-field>
+              </v-flex>
+              <v-flex xs12>
+                <v-text-field label="대표" v-model="represent"></v-text-field>
+              </v-flex>
+              <v-flex xs12>
+                <v-text-field label="전화번호" v-model="telephone"></v-text-field>
+              </v-flex>
+              <v-flex xs12>
+                <v-text-field label="팩스번호" v-model="fax"></v-text-field>
+              </v-flex>
+              <v-flex xs12>
+                <v-text-field label="주소 및 설명" v-model="content"></v-text-field>
+              </v-flex>
+            </v-layout>
+          </v-container>
+        </v-card-text>
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn color="blue darken-1" flat @click="close">취소</v-btn>
+          <v-btn color="blue darken-1" flat @click="regi">등록</v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
+
     <v-btn @click="filter">필터링</v-btn>
   </v-container>
 </template>
@@ -43,6 +87,14 @@ export default {
   data() {
     return {
       expand: false,
+      dialog: false,
+      writer: this.$session.get("nickname"),
+      company:"",
+      position:"",
+      represent:"",
+      telephone:"",
+      fax:"",
+      content:"",
       headers: [
         {
           text: "업체명",
@@ -52,8 +104,8 @@ export default {
         { text: "직책", value: "position" },
         { text: "대표", value: "represent" },
         { text: "전화번호", value: "telephone" },
-        { text: "휴대전화", value: "cellphone" },
-        { text: "팩스번호", value: "fax" }
+        { text: "팩스번호", value: "fax" },
+        { text: "등록자", value: "writer" }
       ],
       desserts: []
     };
@@ -145,7 +197,44 @@ export default {
             alert("수정 실패");
           }
         });
-    }
+    },
+    regi() {
+      fetch(this.$store.state.dbserver + "/addresses", {
+        method: "POST",
+        headers: {
+          "Access-Control-Allow-Origin": "*",
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          token: this.$session.get("token"),
+          writer: this.writer,
+          company: this.company,
+          position: this.position,
+          represent: this.represent,
+          telephone: this.telephone,
+          fax: this.fax,
+          content: this.content,
+        })
+      })
+        .then(res => res.json())
+        .then(data => {
+          if (data.result == true) {
+            alert("등록 완료");
+            this.close();
+            this.getAddressList();
+          } else {
+            alert("등록 실패");
+          }
+        });
+    },
+    close() {
+      this.dialog = false;
+      this.company = "";
+      this.position = "";
+      this.represent = "";
+      this.telephone = "";
+      this.fax = "";
+    },
   }
 };
 </script>

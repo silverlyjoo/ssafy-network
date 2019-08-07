@@ -43,13 +43,13 @@ router.get('/:token', function (req, res) {
 
 /**
  * @swagger
- *  /notices/{id}/{token}:
+ *  /notices/{nickname}/{token}:
  *    get:
  *      tags:
  *      - Notice
  *      description: 회원용 알림 리스트 반환
  *      parameters:
- *      - name: id
+ *      - name: nickname
  *        in: path
  *        description: "아이디"
  *        required: true
@@ -63,12 +63,12 @@ router.get('/:token', function (req, res) {
  *       200:
  *        description: 회원용 알림 리스트 반환 json
  */
-router.get('/:id/:token', function (req, res) {
+router.get('/:nickname/:token', function (req, res) {
     var info = decode(req.params.token);
     if (!info) {
         return res.json({ result: false });
     }
-    Notice.find({$or :[ { unread : req.params.id }, { read: req.params.id } ] },function(err, notices){
+    Notice.find({$or :[ { unread : req.params.nickname }, { read: req.params.nickname } ] },function(err, notices){
         if(err){
             console.log(err);
             return;
@@ -155,7 +155,7 @@ router.post('/', function (req, res) {
  *            _id:
  *              type: string
  *              required: true
- *            id:
+ *            nickname:
  *              type: string
  *              required: true
  *      responses:
@@ -167,7 +167,7 @@ router.put('/', function (req, res) {
     if (!info) {
       return res.json({ result: false });
     }
-    Notice.update({ _id: req.body._id }, { $pullAll: { unread: [req.body.id] }, $addToSet: { read: req.body.id } }, function (err, output) {
+    Notice.update({ _id: req.body._id }, { $pullAll: { unread: [req.body.nickname] }, $addToSet: { read: req.body.nickname } }, function (err, output) {
       if (err) {
         res.status(500).json({ error: 'database failure' });
       }
