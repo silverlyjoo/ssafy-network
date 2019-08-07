@@ -32,7 +32,7 @@
           </v-list>
         </v-card>
       </v-menu>
-      <v-btn icon>
+      <v-btn icon to="/user">
         <v-icon class="toolbartext" color="white">person</v-icon>
       </v-btn>
       <v-btn icon to="/admin" v-if="selfmembership === '관리자'">
