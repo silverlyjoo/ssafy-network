@@ -21,7 +21,7 @@
       <v-card class="userwindow">
         <v-container class="chats">
           <div v-for="user in userlist" :key="user.id">
-              <span class="subheading">{{ user }}</span>
+            <span class="subheading">{{ user }}</span>
           </div>
         </v-container>
       </v-card>
@@ -70,21 +70,24 @@ export default {
     this.ConnectSocket();
     this.$refs.txt.focus();
   },
-  destroyed() {
+  beforedestroyed() {
     this.disconnect();
+  },
+  updated(){
+    this.scrollset();
   },
   methods: {
     scrollset() {
-      document.getElementById("scrolldown").scrollTop = document.getElementById(
-        "scrolldown"
-      ).scrollHeight;
+          document.getElementById(
+          "scrolldown"
+        ).scrollTop = document.getElementById("scrolldown").scrollHeight;
     },
     ConnectSocket() {
       this.socket = io(this.chatserver);
       this.socket.emit("join", { _id: this._id, nickname: this.nickname });
       this.socket.on("chatlist", data => {
         if (!this.chatdata.length) {
-          this.chatdata = data
+          this.chatdata = data;
         }
         // console.log(data)
       });
@@ -121,7 +124,7 @@ export default {
   width: 80%;
   height: 68vh;
 }
-.userwindow{
+.userwindow {
   width: 20%;
   height: 68vh;
   position: absolute;

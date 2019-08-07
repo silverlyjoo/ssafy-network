@@ -6,41 +6,79 @@
   <v-toolbar flat color="transparent" class="subtoolbar">
     <v-spacer />
     <v-toolbar-items>
-      <v-btn icon @click="goCalendar()" class="toolbartext">
-        <v-icon color="white">dashboard</v-icon>
-      </v-btn>
-      <v-menu bottom left content-class="dropdown-menu" offset-y transition="slide-y-transition">
-        <v-btn icon slot="activator">
-          <v-badge color="red" overlap>
-            <template slot="badge">{{ unreadnoti }}</template>
-            <v-icon class="toolbartext" color="white">notifications</v-icon>
-          </v-badge>
-        </v-btn>
-        <v-card>
-          <v-list dense>
-            <v-list-tile
-              v-for="(notification, idx) in notifications.slice(0,5)"
-              :key="notification.id"
-              @click="noticedetail(notification, idx)"
-              class="pa-0"
-            >
-              <v-list-tile-title v-text="notification.title" class="font-weight-bold" />
-            </v-list-tile>
-            <v-list-tile class="pa-0" @click="goNotice">
-              <v-list-tile-title>더보기</v-list-tile-title>
-            </v-list-tile>
-          </v-list>
-        </v-card>
-      </v-menu>
-      <v-btn icon>
-        <v-icon class="toolbartext" color="white">person</v-icon>
-      </v-btn>
-      <v-btn icon to="/admin" v-if="selfmembership === '관리자'">
-        <v-icon class="adminicon">mdi-settings</v-icon>
-      </v-btn>
-      <v-btn icon @click="logout">
-        <v-icon class="toolbartext" color="white">mdi-exit-to-app</v-icon>
-      </v-btn>
+      <v-tooltip bottom>
+        <template v-slot:activator="{ on }">
+          <v-btn icon @click="goCalendar()" class="toolbartext" v-on="on">
+            <v-icon color="white">calendar_today</v-icon>
+          </v-btn>
+        </template>
+        <span>일정관리</span>
+      </v-tooltip>
+      <v-tooltip bottom>
+        <template v-slot:activator="{ on }">
+          <v-menu
+            bottom
+            left
+            content-class="dropdown-menu"
+            offset-y
+            transition="slide-y-transition"
+          >
+            <v-btn icon slot="activator" v-on="on">
+              <v-badge color="red" overlap>
+                <template slot="badge">{{ unreadnoti }}</template>
+                <v-icon class="toolbartext" color="white">notifications</v-icon>
+              </v-badge>
+            </v-btn>
+            <v-card>
+              <v-list dense>
+                <v-list-tile
+                  v-for="(notification, idx) in notifications.slice(0,5)"
+                  :key="notification.id"
+                  @click="noticedetail(notification, idx)"
+                  class="pa-0"
+                >
+                  <v-list-tile-title v-text="notification.title" class="font-weight-bold" />
+                </v-list-tile>
+                <v-list-tile class="pa-0" @click="goNotice">
+                  <v-list-tile-title>더보기</v-list-tile-title>
+                </v-list-tile>
+              </v-list>
+            </v-card>
+          </v-menu>
+        </template>
+        <span>공지사항</span>
+      </v-tooltip>
+      <v-tooltip bottom>
+        <template v-slot:activator="{ on }">
+          <v-flex align-self-center style="height:80%">
+            <v-btn to="/user" outline color="grey" class="ma-2" round v-on="on">
+              <v-icon class="toolbartext" color="white" left>person</v-icon>
+              {{$session.get("nickname")}}
+            </v-btn>
+          </v-flex>
+        </template>
+        <span>개인정보</span>
+      </v-tooltip>
+      <v-tooltip bottom>
+        <template v-slot:activator="{ on }">
+          <v-flex align-self-center>
+          <v-btn icon to="/admin" v-if="selfmembership === '관리자'" v-on="on">
+            <v-icon class="adminicon">mdi-settings</v-icon>
+          </v-btn>
+          </v-flex>
+        </template>
+        <span>관리자 페이지</span>
+      </v-tooltip>
+      <v-tooltip bottom>
+        <template v-slot:activator="{ on }">
+          <v-flex align-self-center>
+          <v-btn icon @click="logout" v-on="on">
+            <v-icon class="toolbartext" color="white">mdi-exit-to-app</v-icon>
+          </v-btn>
+          </v-flex>
+        </template>
+        <span>로그아웃</span>
+      </v-tooltip>
     </v-toolbar-items>
 
     <v-dialog v-model="noticedialog" max-width="400">
