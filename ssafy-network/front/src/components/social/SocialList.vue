@@ -35,11 +35,12 @@
                 <v-list-tile-title v-html="item.title"></v-list-tile-title>
                 <v-list-tile-title v-html="item.owner"></v-list-tile-title>
                 <v-list-tile-title v-html="item.createdAt"></v-list-tile-title>
+                <v-list-tile-title>{{item.userList.length}} / {{ item.max}}</v-list-tile-title>
               </v-list-tile-content>
 
               <v-list-tile-action
                 v-if="item.owner === nickname"
-                @click.stop="delconfirm('Do you really want to delete room?') ? deleteroom(item._id, idx) : ''"
+                @click.stop="delconfirm('삭제하시겠습니까?') ? deleteroom(item._id, idx) : ''"
               >
                 <i class="fas fa-trash-alt deleteicon"></i>
               </v-list-tile-action>
@@ -173,6 +174,10 @@ export default {
         });
     },
     async joinchat(roomId, idx) {
+      if (this.items[idx].max <= this.items[idx].userList.length) {
+        alert('꽉참')
+        return
+      }
       if (this.items[idx].password) {
         // console.log(idx)
         await (this.dialog = true);
