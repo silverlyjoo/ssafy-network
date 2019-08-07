@@ -32,9 +32,11 @@
           </v-list>
         </v-card>
       </v-menu>
-      <v-btn icon>
-        <v-icon class="toolbartext" color="white">person</v-icon>
+      <v-flex align-self-center style="height:80%">
+      <v-btn to="/user" outline color="grey" class="ma-2" round>
+        <v-icon class="toolbartext" color="white" left>person</v-icon>{{$session.get("nickname")}}
       </v-btn>
+      </v-flex>
       <v-btn icon to="/admin" v-if="selfmembership === '관리자'">
         <v-icon class="adminicon">mdi-settings</v-icon>
       </v-btn>

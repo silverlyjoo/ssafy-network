@@ -72,23 +72,10 @@
 
     <!-- 댓글 있으면 그냥 목록 띄우기 -->
     <Comment
-      v-if="comments != null"
-      :comments="comments"
+      :_id="data._id"
       style="width:80%; margin-left:auto; margin-right:auto;"
+      class="px-0"
     ></Comment>
-
-    <!-- 댓글 없을 때 띄우는 화면 -->
-    <!-- <template>
-      <v-layout column>
-        <v-flex>
-          <v-card class="pa-3" grid-list-md style="width:80%; margin-left:auto; margin-right:auto;">
-            <v-alert :value="true" color="grey darken-2" icon="info">댓글이 하나도 없습니다</v-alert>
-          </v-card>
-        </v-flex>
-      </v-layout>
-    </template> -->
-    <!--  -->
-
 
     <v-dialog v-model="showComment" persistent max-width="400">
       <v-card>
@@ -301,6 +288,7 @@ export default {
       this.comment = "";
     },
     closeCommentForm() {
+      this.$validator.reset();
       this.showComment = false;
       this.comment = "";
       this.getComments();
@@ -329,6 +317,7 @@ export default {
             .then(data => {
               if (data.result == true) {
                 alert("댓글이 등록되었습니다.");
+                this.$store.state.commentflag = true;
               } else {
                 alert("댓글을 등록할 수 없습니다.");
               }
@@ -336,29 +325,7 @@ export default {
             });
         }
       });
-    },
-    getComments() {
-      fetch(
-        this.$store.state.dbserver + "/comments/" + this.data._id + "/" + this.$session.get("token"), {
-          method: "GET",
-          headers: {
-            "Access-Control-Allow-Origin": "*",
-            "Content-Type": "application/json"
-          }
-        }
-      )
-        .then(res => res.json())
-        .then(data => {
-          if (data.error != null) {
-            alert("잘못된 값입니다.");
-          } else {
-            this.comments = data;
-          }
-        });
     }
-  },
-  mounted(){
-    this.getComments();
   },
   updated(){
     this.$store.state.heightflag = true;
