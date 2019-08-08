@@ -13,7 +13,7 @@
             <v-btn
               flat
               v-on="on"
-              @click="addNoteOpen()"
+              @click="addNoteOpen('root')"
               small
               class="ma-0 pa-0"
               style="min-width:10px!important;"
@@ -28,7 +28,7 @@
             <v-btn
               v-on="on"
               flat
-              @click="addFolderOpen()"
+              @click="addFolderOpen('root')"
               small
               class="ma-0 pa-0"
               style="min-width:10px!important;"
@@ -49,13 +49,14 @@
       v-if="click"
       style="overflow:hidden!important; text-overflow: ellipsis; "
       class="treecss"
+      open-on-click
+      @update:active="$store.state.heightflag = true"
     >
       <template v-slot:prepend="{item, open,selected}">
-        <v-btn flat class="ma-0 pa-0" style="min-width:30px!important;">
+        <v-btn flat class="ma-0 pa-0" style="min-width:30px!important;" >
           <v-icon
             class="iconn"
             v-if="item.file == 'folder'"
-            open-on-click
           >{{ open ? 'mdi-folder-open' : 'mdi-folder' }}</v-icon>
           <v-icon v-else @click="NoteDetail(item._id)" class="iconn">{{ files[item.file] }}</v-icon>
         </v-btn>
@@ -144,6 +145,7 @@
                   data-vv-name="NoteTitle"
                   data-vv-scope="NoteTitle"
                   :error-messages="errors.collect('NoteTitle')"
+                  ref="NoteTitle"
                 ></v-text-field>
               </v-flex>
               <v-flex>
@@ -169,6 +171,7 @@
                   data-vv-name="FolderTitle"
                   data-vv-scope="FolderTitle"
                   :error-messages="errors.collect('FolderTitle')"
+                  ref="FolderTitle"
                 ></v-text-field>
               </v-flex>
               <v-flex>
@@ -230,7 +233,7 @@ export default {
       showFolder: false,
       showDelete: false,
       showFolderEdit: false,
-      seleteItem: "",
+      selectItem: "",
       FolderTitle: "",
       NoteTitle: "",
       foldflag: this.$store.state.navFoldFlag,
@@ -252,19 +255,19 @@ export default {
   },
   methods: {
     FolderEdit(item) {
-      this.seleteItem = item;
+      this.selectItem = item;
       this.FolderTitle = item.name;
       this.showFolderEdit = true;
     },
     FolderUpdate() {
-      fetch(this.$store.state.dbserver + "/trees/folder", {
+      fetch(this.$store.state.dbserver + "/notes/folder", {
         method: "PUT",
         headers: {
           "Access-Control-Allow-Origin": "*",
           "Content-Type": "application/json"
         },
         body: JSON.stringify({
-          _id: this.seleteItem._id,
+          _id: this.selectItem._id,
           token: this.$session.get("token"),
           name: this.FolderTitle
         })
@@ -272,7 +275,7 @@ export default {
         .then(res => res.json())
         .then(data => {
           if (data.result == true) {
-            alert("폴더 이름 수정 성공");
+
           } else {
             alert("폴더 이름 수정 실패..");
           }
@@ -290,16 +293,16 @@ export default {
     addNoteOpen(item) {
       this.showNote = true;
       this.NoteTitle = "";
-      this.seleteItem = item;
+      this.selectItem = item;
     },
     addFolderOpen(item) {
       this.showFolder = true;
       this.FolderTitle = "";
-      this.seleteItem = item;
+      this.selectItem = item;
     },
     DeleteOpen(item) {
       this.showDelete = true;
-      this.seleteItem = item;
+      this.selectItem = item;
     },
     addNoteClose() {
       this.showNote = false;
@@ -312,8 +315,9 @@ export default {
       this.closeForm();
     },
     closeForm() {
-      this.seleteItem = "";
+      this.selectItem = "";
       this.$validator.reset();
+      this.$store.state.heightflag=true;
       this.getItems();
     },
     goNote() {
@@ -328,81 +332,170 @@ export default {
           alert("값이 유효한지 확인해 주세요.");
         } else {
           // 같은 폴더내에 이름이 같은 파일이 존재하는지 체크
-          const pid = this.seleteItem._id;
-          const title = this.NoteTitle;
+          var course = this.selectItem.course;
+          const name = this.NoteTitle;
+          const id = this.$session.get("id");
           const tokenid = this.$session.get("token");
-          fetch(
-            this.$store.state.dbserver +
-              "/trees/txt/" +
-              pid +
-              "/" +
-              title +
-              "/" +
-              tokenid,
-            {
-              method: "GET",
-              headers: {
-                "Access-Control-Allow-Origin": "*",
-                "Content-Type": "application/json"
+          // 루트 일때
+          if (this.selectItem == "root") {
+            var checkName = false;
+            for (let i in this.items) {
+              if (
+                this.items[i].name == this.NoteTitle
+              ) {
+                checkName = true;
+                break;
               }
             }
-          )
-            .then(res => res.json())
-            .then(data => {
-              if (data.result == false) {
-                // 존재 하지 않는다면 post 로 추가한다.
-                fetch(this.$store.state.dbserver + "/trees/txt", {
-                  method: "POST",
-                  headers: {
-                    "Access-Control-Allow-Origin": "*",
-                    "Content-Type": "application/json"
-                  },
-                  body: JSON.stringify({
-                    token: tokenid,
-                    parent_id: pid,
-                    name: title
-                  })
+            // 중복이 아니라면
+            if (checkName == false) {
+              course = "0." + this.items.length;
+              fetch(this.$store.state.dbserver + "/notes/txt/", {
+                method: "POST",
+                headers: {
+                  "Access-Control-Allow-Origin": "*",
+                  "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                  token: tokenid,
+                  id: id,
+                  name: name,
+                  course: course
                 })
-                  .then(res => res.json())
-                  .then(data => {
-                    if (data.result == true) {
-                      // 만약 추가가 성공한다면 그 id 값을 조회해서 writeForm 으로 보내준다.
-                      fetch(
-                        this.$store.state.dbserver +
-                          "/trees/txt/" +
-                          pid +
-                          "/" +
-                          title +
-                          "/" +
-                          tokenid,
-                        {
-                          method: "GET",
-                          headers: {
-                            "Access-Control-Allow-Origin": "*",
-                            "Content-Type": "application/json"
-                          }
+              })
+                .then(res => res.json())
+                .then(data => {
+                  if (data.result == true) {
+                    // 폴더 추가 성공 시 objectid 값을 찾아야됨
+                    fetch(
+                      this.$store.state.dbserver +
+                        "/notes/" +
+                        id +
+                        "/" +
+                        name +
+                        "/" +
+                        "0" +
+                        "/" +
+                        tokenid,
+                      {
+                        method: "GET",
+                        headers: {
+                          "Access-Control-Allow-Origin": "*",
+                          "Content-Type": "application/json"
                         }
-                      )
-                        .then(res => res.json())
-                        .then(data => {
-                          if (data.result == false) {
-                            alert("추가를 실패하였습니다...");
-                          } else {
-                            this.$router.push({
-                              name: "notewrite",
-                              params: { title: data.name, _id: data._id }
-                            });
-                          }
-                        });
-                    } else {
-                      alert("실패");
-                    }
-                  });
-              } else {
-                alert("이미 존재하는 파일입니다. (실패...)");
+                      }
+                    )
+                      .then(res => res.json())
+                      .then(data => {
+                        if (data.result == false) {
+                          // 파일 없음..
+                          alert("파일이 없습니다.");
+                        } else {
+                          this.$router.push({
+                            name: "notewrite",
+                            params: { _id: data._id, title: data.name }
+                          });
+                        }
+                        this.addNoteClose();
+                      });
+                  } else {
+                    alert("파일 추가 실패");
+                    this.addNoteClose();
+                  }
+                });
+            } else {
+              // 중복이라면
+              alert("이미 존재하는 파일 이름입니다.");
+              this.NoteTitle = "";
+              this.$refs.NoteTitle.focus();
+            }
+          } else {
+            // 루트가 아닐 때
+            fetch(
+              this.$store.state.dbserver +
+                "/notes/" +
+                id +
+                "/" +
+                name +
+                "/" +
+                course +
+                "/" +
+                tokenid,
+              {
+                method: "GET",
+                headers: {
+                  "Access-Control-Allow-Origin": "*",
+                  "Content-Type": "application/json"
+                }
               }
-              this.addNoteClose();
-            });
+            )
+              .then(res => res.json())
+              .then(data => {
+                course = course + "." + this.selectItem.children.length;
+                if (data.result == false) {
+                  // 중복 안됨 -- 파일 추가 실행
+                  fetch(this.$store.state.dbserver + "/notes/txt/", {
+                    method: "POST",
+                    headers: {
+                      "Access-Control-Allow-Origin": "*",
+                      "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({
+                      token: tokenid,
+                      id: id,
+                      name: name,
+                      course: course
+                    })
+                  })
+                    .then(res => res.json())
+                    .then(data => {
+                      if (data.result == true) {
+                        // 파일 추가 성공시 objectid 값 가져와서 write 폼으로 넘겨줌
+                        fetch(
+                          this.$store.state.dbserver +
+                            "/notes/" +
+                            id +
+                            "/" +
+                            name +
+                            "/" +
+                            this.selectItem.course +
+                            "/" +
+                            tokenid,
+                          {
+                            method: "GET",
+                            headers: {
+                              "Access-Control-Allow-Origin": "*",
+                              "Content-Type": "application/json"
+                            }
+                          }
+                        )
+                          .then(res => res.json())
+                          .then(data => {
+                            if (data.result == false) {
+                              // 파일 없음..
+                              alert("파일이 없습니다.");
+                            } else {
+                              this.$router.push({
+                                name: "notewrite",
+                                params: { _id: data._id, title: data.name }
+                              });
+                            }
+                            this.addNoteClose();
+                          });
+                      } else {
+                        // 파일 추가 실패시
+                        alert("파일 추가 실패...");
+                        this.addNoteClose();
+                      }
+                    });
+                } else {
+                  alert("이미 존재하는 파일 이름입니다.");
+                  this.NoteTitle = "";
+                  this.$refs.NoteTitle.focus();
+                  this.addNoteClose();
+                }
+              });
+          }
         }
       });
     },
@@ -411,57 +504,103 @@ export default {
         if (!res) {
           alert("값이 유효한지 확인해 주세요.");
         } else {
-          fetch(
-            this.$store.state.dbserver +
-              "/notes/folder/" +
-              this.$session.get("id") +
-              "/" +
-              this.FolderTitle +
-              "/" +
-              this.$session.get("token"),
-            {
-              method: "GET",
-              headers: {
-                "Access-Control-Allow-Origin": "*",
-                "Content-Type": "application/json"
+          // root 일때
+          var cour = "";
+          if (this.selectItem == "root") {
+            var checkName = false;
+            for (let i in this.items) {
+              if (
+                this.items[i].name == this.FolderTitle
+              ) {
+                checkName = true;
+                break;
               }
             }
-          )
-            .then(res => res.json())
-            .then(data => {
-              if (data.result == false) {
-                const cour = '';
-                if(this.items.length == 0){
-                  cour = '0';
-                }else {
-                  cour = this.seleteItem.course + this.seleteItem.children.length;
-                }
-                fetch(this.$store.state.dbserver + "/notes/folder/", {
-                  method: "POST",
-                  headers: {
-                    "Access-Control-Allow-Origin": "*",
-                    "Content-Type": "application/json"
-                  },
-                  body: JSON.stringify({
-                    token: this.$session.get("token"),
-                    id: this.$session.get('id'),
-                    name: this.FolderTitle,
-                    course : cour
-                  })
+            // 중복이 아니라면
+            if (checkName == false) {
+              cour = "0." + this.items.length;
+              fetch(this.$store.state.dbserver + "/notes/folder/", {
+                method: "POST",
+                headers: {
+                  "Access-Control-Allow-Origin": "*",
+                  "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                  token: this.$session.get("token"),
+                  id: this.$session.get("id"),
+                  name: this.FolderTitle,
+                  course: cour
                 })
-                  .then(res => res.json())
-                  .then(data => {
-                    if (data.result == true) {
-                      alert("폴더 추가 성공");
-                    } else {
-                      alert("폴더 추가 실패");
-                    }
-                  });
-              } else {
-                alert("이미 존재하는 폴더이름입니다");
+              })
+                .then(res => res.json())
+                .then(data => {
+                  if (data.result == true) {
+                  } else {
+                    alert("폴더 추가 실패");
+                  }
+                  this.addFolderClose();
+                });
+            } else {
+              // 중복이면
+              alert("이미 존재하는 폴더 이름입니다.");
+              this.FolderTitle = "";
+              this.$refs.FolderTitle.focus();
+            }
+          } else {
+            // root 가 아닐때 selectItem(부모)가 course가 존재, course로 중복체크
+            fetch(
+              this.$store.state.dbserver +
+                "/notes/" +
+                this.$session.get("id") +
+                "/" +
+                this.FolderTitle +
+                "/" +
+                this.selectItem.course +
+                "/" +
+                this.$session.get("token"),
+              {
+                method: "GET",
+                headers: {
+                  "Access-Control-Allow-Origin": "*",
+                  "Content-Type": "application/json"
+                }
               }
-              this.addFolderClose();
-            });
+            )
+              .then(res => res.json())
+              .then(data => {
+                if (data.result == false) {
+                  cour =
+                    this.selectItem.course +
+                    "." +
+                    this.selectItem.children.length;
+                  fetch(this.$store.state.dbserver + "/notes/folder/", {
+                    method: "POST",
+                    headers: {
+                      "Access-Control-Allow-Origin": "*",
+                      "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({
+                      token: this.$session.get("token"),
+                      id: this.$session.get("id"),
+                      name: this.FolderTitle,
+                      course: cour
+                    })
+                  })
+                    .then(res => res.json())
+                    .then(data => {
+                      if (data.result == true) {
+                      } else {
+                        alert("폴더 추가 실패");
+                      }
+                      this.addFolderClose();
+                    });
+                } else {
+                  alert("이미 존재하는 폴더이름입니다");
+                  this.FolderTitle = "";
+                  this.$refs.FolderTitle.focus();
+                }
+              });
+          }
         }
       });
     },
@@ -487,47 +626,27 @@ export default {
         });
     },
     deleteItem() {
-      fetch(this.$store.state.dbserver + "/trees/", {
+      fetch(this.$store.state.dbserver + "/notes/", {
         method: "DELETE",
         headers: {
           "Access-Control-Allow-Origin": "*",
           "Content-Type": "application/json"
         },
         body: JSON.stringify({
-          _id: this.seleteItem._id,
-          token: this.$session.get("token"),
-          file: this.seleteItem.file
+          _id: this.selectItem._id,
+          token: this.$session.get("token")
         })
       })
         .then(res => res.json())
         .then(data => {
           if (data.result == true) {
-            alert("성공");
           } else {
-            alert("실패");
+            alert("삭제 실패...");
           }
           this.showDelete = false;
           this.$router.push("/note/calendar");
           this.closeForm();
         });
-    },
-    compare(a, b) {
-      if (a.children && b.children) {
-        a.children.sort(this.compare);
-        b.children.sort(this.compare);
-        return 0;
-      } else if (a.children && !b.children) {
-        a.children.sort(this.compare);
-        return -1;
-      } else if (!a.children && b.children) {
-        b.children.sort(this.compare);
-        return 1;
-      } else {
-        return 0;
-      }
-    },
-    sortItem() {
-      this.items.sort(this.compare);
     }
   },
   mounted() {},
@@ -549,6 +668,9 @@ export default {
           this.overlay = false;
         }, 500);
       }
+    },
+    open(to,from){
+      this.$store.state.heightflag = true;
     }
   }
 };
