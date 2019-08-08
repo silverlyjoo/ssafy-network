@@ -109,6 +109,9 @@ router.post('/', function (req, res) {
  *            token:
  *              type: string
  *              required: true
+ *            owner:
+ *              type: string
+ *              required: true
  *      responses:
  *       200:
  *        description: "result = true 일 경우 정상적으로 작동"
@@ -118,7 +121,7 @@ router.delete('/',function(req,res){
     if (!info) {
         return res.json({ result: false });
     }
-    if(info.membership == "관리자"){
+    if(info.membership == "관리자" || info.nickname == req.body.owner){
       Room.remove({ _id: req.body._id }, function (err, output) {
         if (err) {
           return res.status(500).json({ error: "database failure" });

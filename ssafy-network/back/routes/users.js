@@ -1,7 +1,6 @@
 var express = require('express');
 var router = express.Router();
 var User = require('../models/user');
-var Supertree = require('../models/supertree');
 var encode = require('../encode');
 var decode = require('../decode');
 
@@ -357,17 +356,6 @@ router.post('/', function (req, res) {
       return;
     }
 
-    var super_tree = new Supertree();
-    super_tree.id = req.body.id;
-    super_tree.item = [];
-
-    super_tree.save(function (err) {
-      if (err) {
-        console.log(err);
-        return;
-      }
-    });
-
     res.json({ result: true });
   });
 });
@@ -397,12 +385,16 @@ router.post('/', function (req, res) {
  *              required: true
  *            pwd:
  *              type: string
+ *              required: true
  *            nickname:
  *              type: string
+ *              required: true
  *            department:
  *              type: string
+ *              required: true
  *            position:
  *              type: string
+ *              required: true
  *            membership:
  *              type: string
  *      responses:
