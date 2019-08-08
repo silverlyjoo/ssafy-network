@@ -70,7 +70,7 @@ export default {
     this.ConnectSocket();
     this.$refs.txt.focus();
   },
-  beforedestroyed() {
+  beforeDestroy() {
     this.disconnect();
   },
   updated(){

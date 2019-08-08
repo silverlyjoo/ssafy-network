@@ -39,7 +39,7 @@
 
               <v-list-tile-action
                 v-if="item.owner === nickname"
-                @click.stop="deleteroom(item._id, idx)"
+                @click.stop="delconfirm('Do you really want to delete room?') ? deleteroom(item._id, idx) : ''"
               >
                 <i class="fas fa-trash-alt deleteicon"></i>
               </v-list-tile-action>
@@ -94,6 +94,7 @@ export default {
       dbserver: this.$store.state.dbserver,
       token: this.$session.get("token"),
       nickname: this.$session.get("nickname"),
+      id: this.$session.get("id"),
       chatserver: this.$store.state.chatserver,
       chatroomsearchkeyword: "",
       searchoption: "title",
@@ -104,6 +105,9 @@ export default {
     };
   },
   methods: {
+    delconfirm(msg) {
+      return window.confirm(msg)
+    },
     deleteroom(roomId, idx) {
       let roomUrl = this.dbserver;
       caxios(roomUrl).request({
@@ -112,7 +116,8 @@ export default {
         baseURL: roomUrl,
         data: {
           _id: roomId,
-          token: this.token
+          token: this.token,
+          id: this.id
         }
       });
       this.$delete(this.items, idx);

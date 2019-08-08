@@ -215,6 +215,12 @@ export default {
     this.editor.destroy();
   },
   methods: {
+    showImagePrompt(command) {
+      const src = prompt('이미지 url을 입력해주세요.')
+      if (src !== null) {
+        command({ src })
+      }
+    },
     updateNote() {
       this.$validator.validateAll().then(res => {
         if (!res) {

@@ -26,28 +26,80 @@
         <v-container>
           <v-layout wrap column>
             <v-flex xs12>
-              <v-text-field label="제목" readonly v-model="data.title"></v-text-field>
+              <div style="font-family: 'Nanum Gothic', sans-serif;">
+                <span class="grey--text" style="py-5">제목</span><br>
+                <span style="font-size: 18px;">{{data.title}}</span>
+              </div><br>
+              <!-- <v-text-field label="제목" readonly v-model="data.title"></v-text-field> -->
             </v-flex>
             <v-flex xs12>
-              <v-select
+              <div style="font-family: 'Nanum Gothic', sans-serif;">
+                <span class="grey--text" style="py-5">선택 언어</span><br>
+                <span style="font-size: 18px;">{{data.language}}</span>
+              </div><br>
+              <!-- <v-select
                 :items="languages"
                 label="선택 언어"
                 single-line
                 readonly
                 v-model="data.language"
-              ></v-select>
+              ></v-select> -->
             </v-flex>
             <v-flex xs12>
               <codemirror :options="cmOptionJs" v-model="data.source"></codemirror>
             </v-flex>
             <br />
             <v-flex xs12>
-              <v-textarea label="내용" readonly v-model="data.content"></v-textarea>
-            </v-flex>
+              <!-- <v-text-field label="내용" readonly v-model="data.content"></v-text-field> -->
+              <div style="font-family: 'Nanum Gothic', sans-serif;">
+                <span class="grey--text" style="py-5">내용</span><br>
+                <span style="font-size: 18px;">{{data.content}}</span>
+              </div><br>
+            </v-flex><br><br><br>
+            <v-layout>
+              <!-- <v-flex xs1 text-xs-left class="py-3">
+                <v-icon text-xs-left class="py-3">subdirectory_arrow_right</v-icon> &nbsp; &nbsp; &nbsp;
+              </v-flex> -->
+              <v-flex xs2 text-xs-center class="py-3">
+                <div class="py-5">
+                  <h3 class="py-2"><strong>{{$session.get("nickname")}}</strong></h3> &nbsp;&nbsp;&nbsp;
+                </div>
+              </v-flex>
+              <v-flex xs8 text-xs-center>
+                <v-textarea class="py-3"
+                  label="댓글"
+                  box
+                  v-model="comment"
+                  v-validate="'required|min:2'"
+                  data-vv-name="comment"
+                  :error-messages="errors.collect('comment')"
+                ></v-textarea>
+              </v-flex>
+              <v-flex xs2 text-xs-center class="py-4">
+                <div class="py-4">
+                  <v-btn
+                    large
+                    color="grey darken-2"
+                    class="white--text"
+                    @click="createComment()"
+                  >등록</v-btn>
+                </div>
+              </v-flex>
+            </v-layout>
+            <br>
+            <v-divider></v-divider>
+            <Comment
+              :_id="data._id"
+              style="margin-left:auto; margin-right:auto;"
+              class="pa-0"
+            ></Comment>
           </v-layout>
         </v-container>
       </v-card-text>
+
+
     </v-card>
+
     <!-- </v-layout> -->
     <v-dialog v-model="dialog" persistent max-width="290">
       <v-card>
@@ -62,22 +114,15 @@
     </v-dialog>
     <br />
 
-    <v-toolbar flat color="grey lighten-5" style="width:80%; margin-left:auto; margin-right:auto;">
+
+    <!-- <v-toolbar flat color="grey lighten-5" style="width:80%; margin-left:auto; margin-right:auto;">
       <v-toolbar-title>댓글</v-toolbar-title>
       <v-spacer></v-spacer>
       <v-btn class="white--text" color="grey darken-2" @click="CommentForm()">댓글쓰기</v-btn>
-    </v-toolbar>
+    </v-toolbar> -->
     
-    <!-- v-if 와 v-else로 할 수 없을까? -->
 
-    <!-- 댓글 있으면 그냥 목록 띄우기 -->
-    <Comment
-      :_id="data._id"
-      style="width:80%; margin-left:auto; margin-right:auto;"
-      class="px-0"
-    ></Comment>
-
-    <v-dialog v-model="showComment" persistent max-width="400">
+    <!-- <v-dialog v-model="showComment" persistent max-width="400">
       <v-card>
         <v-card-title class="headline">댓글 작성</v-card-title>
         <v-card-text>
@@ -95,7 +140,7 @@
           <v-btn class="white--text" color="grey darken-2" text @click="createComment()">등록</v-btn>
         </v-card-actions>
       </v-card>
-    </v-dialog>
+    </v-dialog> -->
   </div>
 </template>
 
@@ -334,6 +379,8 @@ export default {
 </script>
 
 <style>
+@import url('https://fonts.googleapis.com/css?family=Nanum+Gothic&display=swap');
+
 .board-title {
   color: grey;
 }
