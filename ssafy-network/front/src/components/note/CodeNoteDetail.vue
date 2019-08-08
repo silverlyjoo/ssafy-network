@@ -6,23 +6,26 @@
           <v-container>
             <v-layout wrap column>
               <v-flex xs12>
-                <v-text-field label="제목" v-model="data.name" readonly></v-text-field>
+                <div style="font-family: 'Nanum Gothic', sans-serif;">
+                <span class="grey--text" style="py-5">제목</span><br>
+                <span style="font-size: 18px;">{{data.name}}</span>
+              </div><br>
               </v-flex>
               <v-flex xs12>
-                <v-select
-                  :items="languages"
-                  v-model="data.language"
-                  label="선택 언어"
-                  readonly
-                  single-line
-                ></v-select>
+                <div style="font-family: 'Nanum Gothic', sans-serif;">
+                <span class="grey--text" style="py-5">선택 언어</span><br>
+                <span style="font-size: 18px;">{{data.language}}</span>
+              </div><br>
               </v-flex>
               <v-flex xs12>
                 <codemirror v-model="data.source" :options="customOption"></codemirror>
               </v-flex>
               <br />
               <v-flex xs12>
-                <v-textarea label="내용" v-model="data.content" readonly></v-textarea>
+                <div style="font-family: 'Nanum Gothic', sans-serif;">
+                <span class="grey--text" style="py-5">내용</span><br>
+                <span style="font-size: 18px;">{{data.content}}</span>
+              </div><br>
               </v-flex>
             </v-layout>
           </v-container>

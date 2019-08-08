@@ -69,13 +69,14 @@ export default {
       }
     }
   },
-  methods: {
-    handleResize() {
-      this.height = document.getElementById("routingbody").offsetHeight;
-      if (this.height < 800) {
+  methods:{
+    handleResize(){
+      this.height = document.getElementById('routingbody').offsetHeight;
+      console.log(document.getElementById('nav').getBoundingClientRect().height);
+      if(this.height < 800){
         this.height = window.outerHeight;
-      } else {
-        this.height += this.height * 0.1;
+      }else if(this.height < 1900){
+         this.height += this.height*0.05;
       }
     }
   }
