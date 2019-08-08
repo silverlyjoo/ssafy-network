@@ -39,7 +39,6 @@ export default {
   methods: {
     async getUserInfo() {
       let userUrl = this.dbserver;
-      //   await console.log(userUrl);
       await caxios(userUrl)
         .request({
           baseURL: userUrl,
