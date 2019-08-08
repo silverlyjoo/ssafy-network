@@ -7,26 +7,38 @@
       <br><br><br>
     </v-toolbar>
     <br>
-
-    <v-data-table
-      :headers="headers"
-      :items="articles"
-      :server-items-length="totalArticles"
-      :pagination.sync="pagination"
-      :loading="loading"
-      class="elevation-1"
-      style="width:80%; margin-left:auto; margin-right:auto;"
-    >
-      <template v-slot:items="props">
-        <td @click="addHit(props.item._id)" class="text-xs-center"><router-link :to='{name : "CodeDetail" , params:{data : props.item }}' style="text-decoration: none !important; color:black;">{{ props.item.title }}</router-link></td>
-        <td class="text-xs-center">{{ props.item.writer }}</td>
-        <td class="text-xs-center">{{ props.item.createdAt }}</td>
-        <td class="text-xs-center">{{ props.item.hit }}</td>
-      </template>
-      <template slot="no-data">
-        <v-alert :value="true" color="grey darken-2" icon="info">게시글이 없습니다</v-alert>
-      </template>
-    </v-data-table>
+    <div>
+      <v-data-table
+        :headers="headers"
+        :items="articles"
+        :search="search"
+        :server-items-length="totalArticles"
+        hide-actions
+        :pagination.sync="pagination"
+        :loading="loading"
+        class="elevation-1"
+        style="width:80%; margin-left:auto; margin-right:auto;"
+      >
+        <template v-slot:items="props">
+          <td @click="addHit(props.item._id)" class="text-xs-center"><router-link :to='{name : "CodeDetail" , params:{data : props.item }}' style="text-decoration: none !important; color:black;">{{ props.item.title }}</router-link></td>
+          <td class="text-xs-center">{{ props.item.writer }}</td>
+          <td class="text-xs-center">{{ props.item.createdAt }}</td>
+          <td class="text-xs-center">{{ props.item.hit }}</td>
+        </template>
+        <template slot="no-data">
+          <v-alert :value="true" color="grey darken-2" icon="info" class="ma-3 pa-3">게시글이 없습니다</v-alert>
+        </template>
+      </v-data-table>
+      <div class="text-xs-center pt-2">
+        <v-pagination
+          v-model="pagination.page"
+          :length="pages"
+          :total-visible="7"
+          color="grey darken-2"
+          >
+        </v-pagination>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -40,10 +52,17 @@ export default {
   data() {
     return {
       loading: true,
+      search: "",
       today: "",
       totalArticles: 0,
       articles: [],
-      pagination:{'sortBy': 'createdAt', 'descending': true},
+      pagination:{
+        'sortBy': 'createdAt',
+        'descending': true,
+        'rowsPerPage': 10,
+        'totalItems': 0,
+      },
+      selected: [],
       headers: [
         {
           text: "제목",
@@ -77,6 +96,15 @@ export default {
     this.getArticles();
     this.getDay();
   },
+  computed: {
+    pages () {
+      if (this.pagination.rowsPerPage == null ||
+        this.pagination.totalItems == null
+      ) return 0
+
+      return Math.ceil(this.pagination.totalItems / this.pagination.rowsPerPage)
+    }
+  },
   methods: {
    
     getArticles() {
@@ -89,6 +117,7 @@ export default {
       }).then(res => res.json())
       .then(data => {
         this.articles = data;
+        this.pagination.totalItems = this.articles.length;
         this.loading = false;
       })
     },

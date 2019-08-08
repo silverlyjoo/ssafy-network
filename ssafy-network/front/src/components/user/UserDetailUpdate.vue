@@ -160,7 +160,6 @@ export default {
         } else if (!this.nicknamecheckflag) {
           alert("닉네임 중복체크를 해주세요");
         } else if (this.userDataModel.pwd !== this.postPassword.toString()) {
-          console.log(this.userDataModel);
           alert("패스워드를 올바르게 입력해주세요.");
           return;
         } else {

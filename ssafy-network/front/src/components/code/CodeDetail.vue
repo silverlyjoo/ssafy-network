@@ -7,13 +7,13 @@
         <v-btn class="white--text" color="grey darken-2">목록</v-btn>
       </router-link>
       <v-btn
-        v-if="$session.get('nickname') == data.writer"
+        v-if="$session.get('nickname') == data.writer || selfmembership === '관리자'"
         class="white--text"
         color="grey darken-2"
         @click="codeUpdateForm()"
       >수정</v-btn>
       <v-btn
-        v-if="$session.get('nickname') == data.writer"
+        v-if="$session.get('nickname') == data.writer || selfmembership === '관리자'"
         class="white--text"
         color="grey darken-2"
         @click="codeDeleteForm()"
@@ -56,18 +56,38 @@
                 <span style="font-size: 18px;">{{data.content}}</span>
               </div><br>
             </v-flex><br><br><br>
-            <v-divider></v-divider>
-            <v-layout row>
-              <v-icon text-xs-left class="py-3">subdirectory_arrow_right</v-icon> &nbsp; &nbsp; &nbsp;
+            <v-layout>
               <!-- <v-flex xs1 text-xs-left class="py-3">
+                <v-icon text-xs-left class="py-3">subdirectory_arrow_right</v-icon> &nbsp; &nbsp; &nbsp;
               </v-flex> -->
-              <v-flex xs10 text-xs-center>
-                <v-textarea></v-textarea>
-              </v-flex>
               <v-flex xs2 text-xs-center class="py-3">
-                <v-btn small color="grey darken-2" class="white--text">등록</v-btn>
+                <div class="py-5">
+                  <h3 class="py-2"><strong>{{$session.get("nickname")}}</strong></h3> &nbsp;&nbsp;&nbsp;
+                </div>
+              </v-flex>
+              <v-flex xs8 text-xs-center>
+                <v-textarea class="py-3"
+                  label="댓글"
+                  box
+                  v-model="comment"
+                  v-validate="'required|min:2'"
+                  data-vv-name="comment"
+                  :error-messages="errors.collect('comment')"
+                ></v-textarea>
+              </v-flex>
+              <v-flex xs2 text-xs-center class="py-4">
+                <div class="py-4">
+                  <v-btn
+                    large
+                    color="grey darken-2"
+                    class="white--text"
+                    @click="createComment()"
+                  >등록</v-btn>
+                </div>
               </v-flex>
             </v-layout>
+            <br>
+            <v-divider></v-divider>
             <Comment
               :_id="data._id"
               style="margin-left:auto; margin-right:auto;"
@@ -127,6 +147,7 @@
 
 <script>
 import Comment from "@/components/code/Comment.vue";
+import caxios from "@/plugins/createaxios.js";
 
 // 코드미러 임폴트
 
@@ -213,6 +234,9 @@ export default {
   },
   data() {
     return {
+      token: this.$session.get("token"),
+      id: this.$session.get("id"),
+      dbserver: this.$store.state.dbserver,
       comments: [],
       comment: "",
       showComment: false,
@@ -225,6 +249,7 @@ export default {
       articles: [],
       loading: true,
       pagination: {},
+      selfmembership: "",
       cmOptionJs: {
         autoCloseBrackets: true,
         tabSize: 4,
@@ -350,10 +375,25 @@ export default {
             });
         }
       });
-    }
+    },
+    isAdmin() {
+      let memberUrl = this.dbserver;
+      caxios(memberUrl)
+        .request({
+          url: `/users/admin/${this.id}/${this.token}`,
+          method: "get",
+          baseURL: memberUrl
+        })
+        .then(res => {
+          this.selfmembership = res.data.membership;
+        });
+    },
   },
   updated(){
     this.$store.state.heightflag = true;
+  },
+  mounted() {
+    this.isAdmin()
   }
 };
 </script>
