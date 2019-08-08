@@ -29,17 +29,17 @@
               :key="idx"
               avatar
               @click="joinchat(item._id, idx)"
-              class="mb-3"
+              class="mb-3 pa-3"
             >
               <v-list-tile-content>
-                <v-list-tile-title v-html="item.title"></v-list-tile-title>
-                <v-list-tile-title v-html="item.owner"></v-list-tile-title>
-                <v-list-tile-title v-html="item.createdAt"></v-list-tile-title>
+                {{ item.title}} - {{ item.owner}}
+                <br />
+                {{ item.createdAt}} {{item.userList.length}} / {{ item.max}}
               </v-list-tile-content>
 
               <v-list-tile-action
                 v-if="item.owner === nickname"
-                @click.stop="delconfirm('Do you really want to delete room?') ? deleteroom(item._id, idx) : ''"
+                @click.stop="delconfirm('삭제하시겠습니까?') ? deleteroom(item._id, idx) : ''"
               >
                 <i class="fas fa-trash-alt deleteicon"></i>
               </v-list-tile-action>
@@ -106,7 +106,7 @@ export default {
   },
   methods: {
     delconfirm(msg) {
-      return window.confirm(msg)
+      return window.confirm(msg);
     },
     deleteroom(roomId, idx) {
       let roomUrl = this.dbserver;
@@ -173,6 +173,11 @@ export default {
         });
     },
     async joinchat(roomId, idx) {
+
+      if (this.items[idx].max <= this.items[idx].userList.length) {
+        alert("꽉참");
+        return;
+      }
       if (this.items[idx].password) {
         // console.log(idx)
         await (this.dialog = true);
@@ -186,6 +191,10 @@ export default {
       this.$router.push({ name: "new" });
     },
     joinsecret() {
+      if (this.items[this.secretjoinflag].max <= this.items[this.secretjoinflag].userList.length) {
+        alert("꽉참");
+        return;
+      }
       if (
         this.items[this.secretjoinflag].password ===
         this.typepassword.toString()

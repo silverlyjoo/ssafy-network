@@ -31,14 +31,16 @@
             </v-btn>
             <v-card>
               <v-list dense>
-                <v-list-tile
-                  v-for="(notification, idx) in notifications.slice(0,5)"
+                <div
+                  v-for="(notification, idx) in notifications"
                   :key="notification.id"
-                  @click="noticedetail(notification, idx)"
+                  
                   class="pa-0"
                 >
-                  <v-list-tile-title v-text="notification.title" class="font-weight-bold" />
-                </v-list-tile>
+                  <v-list-tile v-if="idx<5" @click="noticedetail(notification, idx)">
+                    <v-list-tile-title v-text="notification.title" class="font-weight-bold" />
+                  </v-list-tile>
+                </div>
                 <v-list-tile class="pa-0" @click="goNotice">
                   <v-list-tile-title>더보기</v-list-tile-title>
                 </v-list-tile>
@@ -62,9 +64,9 @@
       <v-tooltip bottom>
         <template v-slot:activator="{ on }">
           <v-flex align-self-center>
-          <v-btn icon to="/admin" v-if="selfmembership === '관리자'" v-on="on">
-            <v-icon class="adminicon">mdi-settings</v-icon>
-          </v-btn>
+            <v-btn icon to="/admin" v-if="selfmembership === '관리자'" v-on="on">
+              <v-icon class="adminicon">mdi-settings</v-icon>
+            </v-btn>
           </v-flex>
         </template>
         <span>관리자 페이지</span>
@@ -72,9 +74,9 @@
       <v-tooltip bottom>
         <template v-slot:activator="{ on }">
           <v-flex align-self-center>
-          <v-btn icon @click="logout" v-on="on">
-            <v-icon class="toolbartext" color="white">mdi-exit-to-app</v-icon>
-          </v-btn>
+            <v-btn icon @click="logout" v-on="on">
+              <v-icon class="toolbartext" color="white">mdi-exit-to-app</v-icon>
+            </v-btn>
           </v-flex>
         </template>
         <span>로그아웃</span>
@@ -99,16 +101,15 @@
 </template>
 
 <script>
+import { SET_NOTICES } from "@/store/notice.js";
 import caxios from "@/plugins/createaxios.js";
 export default {
   data() {
     return {
-      notifications: [],
       token: this.$session.get("token"),
       id: this.$session.get("id"),
       dbserver: this.$store.state.dbserver,
       selfmembership: "",
-      unreadnoti: null,
       noticedialog: false,
       detail: {
         title: null,
@@ -120,25 +121,6 @@ export default {
     };
   },
   methods: {
-    getNotification() {
-      let noticeUrl = this.dbserver;
-      caxios(noticeUrl)
-        .request({
-          url: `/notices/${this.id}/${this.token}`,
-          method: "get",
-          baseURL: noticeUrl
-        })
-        .then(res => {
-          let unreads = 0;
-          for (let i = 0; i < res.data.length; i++) {
-            if (res.data[i].unread.indexOf(this.id) !== -1) {
-              this.notifications.push(res.data[i]);
-              unreads++;
-            }
-          }
-          this.unreadnoti = unreads;
-        });
-    },
     read() {
       let noticeUrl = this.dbserver;
       caxios(noticeUrl).request({
@@ -157,11 +139,7 @@ export default {
       await (this.noticedialog = true);
       await (this.detail = notice);
       await this.read();
-      // console.log(this.notifications[idx])
-      // await this.notifications[idx].unread.splice(ididx, 1);
-      // console.log(this.notifications[idx])
-      await this.getNotification();
-      await this.unreadnoti--;
+      await this.$store.commit(SET_NOTICES, [this.id, this.token, this.dbserver]);
     },
     goNotice() {
       this.$router.push({ name: "notice" });
@@ -188,7 +166,38 @@ export default {
     }
   },
   mounted() {
-    this.isAdmin(), this.getNotification();
+    this.isAdmin();
+  },
+  watch: {
+    'notifications' (from, to) {
+
+    }
+  },
+  computed: {
+    notifications() {
+      let result = [];
+      let notices = this.$store.state.notice.notifications;
+      if (notices) {
+        for (let i = 0; i < notices.length; i++) {
+          // console.log(notices[i])
+          if (notices[i].unread.indexOf(this.id) !== -1) {
+            this.$set(result, result.length, notices[i])
+          }
+        }
+        return result;
+      }
+    },
+    unreadnoti() {
+      if (this.notifications) {
+        let count = 0;
+        for (let i = 0; i < this.notifications.length; i++) {
+          if (this.notifications[i].unread.indexOf(this.id) !== -1) {
+            count++;
+          }
+        }
+        return count;
+      }
+    }
   }
 };
 </script>

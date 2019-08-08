@@ -1,10 +1,8 @@
 <template>
   <div>
     <div class="navLayout">
-      <v-container class="navcon">
+      <v-container class="navcon" id = "nav">
         <aside class="navgo">
-
-
           <div class="navBtn mb-3" @click="foldnote">
             <router-link to="/index" style="text-decoration: none !important">
               <v-layout align-center class="pa-2">

@@ -25,7 +25,7 @@ export default {
   },
   methods:{
     async getNoteOne(){
-      await fetch(this.$store.state.dbserver + "/trees/txt/"+ this._id +"/"+this.$session.get("token"), {
+      await fetch(this.$store.state.dbserver + "/notes/txt/"+ this._id +"/"+this.$session.get("token"), {
             method: "GET",
             headers: {
               "Access-Control-Allow-Origin": "*",
