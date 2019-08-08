@@ -16,6 +16,7 @@ var noticesRouter = require('./routes/notices');
 var addressesRouter = require('./routes/addresses');
 var mailRouter = require('./routes/mails');
 var notesRouter = require('./routes/notes');
+var companyRouter = require('./routes/company');
 
 var app = express();
 var db = require('./db');
@@ -43,5 +44,6 @@ app.use('/search', searchRouter);
 app.use('/addresses', addressesRouter);
 app.use('/mails', mailRouter);
 app.use('/notes', notesRouter);
+app.use('/company', companyRouter);
 
 module.exports = app;

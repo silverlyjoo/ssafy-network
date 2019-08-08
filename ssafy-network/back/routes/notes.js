@@ -5,13 +5,13 @@ var decode = require('../decode');
 
 function dfs(notes, ItemTree, depth, parent) {
     for (let i = 0; i < notes.length; i++) {
-        var road = notes[i].course.split("/");
-        if (road.length == depth && notes[i].course.slice(0, (depth - 1) * 2) == parent) {
+        var road = notes[i].course.split(".");
+        if (road.length == depth && notes[i].course.slice(0, notes[i].course.length - road[road.length-1].length) == parent) {
             if (notes[i].file == "txt") {
                 ItemTree.push(notes[i]);
             }
             else {
-                dfs(notes, notes[i].children, depth + 1, notes[i].course + "/");
+                dfs(notes, notes[i].children, depth + 1, notes[i].course + ".");
                 ItemTree.push(notes[i]);
             }
         }
@@ -21,6 +21,45 @@ function dfs(notes, ItemTree, depth, parent) {
         return a.file < b.file ? -1 : a.file > b.file ? 1 : 0;
     });
 }
+
+/**
+ * @swagger
+ *  /notes/txt/{_id}/{token}:
+ *    get:
+ *      tags:
+ *      - Note
+ *      description: 특정 파일 반환
+ *      parameters:
+ *      - name: _id
+ *        in: path
+ *        description: "오브젝트 아이디"
+ *        required: true
+ *        type: string
+ *      - name: token
+ *        in: path
+ *        description: "토큰"
+ *        required: true
+ *        type: string
+ *      responses:
+ *       200:
+ *        description:  특정 파일 반환
+ */
+router.get('/txt/:_id/:token', function (req, res) {
+    var info = decode(req.params.token);
+    if (!info) {
+        return res.json({ result: false });
+    }
+    Note.findOne({ _id: req.params._id }, function (err, note) {
+        if (err) {
+            res.json({ result: false })
+        }
+        if(!note){
+            res.json({result:false});
+            return;
+        }
+        res.json(note);
+    });
+});
 
 /**
  * @swagger
@@ -54,16 +93,71 @@ router.get('/:id/:token', function (req, res) {
         if (err) {
             res.json({ result: false })
         }
-        dfs(notes, ItemTree, 1, "");
+        dfs(notes, ItemTree, 2, "0.");
 
-        //setTimeout(function() {
         console.log(ItemTree);
 
         res.json({
             item: ItemTree
         });
-        //}, 1000);
     });
+});
+
+/**
+ * @swagger
+ *  /notes/{id}/{name}/{course}/{token}:
+ *    get:
+ *      tags:
+ *      - Note
+ *      description: 텍스트 파일 반환
+ *      parameters:
+ *      - name: id
+ *        in: path
+ *        description: "아이디"
+ *        required: true
+ *        type: string
+ *      - name: name
+ *        in: path
+ *        description: "파일명"
+ *        required: true
+ *        type: string
+ *      - name: course
+ *        in: path
+ *        description: "경로"
+ *        required: true
+ *        type: string
+ *      - name: token
+ *        in: path
+ *        description: "토큰"
+ *        required: true
+ *        type: string
+ *      responses:
+ *       200:
+ *        description: 텍스트 파일 정보 반환
+ */
+router.get('/:id/:name/:course/:token', function (req, res) {
+    var info = decode(req.params.token);
+    if (!info) {
+        return res.json({ result: false });
+    }
+    Note.find({id: req.params.id, name: req.params.name },function(err,notes){
+        if(err){
+            res.json({result: false});
+            return;
+        }
+        for (let i = 0; i < notes.length; i++) {
+            var road = notes[i].course.split(".");
+            if(
+                road.length - 1 == req.params.course.split(".").length && 
+                notes[i].course.slice(0, notes[i].course.length - road[road.length-1].length - 1) == req.params.course
+            ){
+                res.json(notes[i]);
+                return;
+            }
+        }
+        res.json({result: false});
+    });
+    
 });
 
 /**
