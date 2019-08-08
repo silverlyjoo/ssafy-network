@@ -138,7 +138,7 @@ export default {
           alert("값이 유효한지 체크해주세요.");
           return;
         }
-        fetch(this.$store.state.dbserver + "/trees/txt", {
+        fetch(this.$store.state.dbserver + "/notes/txt", {
           method: "PUT",
           headers: {
             "Access-Control-Allow-Origin": "*",
@@ -157,7 +157,6 @@ export default {
           .then(res => res.json())
           .then(data => {
             if (data.result == true) {
-              alert("수정 성공");
                this.$validator.reset();
               this.$store.state.NoteCheck = true;
               this.$router.push("/note/detail/" + this.data._id);

@@ -39,11 +39,12 @@
 </template>
 
 <script>
+import { SET_NOTICES } from "@/store/notice.js";
 import caxios from "@/plugins/createaxios.js";
+
 export default {
   data() {
     return {
-      notifications: [],
       token: this.$session.get("token"),
       id: this.$session.get("id"),
       dbserver: this.$store.state.dbserver,
@@ -58,7 +59,21 @@ export default {
       }
     };
   },
-  computed: {},
+  computed: {
+    notifications() {
+      let result = [];
+      let notices = this.$store.state.notice.notifications;
+      if (notices) {
+        for (let i = 0; i < notices.length; i++) {
+          // console.log(notices[i])
+          if (notices[i].unread.indexOf(this.id) !== -1) {
+            this.$set(result, result.length, notices[i]);
+          }
+        }
+        return notices;
+      }
+    }
+  },
   methods: {
     read() {
       let noticeUrl = this.dbserver;
@@ -73,28 +88,15 @@ export default {
         }
       });
     },
-    getNotification() {
-      let noticeUrl = this.dbserver;
-      caxios(noticeUrl)
-        .request({
-          url: `/notices/${this.id}/${this.token}`,
-          method: "get",
-          baseURL: noticeUrl
-        })
-        .then(res => {
-          // console.log(res.data)
-          this.notifications = res.data;
-        });
-    },
     async noticedetail(notice, idx) {
       await (this.noticedialog = true);
       await (this.detail = notice);
       await this.read();
-      await this.notifications[idx].read.push(this.id)
+      await this.$store.commit(SET_NOTICES, [this.id, this.token, this.dbserver]);
+
     }
   },
   mounted() {
-    this.getNotification();
   },
   watch: {
     noticedialog: function(val) {

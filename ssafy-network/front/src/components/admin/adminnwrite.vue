@@ -33,6 +33,7 @@ export default {
       token: this.$session.get("token"),
       nickname: this.$session.get("nickname"),
       userlist: [],
+      userlistid: [],
       title: null,
       content: null,
       unread: []
@@ -63,9 +64,9 @@ export default {
         })
         .then(res => {
           for (let i = 0; i < res.data.length; i++) {
-            this.userlist.push(res.data[i].nickname);
+            let object = {}
+            this.userlist.push(res.data[i].id);
           }
-          console.log(this.userlist);
         });
     },
     newNotice() {
@@ -76,7 +77,7 @@ export default {
           baseURL: noticeUrl,
           data: this.notice
         });
-        // this.$router.push({path:'/admin/notice'})
+        this.$router.push({path:'/admin/notice'})
     }
   },
   mounted() {
