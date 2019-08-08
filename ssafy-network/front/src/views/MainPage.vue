@@ -73,7 +73,6 @@ export default {
     handleResize(){
       this.height = document.getElementById('routingbody').offsetHeight;
       const navh = document.getElementById('nav').offsetHeight;
-      console.log(this.height +"//" + navh);
       if(this.height < navh){
         this.height = navh;
       }
