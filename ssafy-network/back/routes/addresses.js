@@ -3,6 +3,7 @@ var router = express.Router();
 var Address = require('../models/address');
 var decode = require('../decode');
 
+
 /**
  * @swagger
  *  /addresses/{token}:
