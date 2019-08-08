@@ -7,13 +7,13 @@
         <v-btn class="white--text" color="grey darken-2">목록</v-btn>
       </router-link>
       <v-btn
-        v-if="$session.get('nickname') == data.writer"
+        v-if="$session.get('nickname') == data.writer || selfmembership === '관리자'"
         class="white--text"
         color="grey darken-2"
         @click="codeUpdateForm()"
       >수정</v-btn>
       <v-btn
-        v-if="$session.get('nickname') == data.writer"
+        v-if="$session.get('nickname') == data.writer || selfmembership === '관리자'"
         class="white--text"
         color="grey darken-2"
         @click="codeDeleteForm()"
@@ -147,6 +147,7 @@
 
 <script>
 import Comment from "@/components/code/Comment.vue";
+import caxios from "@/plugins/createaxios.js";
 
 // 코드미러 임폴트
 
@@ -233,6 +234,9 @@ export default {
   },
   data() {
     return {
+      token: this.$session.get("token"),
+      id: this.$session.get("id"),
+      dbserver: this.$store.state.dbserver,
       comments: [],
       comment: "",
       showComment: false,
@@ -245,6 +249,7 @@ export default {
       articles: [],
       loading: true,
       pagination: {},
+      selfmembership: "",
       cmOptionJs: {
         autoCloseBrackets: true,
         tabSize: 4,
@@ -370,10 +375,25 @@ export default {
             });
         }
       });
-    }
+    },
+    isAdmin() {
+      let memberUrl = this.dbserver;
+      caxios(memberUrl)
+        .request({
+          url: `/users/admin/${this.id}/${this.token}`,
+          method: "get",
+          baseURL: memberUrl
+        })
+        .then(res => {
+          this.selfmembership = res.data.membership;
+        });
+    },
   },
   updated(){
     this.$store.state.heightflag = true;
+  },
+  mounted() {
+    this.isAdmin()
   }
 };
 </script>
