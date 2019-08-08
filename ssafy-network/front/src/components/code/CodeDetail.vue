@@ -46,14 +46,14 @@
               ></v-select> -->
             </v-flex>
             <v-flex xs12>
-              <codemirror :options="cmOptionJs" v-model="data.source"></codemirror>
+              <codemirror :options="cmOption" v-model="data.source"></codemirror>
             </v-flex>
             <br />
             <v-flex xs12>
               <!-- <v-text-field label="내용" readonly v-model="data.content"></v-text-field> -->
               <div style="font-family: 'Nanum Gothic', sans-serif;">
                 <span class="grey--text" style="py-5">내용</span><br>
-                <span style="font-size: 18px;">{{data.content}}</span>
+                <span style="white-space:pre; font-size: 18px;">{{data.content}}</span>
               </div><br>
             </v-flex><br><br><br>
             <v-layout>
@@ -250,6 +250,7 @@ export default {
       loading: true,
       pagination: {},
       selfmembership: "",
+      cmOption:{},
       cmOptionJs: {
         autoCloseBrackets: true,
         tabSize: 4,
@@ -301,7 +302,7 @@ export default {
           }
         }
       },
-      languages: [{ text: "JavaScript" }, { text: "Python" }, { text: "Vue" }]
+      // languages: [{ text: "JavaScript" }, { text: "Python" }, { text: "Vue" }]
     };
   },
   methods: {
@@ -393,7 +394,14 @@ export default {
     this.$store.state.heightflag = true;
   },
   mounted() {
-    this.isAdmin()
+    this.isAdmin();
+    if (this.data.language == "JavaScript") {
+      this.cmOption = this.cmOptionJs;
+    } else if (this.data.language == "Python") {
+      this.cmOption = this.cmOptionPy;
+    } else if (this.data.language == "Vue") {
+      this.cmOption = this.cmOptionVue;
+    }
   }
 };
 </script>
