@@ -173,7 +173,6 @@ export default {
         });
     },
     async joinchat(roomId, idx) {
-      this.getRooms();
 
       if (this.items[idx].max <= this.items[idx].userList.length) {
         alert("꽉참");
@@ -192,7 +191,6 @@ export default {
       this.$router.push({ name: "new" });
     },
     joinsecret() {
-      this.getRooms();
       if (this.items[this.secretjoinflag].max <= this.items[this.secretjoinflag].userList.length) {
         alert("꽉참");
         return;
