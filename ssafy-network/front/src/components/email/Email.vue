@@ -4,7 +4,7 @@
       <v-toolbar flat color="grey lighten-5">
         <v-toolbar-title>Email-PAGE</v-toolbar-title>
         <v-spacer></v-spacer>
-        <v-dialog v-model="dialog" persistent max-width="600px">
+        <v-dialog v-model="writeMail" persistent max-width="600px">
           <template v-slot:activator="{ on }">
             <v-btn color="grey darken-2" dark v-on="on">메일 쓰기</v-btn>
           </template>
@@ -75,36 +75,67 @@
         >{{ expand ? '여러 개의' : '하나의' }} 쪽지 확인</v-btn>
       </v-toolbar>
       <br />
-      <v-data-table :headers="headers" :items="desserts" :expand="expand" item-key="_id">
+      <v-data-table :headers="headers" :items="mails" :expand="expand" item-key="_id">
         <template v-slot:items="props">
-          <tr @click="props.expanded = !props.expanded">
-            <td class="text-xs-center">{{ props.item.writer }}</td>
-            <td class="text-xs-center">{{ props.item.title }}</td>
-            <td class="text-xs-center">{{ props.item.createdAt }}</td>
+          <tr> <!-- @click="props.expanded = !props.expanded" -->
+            <td @click="props.expanded = !props.expanded" class="text-xs-center">{{ props.item.writer }}</td>
+            <td @click="props.expanded = !props.expanded" class="text-xs-center">{{ props.item.title }}</td>
+            <td @click="props.expanded = !props.expanded" class="text-xs-center">{{ props.item.createdAt }}</td>
+            <td class="justify-center layout px-0">
+              <v-btn
+                color="grey darken-2"
+                class="white--text py-1"
+                @click="mailDeleteForm(props.item)"
+              >
+                <!-- @click="deleteMail(props.item._id)" -->
+                메일 삭제
+              </v-btn>
+            </td>
           </tr>
         </template>
+
+
+
         <template v-slot:expand="props">
           <v-card flat>
+            <!-- 박성민 작업하던 것, 기능 안 먹혀서 수정중 -->
+
             <v-layout class="py-3">
-              <v-flex xs3 text-xs-center class="py-3 display-1">
+              <v-flex xs2 text-xs-center class="py-3 display-1">
                 <strong>내용</strong>
               </v-flex>
-              <v-flex xs6 text-xs-left class="py-3 display-1">
+              <v-flex xs10 text-xs-left class="py-3 display-1">
                 &nbsp; &nbsp; &nbsp; {{ props.item.content }}
               </v-flex>
-              <v-flex xs3 text-xs-left>
+              <!-- <v-flex xs3 text-xs-left>
                 <v-btn
                   @click="deleteMail(props.item._id)"
                   color="grey darken-2"
                   class="white--text"
                   justify-right
                 >메일 삭제</v-btn>
-              </v-flex>
+              </v-flex> -->
             </v-layout>
+
+            <!--  -->
+
           </v-card>
         </template>
       </v-data-table>
+      <v-dialog v-model="dialog" persistent max-width="290">
+        <v-card>
+          <v-card-title class="headline">경고</v-card-title>
+          <v-card-text>메일을 삭제하시겠습니까?</v-card-text>
+          <v-card-actions>
+            <v-spacer></v-spacer>
+            <v-btn class="white--text" color="grey darken-2" text @click="dialog = false">취소</v-btn>
+            <v-btn class="white--text" color="grey darken-2" text @click="deleteMail()">삭제</v-btn>
+          </v-card-actions>
+        </v-card>
+      </v-dialog>
+      <br>
     </div>
+
   </v-container>
 </template>
 
@@ -112,7 +143,9 @@
 export default {
   data() {
     return {
+      selectedItem: "",
       expand: false,
+      writeMail: false,
       dialog: false,
       title: "",
       content: "",
@@ -144,9 +177,10 @@ export default {
           value: "writer"
         },
         { text: "제목", align: "center", value: "title", sortable: false },
-        { text: "시간", align: "center", value: "createdAt", sortable: false }
+        { text: "시간", align: "center", value: "createdAt", sortable: false },
+        { text: "삭제", align: "center", sortable: false }
       ],
-      desserts: []
+      mails: []
     };
   },
   mounted() {
@@ -203,7 +237,7 @@ export default {
         .then(res => res.json())
         .then(data => {
           if (data) {
-            this.desserts = data;
+            this.mails = data;
           }
         })
         .catch(error => console.log(error))
@@ -235,8 +269,18 @@ export default {
           }
         });
     },
+
+    // 
+
+    mailDeleteForm(item) {
+      this.dialog = true;
+      this.selectedItem = item;
+    },
+
+    // 
+
     close() {
-      this.dialog = false;
+      this.writeMail = false;
       this.title = "";
       this.content = "";
       this.receive = [];
@@ -244,7 +288,7 @@ export default {
       this.position = "";
       this.person = "";
     },
-    deleteMail(_id) {
+    deleteMail() {
       fetch(this.$store.state.dbserver + "/mails/", {
         method: "PUT",
         headers: {
@@ -253,18 +297,18 @@ export default {
         },
         body: JSON.stringify({
           token: this.$session.get("token"),
-          _id: _id,
+          _id: this.selectedItem._id,
           nickname: this.$session.get("nickname")
         })
       })
         .then(res => res.json())
         .then(data => {
           if (data.result == true) {
-            alert("메일 삭제");
             this.getMailList();
           } else {
             alert("삭제 실패");
           }
+          this.dialog = false;
         });
     }
   }

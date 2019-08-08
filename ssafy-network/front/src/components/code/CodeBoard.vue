@@ -34,8 +34,9 @@
           v-model="pagination.page"
           :length="pages"
           :total-visible="7"
+          dark
           color="grey darken-2"
-          >
+        >
         </v-pagination>
       </div>
     </div>
