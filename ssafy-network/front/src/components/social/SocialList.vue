@@ -29,13 +29,12 @@
               :key="idx"
               avatar
               @click="joinchat(item._id, idx)"
-              class="mb-3"
+              class="mb-3 pa-3"
             >
               <v-list-tile-content>
-                <v-list-tile-title v-html="item.title"></v-list-tile-title>
-                <v-list-tile-title v-html="item.owner"></v-list-tile-title>
-                <v-list-tile-title v-html="item.createdAt"></v-list-tile-title>
-                <v-list-tile-title>{{item.userList.length}} / {{ item.max}}</v-list-tile-title>
+                {{ item.title}} - {{ item.owner}}
+                <br />
+                {{ item.createdAt}} {{item.userList.length}} / {{ item.max}}
               </v-list-tile-content>
 
               <v-list-tile-action
@@ -107,7 +106,7 @@ export default {
   },
   methods: {
     delconfirm(msg) {
-      return window.confirm(msg)
+      return window.confirm(msg);
     },
     deleteroom(roomId, idx) {
       let roomUrl = this.dbserver;
@@ -174,9 +173,11 @@ export default {
         });
     },
     async joinchat(roomId, idx) {
+      this.getRooms();
+
       if (this.items[idx].max <= this.items[idx].userList.length) {
-        alert('꽉참')
-        return
+        alert("꽉참");
+        return;
       }
       if (this.items[idx].password) {
         // console.log(idx)
@@ -191,6 +192,11 @@ export default {
       this.$router.push({ name: "new" });
     },
     joinsecret() {
+      this.getRooms();
+      if (this.items[this.secretjoinflag].max <= this.items[this.secretjoinflag].userList.length) {
+        alert("꽉참");
+        return;
+      }
       if (
         this.items[this.secretjoinflag].password ===
         this.typepassword.toString()
