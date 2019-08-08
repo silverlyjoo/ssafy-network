@@ -50,7 +50,6 @@
       style="overflow:hidden!important; text-overflow: ellipsis; "
       class="treecss"
       open-on-click
-      @update:active="$store.state.heightflag = true"
     >
       <template v-slot:prepend="{item, open,selected}">
         <v-btn flat class="ma-0 pa-0" style="min-width:30px!important;" >
@@ -650,6 +649,9 @@ export default {
     }
   },
   mounted() {},
+  updated(){
+    this.$store.state.heightflag = true;
+  },
   computed: mapState(["NoteCheck", "notetreefoldflag"]),
   watch: {
     NoteCheck(to, from) {
@@ -670,6 +672,7 @@ export default {
       }
     },
     open(to,from){
+      console.log('ac')
       this.$store.state.heightflag = true;
     }
   }

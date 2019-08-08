@@ -59,7 +59,11 @@ export default {
   methods:{
     handleResize(){
       this.height = document.getElementById('routingbody').offsetHeight;
-      console.log(document.getElementById('nav').getBoundingClientRect().height);
+      const navh = document.getElementById('nav').offsetHeight;
+      console.log(this.height +"//" + navh);
+      if(this.height < navh){
+        this.height = navh;
+      }
       if(this.height < 800){
         this.height = window.outerHeight;
       }else if(this.height < 1900){
