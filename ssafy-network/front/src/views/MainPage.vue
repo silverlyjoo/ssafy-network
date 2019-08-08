@@ -1,14 +1,9 @@
 <template>
   <v-layout fill-height>
-    <vue-resizable
-      :height ="height"
-      :min-width="minWidth"
-      :max-width="maxWidth"
-      :active="handlers"
-    >
+    <vue-resizable :height="height" :min-width="minWidth" :max-width="maxWidth" :active="handlers">
       <Nav class="nav"></Nav>
     </vue-resizable>
-    <div class="mainsection" >
+    <div class="mainsection">
       <Header></Header>
       <div class="routingbody" id="routingbody">
         <router-view></router-view>
@@ -25,6 +20,11 @@ import Nav from "@/components/common/Nav";
 import VueResizable from "vue-resizable";
 import { mapState } from "vuex";
 
+import {
+  SET_NOTICES
+} from "@/store/notice.js";
+import caxios from "@/plugins/createaxios.js";
+
 export default {
   data() {
     return {
@@ -32,7 +32,10 @@ export default {
       height: "",
       minWidth: 320,
       maxWidth: 700,
-      handlers: ['r'],
+      handlers: ["r"],
+      dbserver: this.$store.state.dbserver,
+      token: this.$session.get("token"),
+      id: this.$session.get("id")
     };
   },
   components: {
@@ -42,15 +45,25 @@ export default {
     VueResizable
   },
   mounted() {
-    window.addEventListener('resize', this.handleResize)
+    this.$store.commit(SET_NOTICES, [this.id, this.token, this.dbserver]);
+    window.addEventListener("resize", this.handleResize);
     this.handleResize();
   },
   destroyed() {
-    window.removeEventListener('resize', this.handleResize)
-  },computed:mapState(["heightflag"]),
-  watch:{
-    heightflag(to,from){
-      if(from == false && to == true){
+    window.removeEventListener("resize", this.handleResize);
+  },
+  updated() {
+    this.$store.commit(SET_NOTICES, [this.id, this.token, this.dbserver]);
+  },
+  computed: {
+    ...mapState(["heightflag"]),
+    notifications() {
+      return this.$store.state.notice.notifications;
+    }
+  },
+  watch: {
+    heightflag(to, from) {
+      if (from == false && to == true) {
         this.handleResize();
         this.$store.state.heightflag = false;
       }
@@ -71,8 +84,6 @@ export default {
       }
     }
   }
-
-
 };
 </script>
 
@@ -82,8 +93,8 @@ export default {
   height: 100%;
   overflow: auto;
 }
-.routingbody{
-  width:100%;
+.routingbody {
+  width: 100%;
 }
 .nav {
   width: 100%;
