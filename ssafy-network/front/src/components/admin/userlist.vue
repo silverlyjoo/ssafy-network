@@ -1,9 +1,20 @@
 <template>
   <v-container>
     <h1>admin page</h1>
-    <v-btn to="/admin/user">유저관리</v-btn>
-    <v-btn to="/admin/chat">채팅방관리</v-btn>
-    <v-btn to="/admin/notice">공지사항관리</v-btn>
+    <v-layout justify-center text-xs-center row>
+      <v-btn to="/admin/user">유저관리</v-btn>
+      <v-btn to="/admin/chat">채팅방관리</v-btn>
+      <v-btn to="/admin/notice">공지사항관리</v-btn>
+      <v-spacer></v-spacer>
+      <v-select
+        v-model="membership"
+        label="등급"
+        :items="memberships"
+        required
+        style="max-width:20vh;"
+      ></v-select>
+      <v-btn @click="updateUserMembership">등급 변경</v-btn>
+    </v-layout>
     <router-view></router-view>
 
     <v-data-table
@@ -27,15 +38,22 @@
       </template>
     </v-data-table>
     <v-layout justify-center text-xs-center row>
-        <v-select v-model="department" label="부서" :items="departments" required style="max-width:20vh;"></v-select>
-        <v-btn @clck="updateUserDepartment">부서 변경</v-btn>
-        <v-spacer></v-spacer>
-        <v-select v-model="position" label="직책" :items="positions" required style="max-width:20vh;"></v-select>
-        <v-btn @click="updateUserPosition">직책 변경</v-btn>
-        <v-spacer></v-spacer>
-        <v-select v-model="membership" label="등급" :items="memberships" required style="max-width:20vh;"></v-select>
-        <v-btn @click="updateUserMembership">등급 변경</v-btn>
-        <v-spacer></v-spacer>
+      <v-text-field v-model="superdepartment"></v-text-field>
+      <v-btn @click="getDepartmentList">부서 검색</v-btn>
+      <v-select
+        v-model="first"
+        label="부서찾기"
+        :items="firsts"
+        @change="getChildList"
+      ></v-select>
+      <v-select
+        v-if="showbtn"
+        v-model="second"
+        label="부서찾기"
+        :items="seconds"
+        @change="pull"
+      ></v-select>
+      <v-btn v-if="!showbtn">직급 변경</v-btn>
     </v-layout>
   </v-container>
 </template>
@@ -44,16 +62,35 @@
 export default {
   data() {
     return {
+      superdepartment: "",
+      first: "",
+      firsts: [],
+      second: "",
+      seconds: [],
+      showbtn: true,
       token: this.$session.get("token"),
       id: this.$session.get("id"),
       dbserver: this.$store.state.dbserver,
       pagination: {
         sortBy: "name"
       },
-      department:"개발",
-      departments:["인사", "영업", "개발", "기획"],
-      position:"사원",
-      positions:["사원","주임","대리","과장","차장","부장","이사","상무","전무","부사장","사장","회장"],
+      department: "개발",
+      departments: ["인사", "영업", "개발", "기획"],
+      position: "사원",
+      positions: [
+        "사원",
+        "주임",
+        "대리",
+        "과장",
+        "차장",
+        "부장",
+        "이사",
+        "상무",
+        "전무",
+        "부사장",
+        "사장",
+        "회장"
+      ],
       membership: "회원",
       memberships: ["비회원", "회원", "관리자"],
       selected: [],
@@ -76,6 +113,58 @@ export default {
     this.getUserList();
   },
   methods: {
+    pull() {
+      this.superdepartment = this.first;
+      this.firsts = this.seconds;
+      this.first = this.second;
+      this.getChildList();
+    },
+    getDepartmentList() {
+      fetch(
+        this.$store.state.dbserver +
+          "/company/" +
+          this.superdepartment +
+          "/" +
+          this.$session.get("token"),
+        {
+          method: "GET",
+          headers: {
+            "Access-Control-Allow-Origin": "*",
+            "Content-Type": "application/json"
+          }
+        }
+      )
+        .then(res => res.json())
+        .then(data => {
+          if (data) {
+            this.firsts = data.children;
+          }
+        });
+    },
+    getChildList() {
+      fetch(
+        this.$store.state.dbserver +
+          "/company/" +
+          this.first +
+          "/" +
+          this.$session.get("token"),
+        {
+          method: "GET",
+          headers: {
+            "Access-Control-Allow-Origin": "*",
+            "Content-Type": "application/json"
+          }
+        }
+      )
+        .then(res => res.json())
+        .then(data => {
+          if (data.result == false) {
+            this.showbtn = false;
+          } else {
+            this.seconds = data.children;
+          }
+        });
+    },
     getUserList() {
       fetch(
         this.$store.state.dbserver + "/users/" + this.$session.get("token"),
@@ -111,14 +200,15 @@ export default {
             _id: this.selected[index]._id,
             department: this.department
           })
-        }).then(res => res.json())
-        .then(data => {
-          if (data.result == true) {
-            this.getUserList();
-          } else {
-            alert("수정 실패");
-          }
-        });
+        })
+          .then(res => res.json())
+          .then(data => {
+            if (data.result == true) {
+              this.getUserList();
+            } else {
+              alert("수정 실패");
+            }
+          });
       }
     },
     updateUserPosition() {
@@ -134,14 +224,15 @@ export default {
             _id: this.selected[index]._id,
             position: this.position
           })
-        }).then(res => res.json())
-        .then(data => {
-          if (data.result == true) {
-            this.getUserList();
-          } else {
-            alert("수정 실패");
-          }
-        });
+        })
+          .then(res => res.json())
+          .then(data => {
+            if (data.result == true) {
+              this.getUserList();
+            } else {
+              alert("수정 실패");
+            }
+          });
       }
     },
     updateUserMembership() {
@@ -157,14 +248,15 @@ export default {
             _id: this.selected[index]._id,
             membership: this.membership
           })
-        }).then(res => res.json())
-        .then(data => {
-          if (data.result == true) {
-            this.getUserList();
-          } else {
-            alert("수정 실패");
-          }
-        });
+        })
+          .then(res => res.json())
+          .then(data => {
+            if (data.result == true) {
+              this.getUserList();
+            } else {
+              alert("수정 실패");
+            }
+          });
       }
     },
     deleteUser() {

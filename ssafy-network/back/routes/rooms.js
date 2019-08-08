@@ -36,6 +36,48 @@ router.get('/:token', function (req, res) {
   
 /**
  * @swagger
+ *  /rooms/{_id}/{token}:
+ *    get:
+ *      tags:
+ *      - Room
+ *      description: 채팅방 인원 조회
+ *      parameters:
+ *      - name: _id
+ *        in: path
+ *        description: "오브젝트 아이디"
+ *        required: true
+ *        type: string
+ *      - name: token
+ *        in: path
+ *        description: "토큰"
+ *        required: true
+ *        type: string
+ *      responses:
+ *       200:
+ *        description: "채팅방의 최대인원이 현재 인원보다 크면 result: true"
+ */
+router.get('/:_id/:token', function (req, res) {
+  var info = decode(req.params.token);
+  if (!info) {
+      return res.json({ result: false });
+  }
+  Room.findOne({ _id:req.params._id },function (err, room) {
+    if (err) {
+      return res.status(500).send({ error: 'database failure' });
+    }
+    if(room.max > room.userList.length){
+      res.json({result: true});
+      return;
+    }  
+    else{
+      res.json({result: false});
+      return;
+    }
+  });
+});
+
+/**
+ * @swagger
  *  /rooms:
  *    post:
  *      tags:
