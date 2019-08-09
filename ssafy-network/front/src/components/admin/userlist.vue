@@ -54,7 +54,7 @@
         :items="seconds"
         @change="pull"
       ></v-select>
-      <v-btn v-if="!showbtn">직급 변경</v-btn>
+      <v-btn v-if="!showbtn" @click="updateDePo">직급 변경</v-btn>
     </v-layout>
   </v-container>
 </template>
@@ -75,23 +75,7 @@ export default {
       pagination: {
         sortBy: "name"
       },
-      department: "개발",
-      departments: ["인사", "영업", "개발", "기획"],
-      position: "사원",
-      positions: [
-        "사원",
-        "주임",
-        "대리",
-        "과장",
-        "차장",
-        "부장",
-        "이사",
-        "상무",
-        "전무",
-        "부사장",
-        "사장",
-        "회장"
-      ],
+      
       membership: "회원",
       memberships: ["비회원", "회원", "관리자"],
       selected: [],
@@ -104,7 +88,7 @@ export default {
         { text: "아이디", value: "id" },
         { text: "이름", value: "name" },
         { text: "부서", value: "department" },
-        { text: "직책", value: "position" },
+        { text: "기수", value: "position" },
         { text: "등급", value: "membership" }
       ],
       desserts: []
@@ -114,6 +98,10 @@ export default {
     this.getUserList();
   },
   methods: {
+    updateDePo(){
+      this.updateUserDepartment();
+      this.updateUserPosition();
+    },
     pull() {
       this.superdepartment = this.first;
       this.firsts = this.seconds;
@@ -123,10 +111,8 @@ export default {
     getDepartmentList() {
       fetch(
         this.$store.state.dbserver +
-          "/company/" +
-          this.superdepartment +
-          "/" +
-          this.$session.get("token"),
+          "/company/join/" +
+          this.superdepartment,
         {
           method: "GET",
           headers: {
@@ -145,10 +131,8 @@ export default {
     getChildList() {
       fetch(
         this.$store.state.dbserver +
-          "/company/" +
-          this.first +
-          "/" +
-          this.$session.get("token"),
+          "/company/join/" +
+          this.first,
         {
           method: "GET",
           headers: {
@@ -199,7 +183,7 @@ export default {
           body: JSON.stringify({
             token: this.$session.get("token"),
             _id: this.selected[index]._id,
-            department: this.department
+            department: this.superdepartment
           })
         })
           .then(res => res.json())
@@ -223,7 +207,7 @@ export default {
           body: JSON.stringify({
             token: this.$session.get("token"),
             _id: this.selected[index]._id,
-            position: this.position
+            position: this.first,
           })
         })
           .then(res => res.json())
