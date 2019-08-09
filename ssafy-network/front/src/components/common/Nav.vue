@@ -45,7 +45,7 @@
               </v-layout>
             </router-link>
           </div>
-          <div class="navBtn mb-3" @click="foldnote">
+          <!-- <div class="navBtn mb-3" @click="foldnote">
             <router-link to="/address" style="text-decoration: none !important">
               <v-layout align-center class="pa-2">
                 <v-flex xs7 text-xs-center>
@@ -53,7 +53,7 @@
                 </v-flex>
               </v-layout>
             </router-link>
-          </div>
+          </div> -->
           <!-- <div class="navBtn mb-3" @click="foldnote">
             <router-link to="/vote" style="text-decoration: none !important">
               <v-layout align-center class="pa-2">
