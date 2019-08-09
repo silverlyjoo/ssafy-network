@@ -4,6 +4,7 @@
       <v-toolbar flat color="grey lighten-5">
         <v-toolbar-title>Email-PAGE</v-toolbar-title>
         <v-spacer></v-spacer>
+
         <v-dialog v-model="writeMail" persistent max-width="600px">
           <template v-slot:activator="{ on }">
             <v-btn color="grey darken-2" dark v-on="on">메일 쓰기</v-btn>
@@ -15,6 +16,17 @@
             <v-card-text>
               <v-container grid-list-md>
                 <v-layout wrap>
+
+                  <v-flex xs3 class="pr-1 pl-2">
+                    <v-select v-model="searchoption" :items="searchoptions"></v-select>
+                  </v-flex>
+                  <v-flex xs6 class>
+                    <v-text-field v-model="keyword" @keyup.enter="searchUser"></v-text-field>
+                  </v-flex>
+                  <v-flex xs3 class>
+                    <v-btn @click="searchUser">검색</v-btn>
+                  </v-flex>
+
                   <v-flex xs12>
                     <v-text-field class="mr-5" v-model="parent" label="소속 부서"></v-text-field>
                     <v-btn @click="parentCheck" class="mr-5">검색</v-btn>
@@ -32,7 +44,7 @@
                   <v-flex xs4>
                     <v-select
                       v-model="position"
-                      label="직책"
+                      label="기수"
                       :items="positions"
                       @change="search"
                       required
@@ -42,7 +54,7 @@
                   <v-flex xs4>
                     <v-select
                       v-model="person"
-                      label="직원"
+                      label="사람"
                       :items="people"
                       required
                       style="max-width:20vh;"
@@ -160,6 +172,10 @@ export default {
       writeMail: false,
       dialog: false,
       title: "",
+      parent: "",
+      keyword: "",
+      searchoption: "nickname",
+      searchoptions: ["nickname", "id"],
       content: "",
       receive: [],
       department: "",
@@ -186,9 +202,15 @@ export default {
     this.getMailList();
   },
   methods: {
-    parentCheck(){
+    searchUser() {
       fetch(
-        this.$store.state.dbserver + "/company/join/" + this.parent,
+        this.$store.state.dbserver +
+          "/search/users/" +
+          this.searchoption +
+          "/" +
+          this.keyword +
+          "/" +
+          this.$session.get("token"),
         {
           method: "GET",
           headers: {
@@ -197,30 +219,51 @@ export default {
           }
         }
       )
+        .then(res => res.json())
+        .then(data => {
+          if (data.result == false) {
+            alert("검색된 유저가 없습니다");
+          }
+          else{
+            this.receive.push(data.nickname);
+          }
+        });
+    },
+    parentCheck() {
+      this.department = "";
+      this.departments = [];
+      this.position = "";
+      this.positions = [];
+      fetch(this.$store.state.dbserver + "/company/join/" + this.parent, {
+        method: "GET",
+        headers: {
+          "Access-Control-Allow-Origin": "*",
+          "Content-Type": "application/json"
+        }
+      })
         .then(res => res.json())
         .then(data => {
           if (data) {
             this.departments = data.children;
           }
-        })
+        });
     },
-    childsearch(){
-      fetch(
-        this.$store.state.dbserver + "/company/join/" + this.department,
-        {
-          method: "GET",
-          headers: {
-            "Access-Control-Allow-Origin": "*",
-            "Content-Type": "application/json"
-          }
+    childsearch() {
+      this.position = "";
+      this.positions = [];
+      fetch(this.$store.state.dbserver + "/company/join/" + this.department, {
+        method: "GET",
+        headers: {
+          "Access-Control-Allow-Origin": "*",
+          "Content-Type": "application/json"
         }
-      )
+      })
         .then(res => res.json())
         .then(data => {
           if (data) {
             this.positions = data.children;
           }
-        })
+        });
     },
     addreceive() {
       this.receive.push(this.person);
@@ -316,12 +359,16 @@ export default {
 
     close() {
       this.writeMail = false;
+      this.parent = "";
       this.title = "";
       this.content = "";
       this.receive = [];
       this.department = "";
+      this.departments = [];
       this.position = "";
+      this.positions = [];
       this.person = "";
+      this.people = [];
     },
     deleteMail() {
       fetch(this.$store.state.dbserver + "/mails/", {
