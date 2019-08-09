@@ -29,11 +29,6 @@
               </v-img>
         </v-card>
       </v-flex>
-      <v-flex>
-        <v-content>
-          <router-view></router-view>
-        </v-content>
-      </v-flex>
     </v-layout>
   </v-container>
 </template>

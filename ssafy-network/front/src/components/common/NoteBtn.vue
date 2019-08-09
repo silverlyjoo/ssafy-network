@@ -49,10 +49,10 @@
       v-if="click"
       style="overflow:hidden!important; text-overflow: ellipsis; "
       class="treecss"
-      open-on-click
+      
     >
       <template v-slot:prepend="{item, open,selected}">
-        <v-btn flat class="ma-0 pa-0" style="min-width:30px!important;" >
+        <v-btn flat class="ma-0 pa-0" style="min-width:30px!important;" open-on-click>
           <v-icon
             class="iconn"
             v-if="item.file == 'folder'"
@@ -60,7 +60,7 @@
           <v-icon v-else @click="NoteDetail(item._id)" class="iconn">{{ files[item.file] }}</v-icon>
         </v-btn>
       </template>
-      <template slot="label" slot-scope="{ item }">
+      <template slot="label" slot-scope="{ item }" open-on-click>
         <label v-if="item.file == 'folder'">{{ item.name }}</label>
         <label v-else @click="NoteDetail(item._id)">{{ item.name }}</label>
       </template>
@@ -316,7 +316,6 @@ export default {
     closeForm() {
       this.selectItem = "";
       this.$validator.reset();
-      this.$store.state.heightflag=true;
       this.getItems();
     },
     goNote() {
@@ -670,10 +669,6 @@ export default {
           this.overlay = false;
         }, 500);
       }
-    },
-    open(to,from){
-      console.log('ac')
-      this.$store.state.heightflag = true;
     }
   }
 };

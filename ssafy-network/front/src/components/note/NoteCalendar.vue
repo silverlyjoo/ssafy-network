@@ -1,11 +1,11 @@
 <template>
   <v-layout column>
-    <v-flex align-center class="ma-3 pt-3">
-      <Calendar :events="events" >
-      </Calendar>
-    </v-flex>
     <v-flex align-center width="100%">
       <CalendarForm :today="today"></CalendarForm>
+    </v-flex>
+    <v-flex align-center class="">
+      <Calendar :events="events" >
+      </Calendar>
     </v-flex>
   </v-layout>
 </template>

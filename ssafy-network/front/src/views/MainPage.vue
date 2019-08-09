@@ -1,5 +1,5 @@
 <template>
-  <v-layout fill-height>
+  <v-layout>
     <vue-resizable :height="height" :min-width="minWidth" :max-width="maxWidth" :active="handlers">
       <Nav class="nav"></Nav>
     </vue-resizable>
@@ -73,6 +73,7 @@ export default {
     handleResize(){
       this.height = document.getElementById('routingbody').offsetHeight;
       const navh = document.getElementById('nav').offsetHeight;
+        // console.log(this.height+"//"+navh);
       if(this.height < navh){
         this.height = navh;
       }
