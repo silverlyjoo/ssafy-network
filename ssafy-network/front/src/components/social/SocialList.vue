@@ -8,7 +8,7 @@
               <v-select v-model="searchoption" :items="searchoptions"></v-select>
             </v-flex>
             <v-flex xs6 class>
-              <v-text-field v-model="chatroomsearchkeyword"></v-text-field>
+              <v-text-field v-model="chatroomsearchkeyword" @keyup.enter="searchRooms" @keyup.esc="getRooms"></v-text-field>
             </v-flex>
             <button @click="searchRooms" class="buttonsize">
               <i class="fas fa-search"></i>
@@ -31,6 +31,12 @@
                 <div>인원수</div>
                 <div>생성일</div>
               </div>
+              <div class="headericons">
+                <div>비밀방</div>
+              </div>
+              <div class="headericons">
+                <div>삭제</div>
+              </div>
             </div>
             <div
               v-for="(item, idx) in items"
@@ -51,12 +57,14 @@
                 <div>{{ item.createdAt }}</div>
               </div>
               <div class="chaticons">
+                <i v-if="item.password" class="fas fa-lock fa-lg lockicon chaticon"></i>
+              </div>
+              <div class="chaticons">
                 <i
-                  v-if="item.owner === nickname"
+                  v-if="item.owner === nickname || selfmembership === '관리자'"
                   @click.stop="delconfirm('삭제하시겠습니까?') ? deleteroom(item._id, idx) : ''"
                   class="fas fa-trash-alt fa-lg deleteicon chaticon"
                 ></i>
-                <i v-if="item.password" class="fas fa-lock fa-lg lockicon chaticon"></i>
               </div>
             </div>
           </v-list>
@@ -113,10 +121,23 @@ export default {
       searchoptions: ["title", "owner"],
       dialog: false,
       typepassword: "",
-      secretjoinflag: null
+      secretjoinflag: null,
+      selfmembership: null
     };
   },
   methods: {
+    isAdmin() {
+      let memberUrl = this.dbserver;
+      caxios(memberUrl)
+        .request({
+          url: `/users/admin/${this.id}/${this.token}`,
+          method: "get",
+          baseURL: memberUrl
+        })
+        .then(res => {
+          this.selfmembership = res.data.membership;
+        });
+    },
     delconfirm(msg) {
       return window.confirm(msg);
     },
@@ -224,7 +245,7 @@ export default {
     }
   },
   mounted() {
-    this.getRooms();
+    this.getRooms(), this.isAdmin();
   }
 };
 </script>
@@ -245,6 +266,9 @@ export default {
 }
 .deleteicon {
   color: rgb(255, 138, 138);
+}
+.noicon {
+  color: rgba(255, 255, 255, 0);
 }
 .deleteicon:hover {
   color: rgb(255, 64, 64) !important;
@@ -270,7 +294,7 @@ export default {
 }
 .chatinfo {
   display: flex;
-  flex: 0 0 90%;
+  flex: 0 0 85%;
   justify-content: space-around;
 }
 .headerinfo {
@@ -280,10 +304,17 @@ export default {
 }
 
 .chaticons {
-  flex: 0 0 10%;
+  flex: 0 0 7.5%;
   display: flex;
-  justify-content: flex-end;
+  justify-content: center;
   align-items: center;
+}
+.headericons {
+  flex: 0 0 7.5%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 90%;
 }
 
 .chatinfo > div {
@@ -292,7 +323,6 @@ export default {
 }
 .headerinfo > div {
   display: flex;
-  flex: 0 0 25%;
   justify-content: center;
 }
 
@@ -301,7 +331,7 @@ export default {
   flex: 0 0 40%;
   min-width: 0;
   justify-content: flex-start;
-  padding:0px 10px;
+  padding: 0px 10px;
 }
 .chatinfo div:nth-child(1) span {
   white-space: nowrap;
@@ -319,6 +349,22 @@ export default {
 .chatinfo div:nth-child(4) {
   font-weight: 400;
   font-size: 90%;
+  flex: 0 0 20%;
+}
+.headerinfo div:nth-child(1) {
+  font-weight: 400;
+  flex: 0 0 40%;
+}
+.headerinfo div:nth-child(2) {
+  font-weight: 400;
   flex: 0 0 25%;
+}
+.headerinfo div:nth-child(3) {
+  font-weight: 400;
+  flex: 0 0 10%;
+}
+.headerinfo div:nth-child(4) {
+  font-weight: 400;
+  flex: 0 0 20%;
 }
 </style>
