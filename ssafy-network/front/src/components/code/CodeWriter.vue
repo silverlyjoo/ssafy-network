@@ -16,7 +16,7 @@
                 <v-text-field
                   label="제목"
                   v-model="article.title"
-                  v-validate="'required'"
+                  v-validate="'required|min:6'"
                   :error-messages="errors.collect('title')"
                   data-vv-name="title"
                 ></v-text-field>
