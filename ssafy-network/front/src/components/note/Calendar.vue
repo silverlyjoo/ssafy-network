@@ -2,7 +2,51 @@
   <div>
     <full-calendar :events="events" @eventClick="eventClick" @dateClick="dateClick" locale="ko"></full-calendar>
     <v-layout row justify-end class="mr-3 mb-3">
-      <v-dialog v-model="dialog" persistent max-width="600px">
+      <v-dialog v-model="detailDialog" persistent max-width="600px">
+        <v-card>
+            <v-card-title>
+              <span class="headline">ToDo List 정보</span>
+            </v-card-title>
+            <v-card-text>
+              <v-container grid-list-md>
+              <v-layout wrap column>
+              <v-flex>
+                <label>제목 : </label>
+                <span>{{event.title}}</span>
+              </v-flex>
+              <v-flex>
+                <label>기간 : </label>
+                <span>{{event.startDate}} - {{event.endDate}}</span>
+              </v-flex>
+              <v-flex>
+                <label>내용 : </label>
+                <span>{{event.desc}}</span>
+              </v-flex>
+              </v-layout>
+              </v-container>
+            </v-card-text>
+            <v-card-actions>
+            <v-spacer></v-spacer>
+            <v-btn color="blue darken-1" flat @click="detailDialog = false">취소</v-btn>
+            <v-btn color="blue darken-1" flat @click="updateForm()">수정</v-btn>
+            <v-btn color="blue darken-1" flat @click="deleteDialog = true">삭제</v-btn>
+            <v-dialog v-model="deleteDialog" max-width="290">
+              <v-card>
+                <v-card-title class="headline">삭제 하시겠습니까?</v-card-title>
+                <v-card-actions>
+                  <v-spacer></v-spacer>
+                  <v-btn color="green darken-1" flat="flat" @click="deleteDialog = false">아니오</v-btn>
+                  <v-btn color="green darken-1" flat="flat" @click="deleteCalendar()">예</v-btn>
+                </v-card-actions>
+              </v-card>
+            </v-dialog>
+            </v-card-actions>
+        </v-card>
+      </v-dialog>
+    </v-layout>
+    <!-- updateForm -->
+    <v-layout row justify-end class="mr-3 mb-3">
+      <v-dialog v-model="updateDialog" persistent max-width="600px">
         <v-card>
           <v-card-title>
             <span class="headline">ToDo List 수정</span>
@@ -12,7 +56,7 @@
               <v-layout wrap column>
                 <v-flex xs12 sm6 md4>
                   <v-text-field
-                    label="할일 제목"
+                    label="제목"
                     v-model="event.title"
                     v-validate="'required'"
                     data-vv-name="title"
@@ -33,7 +77,7 @@
                     <template v-slot:activator="{ on }">
                       <v-text-field
                         v-model="event.startDate"
-                        label="시작 날짜"
+                        label="시작 일"
                         prepend-icon="event"
                         readonly
                         v-on="on"
@@ -59,7 +103,7 @@
                     <template v-slot:activator="{ on }">
                       <v-text-field
                         v-model="event.endDate"
-                        label="종료 날짜"
+                        label="종료 일"
                         prepend-icon="event"
                         readonly
                         v-on="on"
@@ -73,7 +117,7 @@
                 </v-flex>
                 <v-flex xs12 sm6 md4>
                   <v-textarea
-                    label="할일 내용"
+                    label="내용"
                     v-model="event.desc"
                     v-validate="'required'"
                     :error-messages="errors.collect('desc')"
@@ -84,7 +128,7 @@
                   <v-select
                     :items="colors"
                     v-model="event.cssClass"
-                    label="Select"
+                    label="색깔"
                     single-line
                     v-validate="'required'"
                     data-vv-name="cssClass"
@@ -96,19 +140,8 @@
           </v-card-text>
           <v-card-actions>
             <v-spacer></v-spacer>
-            <v-btn color="blue darken-1" flat @click="dialog = false">취소</v-btn>
+            <v-btn color="blue darken-1" flat @click="updateDialog = false">취소</v-btn>
             <v-btn color="blue darken-1" flat @click="updateCalendar()">수정</v-btn>
-            <v-btn color="blue darken-1" flat @click="deleteDialog = true">삭제</v-btn>
-            <v-dialog v-model="deleteDialog" max-width="290">
-              <v-card>
-                <v-card-title class="headline">삭제 하시겠습니까?</v-card-title>
-                <v-card-actions>
-                  <v-spacer></v-spacer>
-                  <v-btn color="green darken-1" flat="flat" @click="deleteDialog = false">아니오</v-btn>
-                  <v-btn color="green darken-1" flat="flat" @click="deleteCalendar()">예</v-btn>
-                </v-card-actions>
-              </v-card>
-            </v-dialog>
           </v-card-actions>
         </v-card>
       </v-dialog>
@@ -117,6 +150,7 @@
 </template>
 <script>
 import FullCalendar from "vue-fullcalendar";
+
 export default {
   $_veeValidate: {
     validator: "new"
@@ -129,7 +163,8 @@ export default {
   data() {
     return {
       deleteDialog: false,
-      dialog: false,
+      updateDialog: false,
+      detailDialog:false,
       startDatePick: false,
       endDatePick: false,
       event: {
@@ -162,11 +197,15 @@ export default {
     }
   },
   methods: {
+    updateForm(){
+      this.updateDialog = true;
+
+    },
     dateClick(arg) {
       alert(arg.date);
     },
     eventClick(event, jsEvent, pos) {
-      this.dialog = true;
+      this.detailDialog = true;
       this.event._id = event._id;
       this.event.title = event.title;
       this.event.desc = event.desc;
@@ -189,10 +228,9 @@ export default {
         .then(res => res.json())
         .then(data => {
           if (data.result == true) {
-            alert("삭제 성공!!!");
             this.$store.state.CalendarCheck = true;
           } else {
-            alert("성공 실패...");
+            alert("삭제 실패...");
           }
           this.event._id = "";
           this.event.title = "";
@@ -201,7 +239,7 @@ export default {
           this.event.cssClass = "";
           this.event.endDate = "";
           this.deleteDialog = false;
-          this.dialog = false;
+          this.detailDialog = false;
         });
     },
     updateCalendar() {
@@ -230,12 +268,12 @@ export default {
             .then(res => res.json())
             .then(data => {
               if (data.result == true) {
-                alert("수정 성공!!!");
                 this.$store.state.CalendarCheck = true;
               } else {
                 alert("수정 실패...");
               }
-              this.dialog = false;
+              this.updateDialog = false;
+              this.detailDialog = false;
               this.$validator.reset();
             });
         }

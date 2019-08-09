@@ -49,7 +49,6 @@
       v-if="click"
       style="overflow:hidden!important; text-overflow: ellipsis; "
       class="treecss"
-      
     >
       <template v-slot:prepend="{item, open,selected}">
         <v-btn flat class="ma-0 pa-0" style="min-width:30px!important;" open-on-click>
@@ -196,6 +195,7 @@
                   data-vv-name="FolderTitle"
                   data-vv-scope="FolderTitle"
                   :error-messages="errors.collect('FolderTitle')"
+                  ref="FolderEdit"
                 ></v-text-field>
               </v-flex>
               <v-flex>
@@ -259,26 +259,60 @@ export default {
       this.showFolderEdit = true;
     },
     FolderUpdate() {
-      fetch(this.$store.state.dbserver + "/notes/folder", {
-        method: "PUT",
-        headers: {
-          "Access-Control-Allow-Origin": "*",
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify({
-          _id: this.selectItem._id,
-          token: this.$session.get("token"),
-          name: this.FolderTitle
-        })
-      })
+      const parent = this.selectItem.course.slice(0, -2);
+      fetch(
+        this.$store.state.dbserver +
+          "/notes/" +
+          this.$session.get("id") +
+          "/" +
+          this.FolderTitle +
+          "/" +
+          parent +
+          "/" +
+          this.$session.get("token"),
+        {
+          method: "GET",
+          headers: {
+            "Access-Control-Allow-Origin": "*",
+            "Content-Type": "application/json"
+          }
+        }
+      )
         .then(res => res.json())
         .then(data => {
-          if (data.result == true) {
-
+          if (data.result == false) {
+            // 중복 X
+            fetch(this.$store.state.dbserver + "/notes/folder", {
+              method: "PUT",
+              headers: {
+                "Access-Control-Allow-Origin": "*",
+                "Content-Type": "application/json"
+              },
+              body: JSON.stringify({
+                _id: this.selectItem._id,
+                token: this.$session.get("token"),
+                name: this.FolderTitle
+              })
+            })
+              .then(res => res.json())
+              .then(data => {
+                if (data.result == true) {
+                } else {
+                  alert("폴더 이름 수정 실패..");
+                }
+                this.FolderEditClose();
+              });
           } else {
-            alert("폴더 이름 수정 실패..");
+            // 중복이 있으면
+            if (data.course == this.selectItem.course) {
+              // 자기 자신이라면
+              this.FolderEditClose();
+            } else {
+              alert("중복되는 이름이 있습니다.");
+              this.FolderTitle = this.selectItem.name;
+              this.$refs.FolderEdit.focus();
+            }
           }
-          this.FolderEditClose();
         });
     },
     FolderEditClose() {
@@ -338,9 +372,7 @@ export default {
           if (this.selectItem == "root") {
             var checkName = false;
             for (let i in this.items) {
-              if (
-                this.items[i].name == this.NoteTitle
-              ) {
+              if (this.items[i].name == this.NoteTitle) {
                 checkName = true;
                 break;
               }
@@ -507,9 +539,7 @@ export default {
           if (this.selectItem == "root") {
             var checkName = false;
             for (let i in this.items) {
-              if (
-                this.items[i].name == this.FolderTitle
-              ) {
+              if (this.items[i].name == this.FolderTitle) {
                 checkName = true;
                 break;
               }
@@ -648,7 +678,7 @@ export default {
     }
   },
   mounted() {},
-  updated(){
+  updated() {
     this.$store.state.heightflag = true;
   },
   computed: mapState(["NoteCheck", "notetreefoldflag"]),
