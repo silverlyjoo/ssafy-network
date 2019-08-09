@@ -1,5 +1,5 @@
 <template>
-  <v-toolbar flat color="transparent" class="subtoolbar ma-1" >
+  <v-toolbar flat color="transparent" class="subtoolbar my-1" >
     <v-spacer />
     <v-toolbar-items>
       <v-tooltip bottom>
@@ -21,7 +21,7 @@
           >
             <v-btn icon slot="activator" v-on="on">
               <v-badge color="red" overlap>
-                <template slot="badge">{{ unreadnoti }}</template>
+                <template slot="badge" v-if="unreadnoti !== 0">{{ unreadnoti }}</template>
                 <v-icon class="toolbartext" color="white">notifications</v-icon>
               </v-badge>
             </v-btn>

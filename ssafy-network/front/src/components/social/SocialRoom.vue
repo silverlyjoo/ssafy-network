@@ -7,12 +7,12 @@
           <div v-for="chat in chatdata" :key="chat.id" class="chat">
             <div v-if="chat.name == nickname" class="me">
               <span class="title">{{ chat.msg }}</span>
-              <span class="body-3">{{ chat.createdAt }}</span>
+              <!-- <span class="body-3">{{ chat.createdAt }}</span> -->
             </div>
             <div v-else class="chat">
               <span class="title">{{ chat.name }} :</span>
               <span class="subheading">{{ chat.msg }}</span>
-              <span class="body-3">{{ chat.createdAt }}</span>
+              <!-- <span class="body-3">{{ chat.createdAt }}</span> -->
             </div>
           </div>
         </v-container>
@@ -27,23 +27,8 @@
       </v-card>
 
       <v-card class="chatInput">
-        <v-container>
-          <v-form>
-            <v-layout fluid>
-              <v-flex xs10 class="mr-5">
-                <v-text-field
-                  ref="txt"
-                  v-model="chatText"
-                  @keypress.enter.prevent="SendMsg"
-                  required
-                ></v-text-field>
-              </v-flex>
-              <v-flex xs2>
-                <v-btn @click="SendMsg">Submit</v-btn>
-              </v-flex>
-            </v-layout>
-          </v-form>
-        </v-container>
+          <div><v-text-field ref="txt" v-model="chatText" @keypress.enter.prevent="SendMsg" required></v-text-field></div>
+          <div><v-btn @click="SendMsg">Submit</v-btn></div>
       </v-card>
     </v-content>
   </div>
@@ -73,14 +58,17 @@ export default {
   beforeDestroy() {
     this.disconnect();
   },
-  updated(){
+  updated() {
     this.scrollset();
   },
   methods: {
+    setBodyheight (){
+      document.getElementsByTagName('body')
+    },
     scrollset() {
-          document.getElementById(
-          "scrolldown"
-        ).scrollTop = document.getElementById("scrolldown").scrollHeight;
+      document.getElementById("scrolldown").scrollTop = document.getElementById(
+        "scrolldown"
+      ).scrollHeight;
     },
     ConnectSocket() {
       this.socket = io(this.chatserver);
@@ -118,6 +106,9 @@ export default {
 <style>
 .chatInput {
   height: 100px;
+  bottom: 0px;
+  display: flex;
+  justify-content: space-between;
   /* width: 500px; */
 }
 .chatwindow {
