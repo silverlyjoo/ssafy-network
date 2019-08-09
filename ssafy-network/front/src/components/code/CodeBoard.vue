@@ -23,7 +23,7 @@
         style="width:80%; margin-left:auto; margin-right:auto;"
       >
         <template v-slot:items="props">
-          <td @click="addHit(props.item._id)" class="text-xs-center" style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
+          <td @click="addHit(props.item._id)" class="text-xs-center">
             <router-link
               :to='{name : "CodeDetail" , params: { data : props.item } }'
               style="text-decoration: none !important; color:black;">
@@ -59,7 +59,7 @@
         <v-select v-model="searchOption" :items="searchOptions"></v-select>
       </v-flex>
       <v-flex xs9 class>
-        <v-text-field v-model="articleSearchKeyword"></v-text-field>
+        <v-text-field v-model="articleSearchKeyword" @keyup.enter="searchArticles" @keyup.esc="getArticles"></v-text-field>
       </v-flex>
       <v-flex xs1 class="px-5">
         <v-icon @click="searchArticles" large>
@@ -75,8 +75,6 @@
 
 
 <script>
-import caxios from "@/plugins/createaxios.js";
-
 export default {
   name: "CodeBoard",
   $_veeValidate: {
@@ -85,8 +83,6 @@ export default {
   data() {
     return {
       searchedArticles: [],
-      dbserver: this.$store.state.dbserver,
-      token: this.$session.get("token"),
       articleSearchKeyword: "",
       searchOption: "title",
       searchOptions: ["language", "writer", "title", "source", "content"],
@@ -133,7 +129,6 @@ export default {
 
   mounted() {
     this.getArticles();
-    this.getDay();
   },
   computed: {
     pages () {
@@ -174,6 +169,7 @@ export default {
         .finally();
     },
     getArticles() {
+      this.articleSearchKeyword = "",
       fetch(this.$store.state.dbserver + "/boards/" + this.$session.get("token"), {
         method: "GET",
         hearders: {
@@ -183,23 +179,19 @@ export default {
       }).then(res => res.json())
       .then(data => {
         this.articles = data;
+        this.searchedArticles = data;
+        this.searchedArticles.sort(function(a,b) {
+          if (new Date(a.createdAt) < new Date(b.createdAt)) {
+            return 1;
+          }
+          if (new Date(a.createdAt) > new Date(b.createdAt)) {
+              return -1;
+          }
+          return 0;
+        });
         this.pagination.totalItems = this.articles.length;
         this.loading = false;
       })
-    },
-    getDay() {
-      var today = new Date();
-      var dd = today.getDate();
-      var mm = today.getMonth() + 1; // 1월이 0 !
-      var yyyy = today.getFullYear();
-      if ( dd < 10 ) {
-        dd = "0" + dd;
-      }
-      this.month = mm;
-      if (mm < 10) {
-        mm = "0" + mm;
-      }
-      this.today = yyyy + "-" + mm + "-" + dd;
     },
     addHit(id) {
       fetch(this.$store.state.dbserver + "/boards/hit", {
