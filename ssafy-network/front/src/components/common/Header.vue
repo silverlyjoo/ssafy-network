@@ -1,5 +1,5 @@
 <template>
-  <v-toolbar flat color="transparent" class="subtoolbar ma-1" >
+  <v-toolbar flat color="transparent" class="subtoolbar my-1" >
     <v-spacer />
     <v-toolbar-items>
       <v-tooltip bottom>
