@@ -1,11 +1,14 @@
 <template>
   <v-layout row justify-end class="mr-3 mb-3">
-    <v-dialog v-model="dialog" persistent max-width="600px">
+    <v-tooltip bottom>
       <template v-slot:activator="{ on }">
-        <v-btn fab text small class="primary" v-on="on">
-          <v-icon small>add</v-icon>
+        <v-btn fab text small class="primary" v-on="on" @click="dialog=true">
+          <v-icon small>edit</v-icon>
         </v-btn>
       </template>
+      <span>일정 추가</span>
+      </v-tooltip>
+    <v-dialog v-model="dialog" persistent max-width="600px">
       <v-card>
         <v-card-title>
           <span class="headline">ToDo List 추가</span>
@@ -141,6 +144,16 @@ export default {
   },
   mounted() {
     this.focus = this.today;
+  },watch:{
+    'event.endDate'(to,from){
+      var x = new Date(this.event.startDate);
+      var y = new Date(this.event.endDate);
+          if(x > y){
+            alert("날짜가 올바르지 않습니다.");
+            this.$refs.endDate.focus();
+            this.event.endDate = "";
+          }
+    }
   },
   methods: {
     close() {

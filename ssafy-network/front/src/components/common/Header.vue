@@ -1,9 +1,5 @@
 <template>
-  <!-- <div class="subtoolbar">
-    <h4 class="toolbartext title">SSAFY WM</h4>
-  </div>-->
-
-  <v-toolbar flat color="transparent" class="subtoolbar">
+  <v-toolbar flat color="transparent" class="subtoolbar ma-1" >
     <v-spacer />
     <v-toolbar-items>
       <v-tooltip bottom>
@@ -52,8 +48,8 @@
       </v-tooltip>
       <v-tooltip bottom>
         <template v-slot:activator="{ on }">
-          <v-flex align-self-center style="height:80%">
-            <v-btn to="/user" outline color="grey" class="ma-2" round v-on="on">
+          <v-flex align-self-center>
+            <v-btn to="/user" outline color="grey" class="pa-2 ma-2" round v-on="on">
               <v-icon class="toolbartext" color="white" left>person</v-icon>
               {{$session.get("nickname")}}
             </v-btn>
@@ -74,7 +70,7 @@
       <v-tooltip bottom>
         <template v-slot:activator="{ on }">
           <v-flex align-self-center>
-            <v-btn icon @click="logout" v-on="on">
+            <v-btn icon @click="logoutForm()" v-on="on">
               <v-icon class="toolbartext" color="white">mdi-exit-to-app</v-icon>
             </v-btn>
           </v-flex>
@@ -97,6 +93,16 @@
         </v-card-actions>
       </v-card>
     </v-dialog>
+    <v-dialog v-model="logoutDialog" max-width="290">
+              <v-card>
+                <v-card-title class="headline">로그아웃 하시겠습니까?</v-card-title>
+                <v-card-actions>
+                  <v-spacer></v-spacer>
+                  <v-btn color="green darken-1" flat="flat" @click="logoutDialog = false">아니오</v-btn>
+                  <v-btn color="green darken-1" flat="flat" @click="logout()">예</v-btn>
+                </v-card-actions>
+              </v-card>
+            </v-dialog>
   </v-toolbar>
 </template>
 
@@ -106,6 +112,7 @@ import caxios from "@/plugins/createaxios.js";
 export default {
   data() {
     return {
+      logoutDialog:false,
       token: this.$session.get("token"),
       id: this.$session.get("id"),
       dbserver: this.$store.state.dbserver,
@@ -155,6 +162,9 @@ export default {
         .then(res => {
           this.selfmembership = res.data.membership;
         });
+    },
+    logoutForm(){
+      this.logoutDialog = true;
     },
     logout() {
       this.$store.state.login = false;
