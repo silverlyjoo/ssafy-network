@@ -167,7 +167,7 @@
                   v-model="FolderTitle"
                   v-validate="'required|min:2'"
                   data-vv-name="FolderTitle"
-                  data-vv-scope="FolderTitle"
+                  data-vv-as="FolderTitle"
                   :error-messages="errors.collect('FolderTitle')"
                   ref="FolderTitle"
                 ></v-text-field>
@@ -192,9 +192,9 @@
                   label="폴더 제목"
                   v-model="FolderTitle"
                   v-validate="'required|min:2'"
-                  data-vv-name="FolderTitle"
-                  data-vv-scope="FolderTitle"
-                  :error-messages="errors.collect('FolderTitle')"
+                  data-vv-name="FolderEdit"
+                  data-vv-scope="FolderEdit"
+                  :error-messages="errors.collect('FolderEdit')"
                   ref="FolderEdit"
                 ></v-text-field>
               </v-flex>
@@ -273,6 +273,7 @@ export default {
     },
     FolderUpdate() {
       const parent = this.selectItem.course.slice(0, -2);
+
       fetch(
         this.$store.state.dbserver +
           "/notes/" +
@@ -555,9 +556,12 @@ export default {
       });
     },
     addFolder() {
-      this.$validator.validateAll("FolderTitle").then(res => {
+      this.$validator.validate("FolderTitle").then(res => {
         if (!res) {
           alert("값이 유효한지 확인해 주세요.");
+          this.FolderTitle = "";
+          this.$refs.FolderTitle.focus();
+          return;
         } else {
           // root 일때
           var cour = "";
