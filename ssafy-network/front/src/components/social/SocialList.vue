@@ -29,14 +29,13 @@
               :key="idx"
               avatar
               @click="joinchat(item._id, idx)"
-              class="mb-3 pa-3"
             >
-              <v-list-tile-content>
-                {{ item.title}} - {{ item.owner}}
-                <br />
-                {{ item.createdAt}} {{item.userList.length}} / {{ item.max}}
-              </v-list-tile-content>
-
+              <!-- <v-list-tile-content>
+                {{ item.title}} - {{ item.owner}} - {{ item.createdAt}} {{item.userList.length}} / {{ item.max}}
+              </v-list-tile-content> -->
+              <div class="chatlist">
+                <span>{{ item.title }}</span>
+              </div>
               <v-list-tile-action
                 v-if="item.owner === nickname"
                 @click.stop="delconfirm('삭제하시겠습니까?') ? deleteroom(item._id, idx) : ''"
