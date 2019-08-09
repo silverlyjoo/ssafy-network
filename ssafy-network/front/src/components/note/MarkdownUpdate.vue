@@ -4,6 +4,7 @@
     <div style="margin-top: 20px; margin-left:30px;">
       <h1>
         <v-text-field
+        label="제목"
           v-model="name"
           v-validate="'required|min:2'"
           data-vv-name="제목"

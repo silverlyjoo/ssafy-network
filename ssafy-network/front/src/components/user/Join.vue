@@ -64,10 +64,21 @@
                 <v-btn @click="userNickNameCheck" ref="NickNameCheckBtn" class="mr-5">중복체크</v-btn>
                 <span v-if="NickNameCheck" style="color:blue;">중복체크 완료</span>
               </v-flex>
+              
+              <v-flex>
+                <v-text-field
+                  class="mr-5"
+                  v-model="parent"
+                  label="소속 부서"
+                ></v-text-field>
+                <v-btn @click="parentCheck" class="mr-5">검색</v-btn>
+              </v-flex>
+              
               <v-select
                 v-model="department"
-                label="부서"
+                label="지역"
                 :items="departments"
+                @change="childsearch"
                 v-validate="'required'"
                 data-vv-name="Department"
                 :error-messages="errors.collect('Department')"
@@ -76,7 +87,7 @@
               ></v-select>
               <v-select
                 v-model="position"
-                label="직책"
+                label="기수"
                 :items="positions"
                 v-validate="'required'"
                 data-vv-name="Position"
@@ -108,15 +119,52 @@ export default {
       pwdCheck: "",
       name: "",
       nickname: "",
+      parent:"",
       department: "",
       position: "",
-      departments: ["인사", "영업", "개발", "기획"],
-      positions: ["사원","주임","대리","과장","차장","부장","이사","상무","전무","부사장","사장","회장"],
+      departments: [],
+      positions: [],
       IDCheck: false,
       NickNameCheck: false
     };
   },
   methods: {
+    parentCheck(){
+      fetch(
+        this.$store.state.dbserver + "/company/join/" + this.parent,
+        {
+          method: "GET",
+          headers: {
+            "Access-Control-Allow-Origin": "*",
+            "Content-Type": "application/json"
+          }
+        }
+      )
+        .then(res => res.json())
+        .then(data => {
+          if (data) {
+            this.departments = data.children;
+          }
+        })
+    },
+    childsearch(){
+      fetch(
+        this.$store.state.dbserver + "/company/join/" + this.department,
+        {
+          method: "GET",
+          headers: {
+            "Access-Control-Allow-Origin": "*",
+            "Content-Type": "application/json"
+          }
+        }
+      )
+        .then(res => res.json())
+        .then(data => {
+          if (data) {
+            this.positions = data.children;
+          }
+        })
+    },
     submit() {
       this.$validator.validateAll().then(res => {
         if (!res) {

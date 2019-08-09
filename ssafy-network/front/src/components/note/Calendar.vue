@@ -1,6 +1,6 @@
 <template>
   <div>
-    <full-calendar :events="events" @eventClick="eventClick" @dateClick="dateClick"></full-calendar>
+    <full-calendar :events="events" @eventClick="eventClick" @dateClick="dateClick" locale="ko"></full-calendar>
     <v-layout row justify-end class="mr-3 mb-3">
       <v-dialog v-model="dialog" persistent max-width="600px">
         <v-card>
@@ -117,7 +117,6 @@
 </template>
 <script>
 import FullCalendar from "vue-fullcalendar";
-
 export default {
   $_veeValidate: {
     validator: "new"
@@ -151,6 +150,16 @@ export default {
     };
   },mounted(){
     this.$store.state.heightflag = true;
+  },watch:{
+    'event.endDate'(to,from){
+      var x = new Date(this.event.startDate);
+      var y = new Date(this.event.endDate);
+          if(x > y){
+            alert("날짜가 올바르지 않습니다.");
+            this.$refs.endDate.focus();
+            this.event.endDate = "";
+          }
+    }
   },
   methods: {
     dateClick(arg) {
