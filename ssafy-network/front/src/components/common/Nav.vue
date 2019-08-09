@@ -13,7 +13,7 @@
             <v-layout align-center class="pa-2">
               <v-flex text-xs-center>
                 <!-- <h4 class="toolbartext title">{{navheight}}</h4> -->
-              </v-flex>
+              </v-flex>h
             </v-layout>
           </router-link>
         </div>
