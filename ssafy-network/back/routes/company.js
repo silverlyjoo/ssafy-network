@@ -3,11 +3,9 @@ var express = require('express');
 var router = express.Router();
 var decode = require('../decode');
 
-
-
 /**
  * @swagger
- *  /company/{department}/{token}:
+ *  /company/join/{department}:
  *    get:
  *      tags:
  *      - Company
@@ -27,12 +25,81 @@ var decode = require('../decode');
  *       200:
  *        description: 모든 게시글을 json 리스트에 반환
  */
-router.get('/:department/:token', function (req, res) {
+router.get('/join/:department', function (req, res) {
+    Company.findOne({ department: req.params.department },function (err, company) {
+        if (err) {
+            return res.status(500).send({ error: 'database failure' });
+        }
+        if(!company){
+            res.json({result: false});
+            return;
+        }
+        res.json(company);
+    });
+});
+
+/**
+ * @swagger
+ *  /company/{token}:
+ *    get:
+ *      tags:
+ *      - Company
+ *      description: 회사 전체 조직도 반환
+ *      parameters:
+ *      - name: token
+ *        in: path
+ *        description: "토큰"
+ *        required: trues
+ *        type: string
+ *      responses:
+ *       200:
+ *        description: 모든 게시글을 json 리스트에 반환
+ */
+router.get('/:token', function (req, res) {
     var info = decode(req.params.token);
     if (!info) {
         return res.json({ result: false });
     }
-    Company.findOne({ department: req.params.department },function (err, company) {
+    Company.find(function (err, company) {
+        if (err) {
+            return res.status(500).send({ error: 'database failure' });
+        }
+        if(!company){
+            res.json({result: false});
+            return;
+        }
+        res.json(company);
+    });
+});
+
+/**
+ * @swagger
+ *  /company/{_id}/{token}:
+ *    get:
+ *      tags:
+ *      - Company
+ *      description: 회사 조직도 반환
+ *      parameters:
+ *      - name: _id
+ *        in: path
+ *        description: "오브젝트 아이디"
+ *        required: trues
+ *        type: string
+ *      - name: token
+ *        in: path
+ *        description: "토큰"
+ *        required: trues
+ *        type: string
+ *      responses:
+ *       200:
+ *        description: 모든 게시글을 json 리스트에 반환
+ */
+router.get('/:_id/:token', function (req, res) {
+    var info = decode(req.params.token);
+    if (!info) {
+        return res.json({ result: false });
+    }
+    Company.findOne({ _id: req.params._id },function (err, company) {
         if (err) {
             return res.status(500).send({ error: 'database failure' });
         }
@@ -157,7 +224,7 @@ router.put('/', function (req, res) {
  *        schema:
  *          type: object
  *          properties:
- *            department:
+ *            _id:
  *              type: string
  *              required: true
  *            token:
@@ -173,7 +240,7 @@ router.delete('/', function (req, res) {
         return res.json({ result: false });
     }
     if (info.membership == "관리자") {
-        Company.remove({ department: req.body.department }, function (err, output) {
+        Company.remove({ _id: req.body._id }, function (err, output) {
             if (err) {
                 return res.status(500).json({ error: "database failure" });
             }
