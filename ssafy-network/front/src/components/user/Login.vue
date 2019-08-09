@@ -36,12 +36,16 @@ export default {
   },
   methods: {
     login() {
-      fetch(this.$store.state.dbserver + "/users/login/"+this.id+"/"+this.pwd, {
-        method: "GET",
+      fetch(this.$store.state.dbserver + "/users/login", {
+        method: "POST",
         headers: {
           "Access-Control-Allow-Origin": "*",
           "Content-Type": "application/json"
-        }
+        },
+        body: JSON.stringify({
+            id: this.id,
+            pwd: this.pwd,
+          })
       })
         .then(res => res.json())
         .then(data => {

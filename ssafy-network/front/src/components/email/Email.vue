@@ -15,12 +15,16 @@
             <v-card-text>
               <v-container grid-list-md>
                 <v-layout wrap>
+                  <v-flex xs12>
+                    <v-text-field class="mr-5" v-model="parent" label="소속 부서"></v-text-field>
+                    <v-btn @click="parentCheck" class="mr-5">검색</v-btn>
+                  </v-flex>
                   <v-flex xs4>
                     <v-select
                       v-model="department"
                       label="부서"
                       :items="departments"
-                      @change="search"
+                      @change="childsearch"
                       required
                       style="max-width:20vh;"
                     ></v-select>
@@ -77,10 +81,20 @@
       <br />
       <v-data-table :headers="headers" :items="mails" :expand="expand" item-key="_id">
         <template v-slot:items="props">
-          <tr> <!-- @click="props.expanded = !props.expanded" -->
-            <td @click="props.expanded = !props.expanded" class="text-xs-center">{{ props.item.writer }}</td>
-            <td @click="props.expanded = !props.expanded" class="text-xs-center">{{ props.item.title }}</td>
-            <td @click="props.expanded = !props.expanded" class="text-xs-center">{{ props.item.createdAt }}</td>
+          <tr>
+            <!-- @click="props.expanded = !props.expanded" -->
+            <td
+              @click="props.expanded = !props.expanded"
+              class="text-xs-center"
+            >{{ props.item.writer }}</td>
+            <td
+              @click="props.expanded = !props.expanded"
+              class="text-xs-center"
+            >{{ props.item.title }}</td>
+            <td
+              @click="props.expanded = !props.expanded"
+              class="text-xs-center"
+            >{{ props.item.createdAt }}</td>
             <td class="justify-center layout px-0">
               <v-btn
                 color="grey darken-2"
@@ -94,8 +108,6 @@
           </tr>
         </template>
 
-
-
         <template v-slot:expand="props">
           <v-card flat>
             <!-- 박성민 작업하던 것, 기능 안 먹혀서 수정중 -->
@@ -104,9 +116,11 @@
               <v-flex xs2 text-xs-center class="py-3 display-1">
                 <strong>내용</strong>
               </v-flex>
-              <v-flex xs10 text-xs-left class="py-3 display-1">
-                &nbsp; &nbsp; &nbsp; {{ props.item.content }}
-              </v-flex>
+              <v-flex
+                xs10
+                text-xs-left
+                class="py-3 display-1"
+              >&nbsp; &nbsp; &nbsp; {{ props.item.content }}</v-flex>
               <!-- <v-flex xs3 text-xs-left>
                 <v-btn
                   @click="deleteMail(props.item._id)"
@@ -114,11 +128,10 @@
                   class="white--text"
                   justify-right
                 >메일 삭제</v-btn>
-              </v-flex> -->
+              </v-flex>-->
             </v-layout>
 
             <!--  -->
-
           </v-card>
         </template>
       </v-data-table>
@@ -133,9 +146,8 @@
           </v-card-actions>
         </v-card>
       </v-dialog>
-      <br>
+      <br />
     </div>
-
   </v-container>
 </template>
 
@@ -151,22 +163,9 @@ export default {
       content: "",
       receive: [],
       department: "",
-      departments: ["인사", "영업", "개발", "기획"],
+      departments: [],
       position: "",
-      positions: [
-        "사원",
-        "주임",
-        "대리",
-        "과장",
-        "차장",
-        "부장",
-        "이사",
-        "상무",
-        "전무",
-        "부사장",
-        "사장",
-        "회장"
-      ],
+      positions: [],
       person: "",
       people: [],
       headers: [
@@ -187,6 +186,42 @@ export default {
     this.getMailList();
   },
   methods: {
+    parentCheck(){
+      fetch(
+        this.$store.state.dbserver + "/company/join/" + this.parent,
+        {
+          method: "GET",
+          headers: {
+            "Access-Control-Allow-Origin": "*",
+            "Content-Type": "application/json"
+          }
+        }
+      )
+        .then(res => res.json())
+        .then(data => {
+          if (data) {
+            this.departments = data.children;
+          }
+        })
+    },
+    childsearch(){
+      fetch(
+        this.$store.state.dbserver + "/company/join/" + this.department,
+        {
+          method: "GET",
+          headers: {
+            "Access-Control-Allow-Origin": "*",
+            "Content-Type": "application/json"
+          }
+        }
+      )
+        .then(res => res.json())
+        .then(data => {
+          if (data) {
+            this.positions = data.children;
+          }
+        })
+    },
     addreceive() {
       this.receive.push(this.person);
     },
@@ -270,14 +305,14 @@ export default {
         });
     },
 
-    // 
+    //
 
     mailDeleteForm(item) {
       this.dialog = true;
       this.selectedItem = item;
     },
 
-    // 
+    //
 
     close() {
       this.writeMail = false;
