@@ -24,28 +24,41 @@
         <v-card class="my-4">
           <v-list subheader>
             <v-subheader>Recent chat</v-subheader>
-            <v-list-tile
+            <div class="chatheader">
+              <div class="headerinfo">
+                <div>제목</div>
+                <div>방장</div>
+                <div>인원수</div>
+                <div>생성일</div>
+              </div>
+            </div>
+            <div
               v-for="(item, idx) in items"
               :key="idx"
               avatar
               @click="joinchat(item._id, idx)"
+              class="chatlist"
             >
               <!-- <v-list-tile-content>
                 {{ item.title}} - {{ item.owner}} - {{ item.createdAt}} {{item.userList.length}} / {{ item.max}}
-              </v-list-tile-content> -->
-              <div class="chatlist">
-                <span>{{ item.title }}</span>
+              </v-list-tile-content>-->
+              <div class="chatinfo">
+                <div>
+                  <span>{{ item.title }}</span>
+                </div>
+                <div>{{ item.owner }}</div>
+                <div>{{ item.userList.length }} / {{ item.max }}</div>
+                <div>{{ item.createdAt }}</div>
               </div>
-              <v-list-tile-action
-                v-if="item.owner === nickname"
-                @click.stop="delconfirm('삭제하시겠습니까?') ? deleteroom(item._id, idx) : ''"
-              >
-                <i class="fas fa-trash-alt deleteicon"></i>
-              </v-list-tile-action>
-              <v-list-tile-action v-if="item.password">
-                <i class="fas fa-lock lockicon"></i>
-              </v-list-tile-action>
-            </v-list-tile>
+              <div class="chaticons">
+                <i
+                  v-if="item.owner === nickname"
+                  @click.stop="delconfirm('삭제하시겠습니까?') ? deleteroom(item._id, idx) : ''"
+                  class="fas fa-trash-alt fa-lg deleteicon chaticon"
+                ></i>
+                <i v-if="item.password" class="fas fa-lock fa-lg lockicon chaticon"></i>
+              </div>
+            </div>
           </v-list>
         </v-card>
       </v-flex>
@@ -172,7 +185,6 @@ export default {
         });
     },
     async joinchat(roomId, idx) {
-
       if (this.items[idx].max <= this.items[idx].userList.length) {
         alert("꽉참");
         return;
@@ -190,7 +202,10 @@ export default {
       this.$router.push({ name: "new" });
     },
     joinsecret() {
-      if (this.items[this.secretjoinflag].max <= this.items[this.secretjoinflag].userList.length) {
+      if (
+        this.items[this.secretjoinflag].max <=
+        this.items[this.secretjoinflag].userList.length
+      ) {
         alert("꽉참");
         return;
       }
@@ -225,14 +240,85 @@ export default {
   background: rgb(231, 231, 231);
   box-shadow: 1px 2px 2px rgb(143, 143, 143);
 }
-.flexcenter {
-  display: flex;
-  justify-content: center;
-}
 .lockicon {
   color: rgb(177, 177, 177);
 }
 .deleteicon {
   color: rgb(255, 138, 138);
+}
+.deleteicon:hover {
+  color: rgb(255, 64, 64) !important;
+  /* text-shadow: 3px 3px 3px rgb(255, 99, 99); */
+  -webkit-text-stroke: 0.5px rgb(221, 166, 166);
+}
+.chatlist {
+  display: flex;
+  justify-content: space-between;
+  padding: 10px 15px;
+}
+.chatheader {
+  display: flex;
+  justify-content: space-between;
+  padding: 10px 15px;
+}
+.chatlist:hover {
+  background: rgba(184, 184, 184, 0.226);
+  cursor: pointer;
+}
+.chaticon {
+  margin: 0px 10px;
+}
+.chatinfo {
+  display: flex;
+  flex: 0 0 90%;
+  justify-content: space-around;
+}
+.headerinfo {
+  display: flex;
+  flex: 0 0 85%;
+  justify-content: space-around;
+}
+
+.chaticons {
+  flex: 0 0 10%;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+}
+
+.chatinfo > div {
+  display: flex;
+  justify-content: center;
+}
+.headerinfo > div {
+  display: flex;
+  flex: 0 0 25%;
+  justify-content: center;
+}
+
+.chatinfo div:nth-child(1) {
+  font-weight: 600;
+  flex: 0 0 40%;
+  min-width: 0;
+  justify-content: flex-start;
+  padding:0px 10px;
+}
+.chatinfo div:nth-child(1) span {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.chatinfo div:nth-child(2) {
+  font-weight: 400;
+  flex: 0 0 25%;
+}
+.chatinfo div:nth-child(3) {
+  font-weight: 400;
+  flex: 0 0 10%;
+}
+.chatinfo div:nth-child(4) {
+  font-weight: 400;
+  font-size: 90%;
+  flex: 0 0 25%;
 }
 </style>
