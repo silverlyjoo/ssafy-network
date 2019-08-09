@@ -12,7 +12,7 @@
           <router-link to="/index" style="text-decoration: none !important">
             <v-layout align-center class="pa-2">
               <v-flex text-xs-center>
-                <h4 class="toolbartext title">SSAFY WM</h4>
+                <!-- <h4 class="toolbartext title">{{navheight}}</h4> -->
               </v-flex>
             </v-layout>
           </router-link>
@@ -49,24 +49,6 @@
           </router-link>
         </div>
       </div>
-      <!-- <div class="navBtn mb-3" @click="foldnote">
-            <router-link to="/address" style="text-decoration: none !important">
-              <v-layout align-center class="pa-2">
-                <v-flex xs7 text-xs-center>
-                  <span class="navtext navtcolor">ADDRESS</span>
-                </v-flex>
-              </v-layout>
-            </router-link>
-      </div>-->
-      <!-- <div class="navBtn mb-3" @click="foldnote">
-            <router-link to="/vote" style="text-decoration: none !important">
-              <v-layout align-center class="pa-2">
-                <v-flex xs7 text-xs-center>
-                  <span class="navtext navtcolor">VOTE</span>
-                </v-flex>
-              </v-layout>
-            </router-link>
-      </div>-->
     </div>
   </vue-resizable>
 </template>
@@ -91,31 +73,57 @@ export default {
       maxWidth: 700,
       handlers: ["r"],
       height: 100,
+      window: {
+        width: 0,
+        height: 0
+      }
     };
   },
   methods: {
     foldnote() {
       this.$store.state.notetreefoldflag = false;
       this.$store.state.heightflag = true;
+    },
+    handleResize() {
+      this.window.width = window.innerWidth;
+      this.window.height = window.innerHeight;
     }
   },
-  mounted() {}
+  mounted() {
+
+  },
+  created() {
+    window.addEventListener('resize', this.handleResize)
+    this.handleResize();
+  },
+  destroyed() {
+    window.removeEventListener('resize', this.handleResize)
+  },
+  computed :{
+    // navheight () {
+    //   let routeheight = document.getElementById('mainlayoutId').offsetHeight
+    //   console.log(routeheight)
+    //   return routeheight
+    // }
+  },
+  watch: {
+    'window.height' (from, to) {
+      document.getElementsByClassName('navcon')[0].style.height = this.window.height
+    }
+  }
 };
 </script>
+
 <style>
 .navcon {
   background: rgb(75, 75, 75);
   z-index: 100;
   padding: 15px;
-  display: flex;
-  align-self: stretch;
-}
-.navitems {
-  /* display:  */
 }
 .navBtn:hover {
   background: rgba(212, 212, 212, 0.212);
   border-radius: 10px;
+  cursor: pointer;
 }
 .navtext {
   font-family: "Raleway";
@@ -125,21 +133,42 @@ export default {
 .navtcolor {
   color: rgba(233, 233, 233, 0.932);
 }
-/* .fold {
-  display: flex;
-  justify-content: flex-end;
-} */
-.foldbtn:hover {
-  background: rgba(211, 211, 211, 0.205);
-  border-radius: 15px;
-}
-/* .navgo {
-  display: flex;
-  flex-direction: column;
-  justify-content: space-around;
-} */
 .toolbartext {
   text-shadow: 1px 1px 5px black;
   color: white;
 }
 </style>
+
+
+// .fold {
+//   display: flex;
+//   justify-content: flex-end;
+// }
+// .foldbtn:hover {
+//   background: rgba(211, 211, 211, 0.205);
+//   border-radius: 15px;
+// }
+// .navgo {
+//   display: flex;
+//   flex-direction: column;
+//   justify-content: space-around;
+// }
+
+// <div class="navBtn mb-3" @click="foldnote">
+//       <router-link to="/address" style="text-decoration: none !important">
+//         <v-layout align-center class="pa-2">
+//           <v-flex xs7 text-xs-center>
+//             <span class="navtext navtcolor">ADDRESS</span>
+//           </v-flex>
+//         </v-layout>
+//       </router-link>
+// </div>
+// <div class="navBtn mb-3" @click="foldnote">
+//       <router-link to="/vote" style="text-decoration: none !important">
+//         <v-layout align-center class="pa-2">
+//           <v-flex xs7 text-xs-center>
+//             <span class="navtext navtcolor">VOTE</span>
+//           </v-flex>
+//         </v-layout>
+//       </router-link>
+// </div>
