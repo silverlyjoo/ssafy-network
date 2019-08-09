@@ -49,7 +49,6 @@
       v-if="click"
       style="overflow:hidden!important; text-overflow: ellipsis; "
       class="treecss"
-      
     >
       <template v-slot:prepend="{item, open,selected}">
         <v-btn flat class="ma-0 pa-0" style="min-width:30px!important;" open-on-click>
@@ -168,7 +167,7 @@
                   v-model="FolderTitle"
                   v-validate="'required|min:2'"
                   data-vv-name="FolderTitle"
-                  data-vv-scope="FolderTitle"
+                  data-vv-as="FolderTitle"
                   :error-messages="errors.collect('FolderTitle')"
                   ref="FolderTitle"
                 ></v-text-field>
@@ -193,9 +192,10 @@
                   label="폴더 제목"
                   v-model="FolderTitle"
                   v-validate="'required|min:2'"
-                  data-vv-name="FolderTitle"
-                  data-vv-scope="FolderTitle"
-                  :error-messages="errors.collect('FolderTitle')"
+                  data-vv-name="FolderEdit"
+                  data-vv-scope="FolderEdit"
+                  :error-messages="errors.collect('FolderEdit')"
+                  ref="FolderEdit"
                 ></v-text-field>
               </v-flex>
               <v-flex>
@@ -207,13 +207,24 @@
         </v-card-actions>
       </v-card>
     </v-dialog>
-    <v-dialog v-model="showDelete" max-width="400">
+    <v-dialog v-model="showDelete" max-width="700">
       <v-card class="pa-2">
-        <v-card-title class="headline justify-center">삭제 하시겠습니까?</v-card-title>
+        <v-card-title class="justify-center">
+          <span class="headline" v-if="selectItem.file == 'folder' ">
+            선택된 폴더에
+            <span
+              style="color:red; font-weight:bold;"
+            >{{deleteItemFolder}}개의 폴더와 {{deleteItemTxt}}개의 파일</span>이 있습니다.
+          </span>
+          <br />
+          <span class="headline" v-if="selectItem.file == 'txt' ">파일을</span>&nbsp;&nbsp;
+          <span class="headline">삭제하시겠습니까?</span>
+        </v-card-title>
         <v-card-actions class="text-xs-center">
           <v-spacer></v-spacer>
-          <v-btn color="green darken-1" flat="flat" @click="showDelete = false">아니오</v-btn>
-          <v-btn color="green darken-1" flat="flat" @click="deleteItem()">예</v-btn>
+          <v-btn color="green darken-1" flat="flat" @click="deleteItemClose()">아니오</v-btn>
+          <v-btn v-if="selectItem.file == 'folder' " color="green darken-1" flat="flat" @click="deleteFolder()">예</v-btn>
+          <v-btn v-if="selectItem.file == 'txt' " color="green darken-1" flat="flat" @click="deleteTxt()">예</v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>
@@ -231,6 +242,8 @@ export default {
       showNote: false,
       showFolder: false,
       showDelete: false,
+      deleteItemFolder: 0,
+      deleteItemTxt: 0,
       showFolderEdit: false,
       selectItem: "",
       FolderTitle: "",
@@ -259,26 +272,61 @@ export default {
       this.showFolderEdit = true;
     },
     FolderUpdate() {
-      fetch(this.$store.state.dbserver + "/notes/folder", {
-        method: "PUT",
-        headers: {
-          "Access-Control-Allow-Origin": "*",
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify({
-          _id: this.selectItem._id,
-          token: this.$session.get("token"),
-          name: this.FolderTitle
-        })
-      })
+      const parent = this.selectItem.course.slice(0, -2);
+
+      fetch(
+        this.$store.state.dbserver +
+          "/notes/" +
+          this.$session.get("id") +
+          "/" +
+          this.FolderTitle +
+          "/" +
+          parent +
+          "/" +
+          this.$session.get("token"),
+        {
+          method: "GET",
+          headers: {
+            "Access-Control-Allow-Origin": "*",
+            "Content-Type": "application/json"
+          }
+        }
+      )
         .then(res => res.json())
         .then(data => {
-          if (data.result == true) {
-
+          if (data.result == false) {
+            // 중복 X
+            fetch(this.$store.state.dbserver + "/notes/folder", {
+              method: "PUT",
+              headers: {
+                "Access-Control-Allow-Origin": "*",
+                "Content-Type": "application/json"
+              },
+              body: JSON.stringify({
+                _id: this.selectItem._id,
+                token: this.$session.get("token"),
+                name: this.FolderTitle
+              })
+            })
+              .then(res => res.json())
+              .then(data => {
+                if (data.result == true) {
+                } else {
+                  alert("폴더 이름 수정 실패..");
+                }
+                this.FolderEditClose();
+              });
           } else {
-            alert("폴더 이름 수정 실패..");
+            // 중복이 있으면
+            if (data.course == this.selectItem.course) {
+              // 자기 자신이라면
+              this.FolderEditClose();
+            } else {
+              alert("중복되는 이름이 있습니다.");
+              this.FolderTitle = this.selectItem.name;
+              this.$refs.FolderEdit.focus();
+            }
           }
-          this.FolderEditClose();
         });
     },
     FolderEditClose() {
@@ -302,6 +350,18 @@ export default {
     DeleteOpen(item) {
       this.showDelete = true;
       this.selectItem = item;
+      for (let i in this.selectItem.children) {
+        if (this.selectItem.children[i].file == "folder") {
+          this.deleteItemFolder++;
+        } else {
+          this.deleteItemTxt++;
+        }
+      }
+    },
+    deleteItemClose() {
+      this.showDelete = false;
+      this.deleteItemFolder = 0;
+      this.deleteItemTxt = 0;
     },
     addNoteClose() {
       this.showNote = false;
@@ -338,9 +398,7 @@ export default {
           if (this.selectItem == "root") {
             var checkName = false;
             for (let i in this.items) {
-              if (
-                this.items[i].name == this.NoteTitle
-              ) {
+              if (this.items[i].name == this.NoteTitle) {
                 checkName = true;
                 break;
               }
@@ -498,18 +556,19 @@ export default {
       });
     },
     addFolder() {
-      this.$validator.validateAll("FolderTitle").then(res => {
+      this.$validator.validate("FolderTitle").then(res => {
         if (!res) {
           alert("값이 유효한지 확인해 주세요.");
+          this.FolderTitle = "";
+          this.$refs.FolderTitle.focus();
+          return;
         } else {
           // root 일때
           var cour = "";
           if (this.selectItem == "root") {
             var checkName = false;
             for (let i in this.items) {
-              if (
-                this.items[i].name == this.FolderTitle
-              ) {
+              if (this.items[i].name == this.FolderTitle) {
                 checkName = true;
                 break;
               }
@@ -623,7 +682,31 @@ export default {
           this.items = data.item;
         });
     },
-    deleteItem() {
+    deleteFolder(){
+       fetch(this.$store.state.dbserver + "/notes/folder", {
+        method: "DELETE",
+        headers: {
+          "Access-Control-Allow-Origin": "*",
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          id: this.$session.get("id"),
+          token: this.$session.get("token"),
+          course : this.selectItem.course
+        })
+      })
+        .then(res => res.json())
+        .then(data => {
+          if (data.result == true) {
+          } else {
+            alert("삭제 실패...");
+          }
+          this.deleteItemClose();
+          this.$router.push("/note/calendar");
+          this.closeForm();
+        });
+    },
+    deleteTxt() {
       fetch(this.$store.state.dbserver + "/notes/", {
         method: "DELETE",
         headers: {
@@ -641,14 +724,14 @@ export default {
           } else {
             alert("삭제 실패...");
           }
-          this.showDelete = false;
+          this.deleteItemClose();
           this.$router.push("/note/calendar");
           this.closeForm();
         });
     }
   },
   mounted() {},
-  updated(){
+  updated() {
     this.$store.state.heightflag = true;
   },
   computed: mapState(["NoteCheck", "notetreefoldflag"]),
