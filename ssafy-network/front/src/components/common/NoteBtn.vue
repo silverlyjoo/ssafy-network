@@ -207,13 +207,24 @@
         </v-card-actions>
       </v-card>
     </v-dialog>
-    <v-dialog v-model="showDelete" max-width="400">
+    <v-dialog v-model="showDelete" max-width="700">
       <v-card class="pa-2">
-        <v-card-title class="headline justify-center">삭제 하시겠습니까?</v-card-title>
+        <v-card-title class="justify-center">
+          <span class="headline" v-if="selectItem.file == 'folder' ">
+            선택된 폴더에
+            <span
+              style="color:red; font-weight:bold;"
+            >{{deleteItemFolder}}개의 폴더와 {{deleteItemTxt}}개의 파일</span>이 있습니다.
+          </span>
+          <br />
+          <span class="headline" v-if="selectItem.file == 'txt' ">파일을</span>&nbsp;&nbsp;
+          <span class="headline">삭제하시겠습니까?</span>
+        </v-card-title>
         <v-card-actions class="text-xs-center">
           <v-spacer></v-spacer>
-          <v-btn color="green darken-1" flat="flat" @click="showDelete = false">아니오</v-btn>
-          <v-btn color="green darken-1" flat="flat" @click="deleteItem()">예</v-btn>
+          <v-btn color="green darken-1" flat="flat" @click="deleteItemClose()">아니오</v-btn>
+          <v-btn v-if="selectItem.file == 'folder' " color="green darken-1" flat="flat" @click="deleteFolder()">예</v-btn>
+          <v-btn v-if="selectItem.file == 'txt' " color="green darken-1" flat="flat" @click="deleteTxt()">예</v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>
@@ -231,6 +242,8 @@ export default {
       showNote: false,
       showFolder: false,
       showDelete: false,
+      deleteItemFolder: 0,
+      deleteItemTxt: 0,
       showFolderEdit: false,
       selectItem: "",
       FolderTitle: "",
@@ -336,6 +349,18 @@ export default {
     DeleteOpen(item) {
       this.showDelete = true;
       this.selectItem = item;
+      for (let i in this.selectItem.children) {
+        if (this.selectItem.children[i].file == "folder") {
+          this.deleteItemFolder++;
+        } else {
+          this.deleteItemTxt++;
+        }
+      }
+    },
+    deleteItemClose() {
+      this.showDelete = false;
+      this.deleteItemFolder = 0;
+      this.deleteItemTxt = 0;
     },
     addNoteClose() {
       this.showNote = false;
@@ -653,7 +678,31 @@ export default {
           this.items = data.item;
         });
     },
-    deleteItem() {
+    deleteFolder(){
+       fetch(this.$store.state.dbserver + "/notes/folder", {
+        method: "DELETE",
+        headers: {
+          "Access-Control-Allow-Origin": "*",
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          id: this.$session.get("id"),
+          token: this.$session.get("token"),
+          course : this.selectItem.course
+        })
+      })
+        .then(res => res.json())
+        .then(data => {
+          if (data.result == true) {
+          } else {
+            alert("삭제 실패...");
+          }
+          this.deleteItemClose();
+          this.$router.push("/note/calendar");
+          this.closeForm();
+        });
+    },
+    deleteTxt() {
       fetch(this.$store.state.dbserver + "/notes/", {
         method: "DELETE",
         headers: {
@@ -671,7 +720,7 @@ export default {
           } else {
             alert("삭제 실패...");
           }
-          this.showDelete = false;
+          this.deleteItemClose();
           this.$router.push("/note/calendar");
           this.closeForm();
         });
