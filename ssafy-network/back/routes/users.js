@@ -267,28 +267,30 @@ router.get('/department/:department/position/:position/:token', function (req, r
 
 /**
  * @swagger
- *  /users/login/{id}/{pwd}:
- *    get:
+ *  /users/login:
+ *    post:
  *      tags:
  *      - User
  *      description: 로그인
  *      parameters:
- *      - name: id
- *        in: path
- *        description: "아이디"
- *        required: true
- *        type: string
- *      - name: pwd
- *        in: path
- *        description: "비밀번호"
- *        required: true
- *        type: string
+ *      - in: body
+ *        name: login
+ *        description: "로그인"
+ *        schema:
+ *          type: object
+ *          properties:
+ *            id:
+ *              type: string
+ *              required: true
+ *            pwd:
+ *              type: string
+ *              required: true
  *      responses:
  *       200:
  *        description: 로그인
  */
-router.get('/login/:id/:pwd', function (req, res) {
-  User.findOne({ id: req.params.id, pwd: req.params.pwd }, function (err, user) {
+router.post('/login', function (req, res) {
+  User.findOne({ id: req.body.id, pwd: req.body.pwd }, function (err, user) {
     if (err) {
       return res.status(500).json({ error: err });
     }
