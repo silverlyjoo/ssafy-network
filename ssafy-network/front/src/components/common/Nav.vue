@@ -6,14 +6,14 @@
     :active="handlers"
     class="navlayout"
   >
-    <div class="navcon">
+    <div id="navcon" :style="styleObject">
       <div class="navitems">
         <div class="navBtn mb-3" @click="foldnote">
           <router-link to="/index" style="text-decoration: none !important">
             <v-layout align-center class="pa-2">
               <v-flex text-xs-center>
-                <!-- <h4 class="toolbartext title">{{navheight}}</h4> -->
-              </v-flex>h
+                <h4 class="toolbartext title">{{mainheight}}</h4>
+              </v-flex>
             </v-layout>
           </router-link>
         </div>
@@ -76,7 +76,8 @@ export default {
       window: {
         width: 0,
         height: 0
-      }
+      },
+      mainheight: null
     };
   },
   methods: {
@@ -87,38 +88,46 @@ export default {
     handleResize() {
       this.window.width = window.innerWidth;
       this.window.height = window.innerHeight;
-    }
+    },
+    handleScroll(e) {
+      this.mainheight = document
+        .getElementById("mainlayoutId")
+        .offsetHeight.toString();
+      // console.log('scroll!')
+      // console.log(document.getElementById("mainlayoutId").offsetHeight.toString())
+    },
+    checkMainheight() {}
   },
-  mounted() {
-
-  },
+  mounted() {},
   created() {
-    window.addEventListener('resize', this.handleResize)
+    window.addEventListener("resize", this.handleResize);
+    window.addEventListener("scroll", this.handleScroll);
     this.handleResize();
   },
   destroyed() {
-    window.removeEventListener('resize', this.handleResize)
+    window.removeEventListener("resize", this.handleResize);
+    window.removeEventListener("scroll", this.handleScroll);
   },
-  computed :{
-    // navheight () {
-    //   let routeheight = document.getElementById('mainlayoutId').offsetHeight
-    //   console.log(routeheight)
-    //   return routeheight
-    // }
-  },
-  watch: {
-    'window.height' (from, to) {
-      document.getElementsByClassName('navcon')[0].style.height = this.window.height
+  computed: {
+    styleObject() {
+      return {
+        height: this.mainheight
+      };
     }
-  }
+  },
+  watch: {}
 };
 </script>
 
 <style>
-.navcon {
+#navcon {
   background: rgb(75, 75, 75);
   z-index: 100;
   padding: 15px;
+  position: fixed;
+  width: 300px;
+  top: 0px;
+  height: 100vh;
 }
 .navBtn:hover {
   background: rgba(212, 212, 212, 0.212);

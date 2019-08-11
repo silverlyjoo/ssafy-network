@@ -61,6 +61,7 @@ export default {
   height: 100%;
   overflow: auto;
 }
+
 .routingbody {
   width: 100%;
 }
