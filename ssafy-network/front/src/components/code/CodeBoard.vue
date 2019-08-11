@@ -7,6 +7,9 @@
       <br><br><br>
     </v-toolbar>
     <br>
+
+    <!--  -->
+
     <div>
       <v-data-table
         :headers="headers"
@@ -20,7 +23,13 @@
         style="width:80%; margin-left:auto; margin-right:auto;"
       >
         <template v-slot:items="props">
-          <td @click="addHit(props.item._id)" class="text-xs-center"><router-link :to='{name : "CodeDetail" , params:{data : props.item }}' style="text-decoration: none !important; color:black;">{{ props.item.title }}</router-link></td>
+          <td @click="addHit(props.item._id)" class="text-xs-center">
+            <router-link
+              :to='{name : "CodeDetail" , params: { data : props.item } }'
+              style="text-decoration: none !important; color:black;">
+              {{ props.item.title }}
+            </router-link>
+          </td>
           <td class="text-xs-center">{{ props.item.writer }}</td>
           <td class="text-xs-center">{{ props.item.createdAt }}</td>
           <td class="text-xs-center">{{ props.item.hit }}</td>
@@ -29,6 +38,7 @@
           <v-alert :value="true" color="grey darken-2" icon="info" class="ma-3 pa-3">게시글이 없습니다</v-alert>
         </template>
       </v-data-table>
+      <br>
       <div class="text-xs-center pt-2">
         <v-pagination
           v-model="pagination.page"
@@ -40,6 +50,26 @@
         </v-pagination>
       </div>
     </div>
+
+    <br><br>
+      <!-- <v-card class="sociallist-header"> -->
+    <v-layout justify-space-around align-center style="width:80%; margin-left:auto; margin-right:auto;">
+      <!-- justify-space-around align-center -->
+      <v-flex xs2 text-xs-center class="px-5">
+        <v-select v-model="searchOption" :items="searchOptions"></v-select>
+      </v-flex>
+      <v-flex xs9 class>
+        <v-text-field v-model="articleSearchKeyword" @keyup.enter="searchArticles" @keyup.esc="getArticles"></v-text-field>
+      </v-flex>
+      <v-flex xs1 class="px-5">
+        <v-icon @click="searchArticles" large>
+          search
+        </v-icon>
+      </v-flex>
+    </v-layout>
+  <!-- </v-card> -->
+
+
   </div>
 </template>
 
@@ -52,6 +82,10 @@ export default {
   },
   data() {
     return {
+      searchedArticles: [],
+      articleSearchKeyword: "",
+      searchOption: "title",
+      searchOptions: ["language", "writer", "title", "source", "content"],
       loading: true,
       search: "",
       today: "",
@@ -95,7 +129,6 @@ export default {
 
   mounted() {
     this.getArticles();
-    this.getDay();
   },
   computed: {
     pages () {
@@ -107,8 +140,36 @@ export default {
     }
   },
   methods: {
-   
+    searchArticles() {
+      fetch(
+        this.$store.state.dbserver +
+          "/search/boards/" +
+          this.searchOption +
+          "/" +
+          this.articleSearchKeyword +
+          "/" +
+          this.$session.get("token"),
+        {
+          method: "GET",
+          headers: {
+            "Access-Control-Allow-Origin": "*",
+            "Content-Type": "application/json"
+          }
+        }
+      )
+        .then(res => res.json())
+        .then(data => {
+          if (data) {
+            this.searchedArticles = data;
+          } else {
+            alert("올바른 값을 입력하세요");
+          }
+        })
+        .catch(error => console.log(error))
+        .finally();
+    },
     getArticles() {
+      this.articleSearchKeyword = "",
       fetch(this.$store.state.dbserver + "/boards/" + this.$session.get("token"), {
         method: "GET",
         hearders: {
@@ -118,23 +179,19 @@ export default {
       }).then(res => res.json())
       .then(data => {
         this.articles = data;
+        this.searchedArticles = data;
+        this.searchedArticles.sort(function(a,b) {
+          if (new Date(a.createdAt) < new Date(b.createdAt)) {
+            return 1;
+          }
+          if (new Date(a.createdAt) > new Date(b.createdAt)) {
+              return -1;
+          }
+          return 0;
+        });
         this.pagination.totalItems = this.articles.length;
         this.loading = false;
       })
-    },
-    getDay() {
-      var today = new Date();
-      var dd = today.getDate();
-      var mm = today.getMonth() + 1; // 1월이 0 !
-      var yyyy = today.getFullYear();
-      if ( dd < 10 ) {
-        dd = "0" + dd;
-      }
-      this.month = mm;
-      if (mm < 10) {
-        mm = "0" + mm;
-      }
-      this.today = yyyy + "-" + mm + "-" + dd;
     },
     addHit(id) {
       fetch(this.$store.state.dbserver + "/boards/hit", {
