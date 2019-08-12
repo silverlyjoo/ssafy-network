@@ -2,6 +2,7 @@ import Vue from 'vue'
 import Vuex from 'vuex'
 import notice from '@/store/notice.js'
 
+export const SET_MAINHEIGHT = 'SET_MAINHEIGHT'
 
 Vue.use(Vuex)
 
@@ -17,9 +18,19 @@ export default new Vuex.Store({
     notetreefoldflag: false,
     heightflag: false,
     commentflag: false,
+    mainheight: null,
+  },
+  getters: {
+    // getHeight(state) {
+    //   console.log('when?')
+    //   return state.mainheight
+    // }
   },
   mutations: {
-
+    [SET_MAINHEIGHT](state, height) {
+      // console.log('changed')
+      state.mainheight = height
+    }
   },
   actions: {
 

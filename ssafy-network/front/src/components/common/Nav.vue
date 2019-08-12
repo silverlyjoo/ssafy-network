@@ -4,15 +4,15 @@
     :min-width="minWidth"
     :max-width="maxWidth"
     :active="handlers"
-    class="navlayout"
+    id="resizecon"
   >
-    <div id="navcon" :style="styleObject">
+    <div id="navcon">
       <div class="navitems">
         <div class="navBtn mb-3" @click="foldnote">
           <router-link to="/index" style="text-decoration: none !important">
             <v-layout align-center class="pa-2">
               <v-flex text-xs-center>
-                <h4 class="toolbartext title">{{mainheight}}</h4>
+                <h4 class="toolbartext title">SSAFY WM</h4>
               </v-flex>
             </v-layout>
           </router-link>
@@ -20,8 +20,8 @@
 
         <v-divider class="mb-3" style="border-color: rgb(218, 234, 248); width: 90%;"></v-divider>
         <NoteBtn></NoteBtn>
-        <div class="navBtn mb-3" @click="foldnote">
-          <router-link to="/code/board" style="text-decoration: none !important">
+        <div class="navBtn mb-3" @click="foldnote" >
+          <router-link to="/code/board" style="text-decoration: none !important" >
             <v-layout align-center class="pa-2">
               <v-flex xs7 text-xs-center>
                 <span class="navtext navtcolor">CODE</span>
@@ -55,8 +55,8 @@
 
 <script>
 import VueResizable from "vue-resizable";
-
 import NoteBtn from "@/components/common/NoteBtn";
+import { mapState } from 'vuex';
 
 export default {
   $_veeValidate: {
@@ -68,11 +68,12 @@ export default {
     VueResizable
   },
   data() {
+    const ht = '100vh';
     return {
       minWidth: 320,
       maxWidth: 700,
       handlers: ["r"],
-      height: 100,
+      height: ht,
       window: {
         width: 0,
         height: 0
@@ -81,41 +82,60 @@ export default {
     };
   },
   methods: {
+    compareHeight() {
+      if (this.height > this.mainheight) {
+        return this.height
+      } else {
+        return this.mainheight
+      }
+    },
     foldnote() {
       this.$store.state.notetreefoldflag = false;
-      this.$store.state.heightflag = true;
     },
-    handleResize() {
-      this.window.width = window.innerWidth;
-      this.window.height = window.innerHeight;
+    async handleResize() {
+      await (this.height = window.innerHeight);
+      await (document.getElementById("navcon").style.height = this.compareHeight()+'px');
     },
-    handleScroll(e) {
-      this.mainheight = document
+    async changeHeight() {
+      await (this.mainheight = document
         .getElementById("mainlayoutId")
-        .offsetHeight.toString();
-      // console.log('scroll!')
-      // console.log(document.getElementById("mainlayoutId").offsetHeight.toString())
+        .offsetHeight.toString());
+      await (document.getElementById("navcon").style.height =
+        this.mainheight + "px");
+      // this.$store.state.heightflag = true;
     },
-    checkMainheight() {}
+    async handleScroll(e) {
+      await (this.mainheight = document
+        .getElementById("mainlayoutId")
+        .offsetHeight.toString());
+      document.getElementById("navcon").style.height = this.mainheight + "px";
+      this.height = parseInt(this.compareHeight())
+      console.log('h',this.height)
+      console.log('m', this.mainheight)
+      // this.$store.state.heightflag = true;
+    }
   },
-  mounted() {},
+  mounted() {
+    this.changeHeight();
+  },
   created() {
     window.addEventListener("resize", this.handleResize);
     window.addEventListener("scroll", this.handleScroll);
     this.handleResize();
   },
+  updated() {},
   destroyed() {
     window.removeEventListener("resize", this.handleResize);
     window.removeEventListener("scroll", this.handleScroll);
   },
   computed: {
-    styleObject() {
-      return {
-        height: this.mainheight
-      };
-    }
   },
-  watch: {}
+  watch: {
+    '$route' (from, to) {
+      this.height = 0
+      window.scrollTo(0, 0)
+    }
+  }
 };
 </script>
 
@@ -124,9 +144,6 @@ export default {
   background: rgb(75, 75, 75);
   z-index: 100;
   padding: 15px;
-  position: fixed;
-  width: 300px;
-  top: 0px;
   height: 100vh;
 }
 .navBtn:hover {

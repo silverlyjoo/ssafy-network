@@ -12,6 +12,8 @@
 </template>
 
 <script>
+import { SET_MAINHEIGHT } from "@/store.js";
+
 import Header from "@/components/common/Header";
 import Footer from "@/components/common/Footer";
 import Nav from "@/components/common/Nav";
@@ -35,23 +37,32 @@ export default {
     Nav
   },
   mounted() {
+    this.changeHeight();
+    this.$store.commit(SET_MAINHEIGHT, this.height);
     this.$store.commit(SET_NOTICES, [this.id, this.token, this.dbserver]);
-    // window.addEventListener("resize", this.handleResize);
   },
-  destroyed() {
-    // window.removeEventListener("resize", this.handleResize);
-  },
+  destroyed() {},
   updated() {
+    this.height = window.innerHeight;
+    this.changeHeight();
+    this.$store.commit(SET_MAINHEIGHT, this.height);
+    console.log(this.$store.state.mainheight)
     this.$store.commit(SET_NOTICES, [this.id, this.token, this.dbserver]);
   },
   computed: {
-    ...mapState(["heightflag"]),
+    ...mapState(["mainheight"]),
     notifications() {
       return this.$store.state.notice.notifications;
     }
   },
   watch: {},
-  methods: {}
+  methods: {
+    async changeHeight() {
+      await (this.height = document
+        .getElementById("mainlayoutId")
+        .offsetHeight.toString());
+    }
+  }
 };
 </script>
 
