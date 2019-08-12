@@ -1,11 +1,16 @@
 <template>
   <v-container>
-    <h1>admin page</h1>
-        <v-btn to="/admin/user">유저관리</v-btn>
-        <v-btn to="/admin/chat">채팅방관리</v-btn>
-        <v-btn to="/admin/notice">공지사항관리</v-btn>
-        <v-btn to="/admin/dep">부서관리</v-btn>
-        <router-view></router-view>
+    <h1>Notice 관리</h1>
+    <v-layout justify-center text-xs-center row>
+      <v-btn to="/admin/user" color="grey darken-2" class="white--text">유저관리</v-btn>
+      <v-btn to="/admin/chat" color="grey darken-2" class="white--text">채팅방관리</v-btn>
+      <v-btn to="/admin/notice" color="grey darken-2" class="white--text">공지사항관리</v-btn>
+      <v-btn to="/admin/dep" color="grey darken-2" class="white--text">부서관리</v-btn>
+      <router-view></router-view>
+      <v-spacer></v-spacer>
+      <v-btn @click="deleteNotice" color="grey darken-2" class="white--text">삭제</v-btn>
+      <v-btn to="/admin/nwrite" color="grey darken-2" class="white--text">새 공지</v-btn>
+    </v-layout>
     <v-data-table
       v-model="selected"
       :headers="headers"
@@ -50,8 +55,6 @@
         </tr>
       </template>
     </v-data-table>
-    <v-btn @click="deleteNotice">삭제</v-btn>
-    <v-btn to="/admin/nwrite">새 공지</v-btn>
   </v-container>
 </template>
 
