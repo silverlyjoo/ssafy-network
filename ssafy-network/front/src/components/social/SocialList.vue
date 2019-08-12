@@ -8,7 +8,11 @@
               <v-select v-model="searchoption" :items="searchoptions"></v-select>
             </v-flex>
             <v-flex xs6 class>
-              <v-text-field v-model="chatroomsearchkeyword" @keyup.enter="searchRooms" @keyup.esc="getRooms"></v-text-field>
+              <v-text-field
+                v-model="chatroomsearchkeyword"
+                @keyup.enter="searchRooms"
+                @keyup.esc="getRooms"
+              ></v-text-field>
             </v-flex>
             <button @click="searchRooms" class="buttonsize">
               <i class="fas fa-search"></i>
@@ -122,7 +126,8 @@ export default {
       dialog: false,
       typepassword: "",
       secretjoinflag: null,
-      selfmembership: null
+      selfmembership: null,
+      fullflag: null
     };
   },
   methods: {
@@ -140,6 +145,21 @@ export default {
     },
     delconfirm(msg) {
       return window.confirm(msg);
+    },
+    async isFull(roomId) {
+      let url = this.dbserver;
+      let result = await caxios(url)
+        .request({
+          url: `/rooms/${roomId}/${this.token}`,
+          method: "GET",
+          baseURL: url
+        })
+        .then(res => {
+          // return res.data.result;
+          // console.log(res.data)
+          this.fullflag = res.data.result;
+        });
+      // return result;
     },
     deleteroom(roomId, idx) {
       let roomUrl = this.dbserver;
@@ -206,40 +226,52 @@ export default {
         });
     },
     async joinchat(roomId, idx) {
-      if (this.items[idx].max <= this.items[idx].userList.length) {
-        alert("꽉참");
-        return;
-      }
-      if (this.items[idx].password) {
-        // console.log(idx)
-        await (this.dialog = true);
-        await this.$refs.chtpwd.focus();
-        await (this.secretjoinflag = idx);
+      // this.isFull(roomId).then(res => {
+      //   console.log(res);
+      // });
+      await this.isFull(roomId);
+      // await console.log(this.fullflag)
+      if (await this.fullflag) {
+        this.fullflag = "";
+
+        if (this.items[idx].password) {
+          await (this.dialog = true);
+          await this.$refs.chtpwd.focus();
+          await (this.secretjoinflag = idx);
+        } else {
+          this.$router.push({ name: "room", params: { _id: roomId } });
+        }
       } else {
-        this.$router.push({ name: "room", params: { _id: roomId } });
+        alert("꽉찬 방입니다.");
+        this.fullflag = "";
       }
     },
     newSocialRoom() {
       this.$router.push({ name: "new" });
     },
-    joinsecret() {
-      if (
-        this.items[this.secretjoinflag].max <=
-        this.items[this.secretjoinflag].userList.length
-      ) {
-        alert("꽉참");
-        return;
-      }
+    async joinsecret() {
+      let secretroomid = this.items[this.secretjoinflag]._id;
+
       if (
         this.items[this.secretjoinflag].password ===
         this.typepassword.toString()
       ) {
-        this.$router.push({
-          name: "room",
-          params: { _id: this.items[this.secretjoinflag]._id }
-        });
+        await this.isFull(secretroomid);
+        if (await this.fullflag) {
+          this.fullflag = "";
+          this.$router.push({
+            name: "room",
+            params: { _id: this.items[this.secretjoinflag]._id }
+          });
+        } else {
+          this.fullflag = "";
+          alert("방이 꽉찼습니다.");
+          this.dialog = false;
+          this.getRooms();
+        }
       } else {
-        alert("비밀번호가 틀렸습니다.");
+        this.fullflag = "";
+        alert("패스워드가 틀렸습니다.");
         this.typepassword = "";
       }
     }
