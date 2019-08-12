@@ -11,33 +11,64 @@
     <!--  -->
 
     <div>
-      <v-data-table
-        :headers="headers"
-        :items="articles"
-        :search="search"
-        :server-items-length="totalArticles"
-        hide-actions
-        :pagination.sync="pagination"
-        :loading="loading"
-        class="elevation-1"
-        style="width:80%; margin-left:auto; margin-right:auto;"
-      >
-        <template v-slot:items="props">
-          <td @click="addHit(props.item._id)" class="text-xs-center">
-            <router-link
-              :to='{name : "CodeDetail" , params: { data : props.item } }'
-              style="text-decoration: none !important; color:black;">
-              {{ props.item.title }}
-            </router-link>
-          </td>
-          <td class="text-xs-center">{{ props.item.writer }}</td>
-          <td class="text-xs-center">{{ props.item.createdAt }}</td>
-          <td class="text-xs-center">{{ props.item.hit }}</td>
-        </template>
-        <template slot="no-data">
-          <v-alert :value="true" color="grey darken-2" icon="info" class="ma-3 pa-3">게시글이 없습니다</v-alert>
-        </template>
-      </v-data-table>
+      <div v-if="searchedFlag">
+        <v-data-table
+          :headers="headers"
+          :items="searchedArticles"
+          :search="search"
+          :server-items-length="totalArticles"
+          hide-actions
+          :pagination.sync="pagination"
+          :loading="loading"
+          class="elevation-1"
+          style="width:80%; margin-left:auto; margin-right:auto;"
+        >
+          <template v-slot:items="props">
+            <td @click="addHit(props.item._id)" class="text-xs-center">
+              <router-link
+                :to='{name : "CodeDetail" , params: { data : props.item } }'
+                style="text-decoration: none !important; color:black;">
+                {{ props.item.title }}
+              </router-link>
+            </td>
+            <td class="text-xs-center">{{ props.item.writer }}</td>
+            <td class="text-xs-center">{{ props.item.createdAt }}</td>
+            <td class="text-xs-center">{{ props.item.hit }}</td>
+          </template>
+          <template slot="no-data">
+            <v-alert :value="true" color="grey darken-2" icon="info" class="ma-3 pa-3">게시글이 없습니다</v-alert>
+          </template>
+        </v-data-table>
+      </div>
+      <div v-else>
+        <v-data-table
+          :headers="headers"
+          :items="articles"
+          :search="search"
+          :server-items-length="totalArticles"
+          hide-actions
+          :pagination.sync="pagination"
+          :loading="loading"
+          class="elevation-1"
+          style="width:80%; margin-left:auto; margin-right:auto;"
+        >
+          <template v-slot:items="props">
+            <td @click="addHit(props.item._id)" class="text-xs-center">
+              <router-link
+                :to='{name : "CodeDetail" , params: { data : props.item } }'
+                style="text-decoration: none !important; color:black;">
+                {{ props.item.title }}
+              </router-link>
+            </td>
+            <td class="text-xs-center">{{ props.item.writer }}</td>
+            <td class="text-xs-center">{{ props.item.createdAt }}</td>
+            <td class="text-xs-center">{{ props.item.hit }}</td>
+          </template>
+          <template slot="no-data">
+            <v-alert :value="true" color="grey darken-2" icon="info" class="ma-3 pa-3">게시글이 없습니다</v-alert>
+          </template>
+        </v-data-table>
+      </div>
       <br>
       <div class="text-xs-center pt-2">
         <v-pagination
@@ -75,6 +106,8 @@
 
 
 <script>
+import { mapState } from "vuex";
+
 export default {
   name: "CodeBoard",
   $_veeValidate: {
@@ -83,6 +116,7 @@ export default {
   data() {
     return {
       searchedArticles: [],
+      searchedFlag: false,
       articleSearchKeyword: "",
       searchOption: "title",
       searchOptions: ["language", "writer", "title", "source", "content"],
@@ -161,6 +195,16 @@ export default {
         .then(data => {
           if (data) {
             this.searchedArticles = data;
+            this.searchedFlag = true;
+            this.searchedArticles.sort(function(a,b) {
+              if (new Date(a.createdAt) < new Date(b.createdAt)) {
+                return 1;
+              }
+              if (new Date(a.createdAt) > new Date(b.createdAt)) {
+                  return -1;
+              }
+              return 0;
+            });
           } else {
             alert("올바른 값을 입력하세요");
           }
@@ -179,7 +223,6 @@ export default {
       }).then(res => res.json())
       .then(data => {
         this.articles = data;
-        this.searchedArticles = data;
         this.searchedArticles.sort(function(a,b) {
           if (new Date(a.createdAt) < new Date(b.createdAt)) {
             return 1;
@@ -191,6 +234,7 @@ export default {
         });
         this.pagination.totalItems = this.articles.length;
         this.loading = false;
+        this.searchedFlag = false;
       })
     },
     addHit(id) {
