@@ -1,11 +1,11 @@
 <template>
   <v-container>
-    <h1>admin page</h1>
+    <h1>User 관리</h1>
     <v-layout justify-center text-xs-center row>
-      <v-btn to="/admin/user">유저관리</v-btn>
-      <v-btn to="/admin/chat">채팅방관리</v-btn>
-      <v-btn to="/admin/notice">공지사항관리</v-btn>
-      <v-btn to="/admin/dep">부서관리</v-btn>
+      <v-btn to="/admin/user" color="grey darken-2" class="white--text">유저관리</v-btn>
+      <v-btn to="/admin/chat" color="grey darken-2" class="white--text">채팅방관리</v-btn>
+      <v-btn to="/admin/notice" color="grey darken-2" class="white--text">공지사항관리</v-btn>
+      <v-btn to="/admin/dep" color="grey darken-2" class="white--text">부서관리</v-btn>
       <v-spacer></v-spacer>
       <v-select
         v-model="membership"
@@ -14,7 +14,7 @@
         required
         style="max-width:20vh;"
       ></v-select>
-      <v-btn @click="updateUserMembership">등급 변경</v-btn>
+      <v-btn @click="updateUserMembership" color="grey darken-2" class="white--text">등급 변경</v-btn>
     </v-layout>
     <router-view></router-view>
 
@@ -40,7 +40,7 @@
     </v-data-table>
     <v-layout justify-center text-xs-center row>
       <v-text-field v-model="superdepartment"></v-text-field>
-      <v-btn @click="getDepartmentList">부서 검색</v-btn>
+      <v-btn @click="getDepartmentList" color="grey darken-2" class="white--text">부서 검색</v-btn>
       <v-select
         v-model="first"
         label="부서찾기"
@@ -125,6 +125,7 @@ export default {
         .then(data => {
           if (data) {
             this.firsts = data.children;
+            this.first = this.firsts[0];
           }
         });
     },
