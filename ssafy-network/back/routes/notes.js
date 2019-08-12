@@ -420,4 +420,45 @@ router.delete('/', function (req, res) {
     });
 });
 
+/**
+ * @swagger
+ *  /notes/folder:
+ *    delete:
+ *      tags:
+ *      - Note
+ *      description: 폴더 아래 다 삭제
+ *      parameters:
+ *      - in: body
+ *        name: deletefolder
+ *        description: "폴더 아래 다 삭제"
+ *        schema:
+ *          type: object
+ *          properties:
+ *            id:
+ *              type: string
+ *              required: true
+ *            course:
+ *              type: string
+ *              required: true
+ *            token:
+ *              type: string
+ *              required: true
+ *      responses:
+ *       200:
+ *        description: "result = true 일 경우 정상적으로 작동"
+ */
+router.delete('/folder', function (req, res) {
+    var info = decode(req.body.token);
+    if (!info) {
+        return res.json({ result: false });
+    }
+    console.log(req.body._id);
+    Note.remove({ id: req.body.id , course :{ $regex: ".*"+req.body.course  } }, function (err, output) {
+        if (err) {
+            return res.status(500).json({ error: "database failure" });
+        }
+        console.log(output);
+        res.json({ result: true });
+    });
+});
 module.exports = router;

@@ -8,8 +8,6 @@
     </v-toolbar>
     <br>
 
-    <!--  -->
-
     <div>
       <div v-if="searchedFlag">
         <v-data-table
@@ -24,10 +22,11 @@
           style="width:80%; margin-left:auto; margin-right:auto;"
         >
           <template v-slot:items="props">
-            <td @click="addHit(props.item._id)" class="text-xs-center">
+            <td @click="addHit(props.item._id)" class="text-xs-center header">
               <router-link
                 :to='{name : "CodeDetail" , params: { data : props.item } }'
-                style="text-decoration: none !important; color:black;">
+                style="text-decoration: none !important; color:black;"
+              >
                 {{ props.item.title }}
               </router-link>
             </td>
@@ -53,7 +52,7 @@
           style="width:80%; margin-left:auto; margin-right:auto;"
         >
           <template v-slot:items="props">
-            <td @click="addHit(props.item._id)" class="text-xs-center">
+            <td @click="addHit(props.item._id)" class="text-xs-center header">
               <router-link
                 :to='{name : "CodeDetail" , params: { data : props.item } }'
                 style="text-decoration: none !important; color:black;">
@@ -83,11 +82,19 @@
     </div>
 
     <br><br>
-      <!-- <v-card class="sociallist-header"> -->
+
+    <!-- <v-toolbar flat color="grey lighten-5" style="width:80%; margin-left:auto; margin-right:auto;">
+      <v-toolbar-title class="grey--text" style="font-size:16px;">※ createdAt은 작성일 순, hit은 조회수 순입니다.※</v-toolbar-title>
+    </v-toolbar> -->
+
     <v-layout justify-space-around align-center style="width:80%; margin-left:auto; margin-right:auto;">
-      <!-- justify-space-around align-center -->
+
+      <!-- <v-flex xs2 text-xs-center class="px-5">
+        <v-select v-model="searchOption1" :items="searchOptions1"></v-select>
+      </v-flex> -->
+
       <v-flex xs2 text-xs-center class="px-5">
-        <v-select v-model="searchOption" :items="searchOptions"></v-select>
+        <v-select v-model="searchOption2" :items="searchOptions2"></v-select>
       </v-flex>
       <v-flex xs9 class>
         <v-text-field v-model="articleSearchKeyword" @keyup.enter="searchArticles" @keyup.esc="getArticles"></v-text-field>
@@ -98,9 +105,6 @@
         </v-icon>
       </v-flex>
     </v-layout>
-  <!-- </v-card> -->
-
-
   </div>
 </template>
 
@@ -118,8 +122,10 @@ export default {
       searchedArticles: [],
       searchedFlag: false,
       articleSearchKeyword: "",
-      searchOption: "title",
-      searchOptions: ["language", "writer", "title", "source", "content"],
+      // searchOption1: "createdAt",
+      // searchOptions1: ["createdAt", "hit"],
+      searchOption2: "title",
+      searchOptions2: ["language", "writer", "title", "source", "content"],
       loading: true,
       search: "",
       today: "",
@@ -137,7 +143,7 @@ export default {
           text: "제목",
           align: "center",
           sortable: false,
-          value: "title"
+          value: "title",
         },
         {
           text: "작성자",
@@ -178,7 +184,7 @@ export default {
       fetch(
         this.$store.state.dbserver +
           "/search/boards/" +
-          this.searchOption +
+          this.searchOption2 +
           "/" +
           this.articleSearchKeyword +
           "/" +
@@ -273,5 +279,19 @@ export default {
 .write-btn {
   float: right;
   /* padding-right: 100px; */
+}
+.header{
+  overflow: hidden; 
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  max-width: 10vw;
+  max-height: 10vh;
+}
+.code-detail {
+  text-decoration: none !important;
+  color:black;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 </style>
