@@ -28,7 +28,7 @@
 
       <v-card class="chatInput">
           <div><v-text-field ref="txt" v-model="chatText" @keypress.enter.prevent="SendMsg" required></v-text-field></div>
-          <div><v-btn @click="SendMsg">Submit</v-btn></div>
+          <div><v-btn @click="SendMsg" color="grey darken-2" class="white--text">Submit</v-btn></div>
       </v-card>
     </v-content>
   </div>

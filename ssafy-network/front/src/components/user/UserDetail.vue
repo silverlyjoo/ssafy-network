@@ -20,7 +20,7 @@
         </v-flex>
       </v-layout>
     </v-card>
-    <v-btn to="/user/update">회원정보 수정</v-btn>
+    <v-btn to="/user/update" color="grey darken-2" class="white--text">회원정보 수정</v-btn>
   </v-container>
 </template>
 
