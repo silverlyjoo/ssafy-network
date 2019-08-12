@@ -139,7 +139,7 @@
                 <v-form data-vv-scope="NoteTitle">
                   <v-text-field
                     label="파일 제목"
-                    v-model="NoteTitle"
+                    v-model.trim="NoteTitle"
                     v-validate="'required|min:2'"
                     data-vv-name="NoteTitle"
                     data-vv-as="NoteTitle"
@@ -168,7 +168,7 @@
                 <v-form data-vv-scope="FolderTitle">
                   <v-text-field
                     label="폴더 제목"
-                    v-model="FolderTitle"
+                    v-model.trim="FolderTitle"
                     v-validate="'required|min:2'"
                     data-vv-name="FolderTitle"
                     data-vv-as="폴더 제목 "
@@ -197,7 +197,7 @@
                 <v-form data-vv-scope="FolderEditTitle">
                   <v-text-field
                     label="폴더 제목"
-                    v-model="FolderEditTitle"
+                    v-model.trim="FolderEditTitle"
                     v-validate="'required|min:2'"
                     data-vv-name="FolderEditTitle"
                     data-vv-as="폴더 제목 "
@@ -292,6 +292,7 @@ export default {
       this.selectItem = item;
       this.FolderEditTitle = item.name;
       this.showFolderEdit = true;
+      this.$refs.FolderEditTitle.focus();
     },
     FolderUpdate() {
       this.$validator.validateAll("FolderEditTitle").then(res => {
@@ -302,9 +303,10 @@ export default {
           return;
         } else {
           const parent = this.selectItem.course.slice(0, -2);
+          // 중복 체크
           fetch(
             this.$store.state.dbserver +
-              "/notes/" +
+              "/notes/folder/" +
               this.$session.get("id") +
               "/" +
               this.FolderEditTitle +
@@ -371,11 +373,13 @@ export default {
       this.showNote = true;
       this.NoteTitle = "";
       this.selectItem = item;
+      this.$refs.NoteTitle.focus();
     },
     addFolderOpen(item) {
       this.showFolder = true;
       this.FolderTitle = "";
       this.selectItem = item;
+      this.$refs.FolderTitle.focus();
     },
     DeleteOpen(item) {
       this.showDelete = true;
@@ -434,7 +438,10 @@ export default {
               if (Number(temp[temp.length - 1]) > max) {
                 max = temp[temp.length - 1];
               }
-              if (this.items[i].name == this.NoteTitle) {
+              if (
+                this.items[i].name == this.NoteTitle &&
+                this.items[i].file == "txt"
+              ) {
                 checkName = true;
                 break;
               }
@@ -462,13 +469,11 @@ export default {
                     // 폴더 추가 성공 시 objectid 값을 찾아야됨
                     fetch(
                       this.$store.state.dbserver +
-                        "/notes/" +
+                        "/notes/txt/" +
                         id +
                         "/" +
                         name +
-                        "/" +
-                        "0" +
-                        "/" +
+                        "/0/" +
                         tokenid,
                       {
                         method: "GET",
@@ -506,7 +511,7 @@ export default {
             // 루트가 아닐 때
             fetch(
               this.$store.state.dbserver +
-                "/notes/" +
+                "/notes/txt/" +
                 id +
                 "/" +
                 name +
@@ -619,7 +624,10 @@ export default {
               if (Number(temp[temp.length - 1]) > max) {
                 max = temp[temp.length - 1];
               }
-              if (this.items[i].name == this.FolderTitle) {
+              if (
+                this.items[i].name == this.FolderTitle &&
+                this.items[i].file == "folder"
+              ) {
                 checkName = true;
                 break;
               }
@@ -659,7 +667,7 @@ export default {
             // root 가 아닐때 selectItem(부모)가 course가 존재, course로 중복체크
             fetch(
               this.$store.state.dbserver +
-                "/notes/" +
+                "/notes/folder/" +
                 this.$session.get("id") +
                 "/" +
                 this.FolderTitle +
@@ -709,7 +717,7 @@ export default {
                       this.addFolderClose();
                     });
                 } else {
-                  alert("이미 존재하는 폴더이름입니다");
+                  alert("이미 존재하는 폴더 이름입니다");
                   this.FolderTitle = "";
                   this.$refs.FolderTitle.focus();
                 }
