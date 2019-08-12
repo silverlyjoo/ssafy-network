@@ -216,7 +216,7 @@
       </v-card>
     </v-dialog>
     <v-dialog v-model="showDelete" max-width="700">
-      <v-card class="pa-2">
+      <v-card class="pa-2" v-if="selectItem != ''">
         <v-card-title class="justify-center">
           <span class="headline" v-if="selectItem.file == 'folder' ">
             선택된 폴더에
@@ -398,6 +398,7 @@ export default {
       this.showDelete = false;
       this.deleteItemFolder = 0;
       this.deleteItemTxt = 0;
+      this.closeForm();
     },
     addNoteClose() {
       this.showNote = false;
@@ -765,12 +766,12 @@ export default {
         .then(res => res.json())
         .then(data => {
           if (data.result == true) {
+            this.showDelete = false;
+            this.$router.push("/note/calendar");
+            this.deleteItemClose();
           } else {
             alert("삭제 실패...");
           }
-          this.$router.push("/note/calendar");
-          this.deleteItemClose();
-          this.closeForm();
         });
     },
     deleteTxt() {
@@ -788,12 +789,12 @@ export default {
         .then(res => res.json())
         .then(data => {
           if (data.result == true) {
+            this.showDelete = false;
+            this.$router.push("/note/calendar");
+            this.deleteItemClose();
           } else {
             alert("삭제 실패...");
           }
-          this.$router.push("/note/calendar");
-          this.deleteItemClose();
-          this.closeForm();
         });
     }
   },
