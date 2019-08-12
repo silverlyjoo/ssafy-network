@@ -1,5 +1,5 @@
 <template>
-  <div class="pa-5" >    
+  <div class="pa-3" >    
     <v-toolbar flat color="grey lighten-5" style="width:80%; margin-left:auto; margin-right:auto;">
       <v-toolbar-title>Code Review 게시판</v-toolbar-title>
       <v-spacer></v-spacer>
