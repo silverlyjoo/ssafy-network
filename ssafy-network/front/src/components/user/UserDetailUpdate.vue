@@ -30,7 +30,7 @@
             <v-text-field v-model="userDataModel.nickname" label="nickname"></v-text-field>
           </v-flex>
           <v-flex xs2>
-            <v-btn @click="nicknameCheck">중복체크</v-btn>
+            <v-btn @click="nicknameCheck" color="grey darken-2" class="white--text">중복체크</v-btn>
             <span v-if="nicknamecheckflag">중복체크 완료</span>
             <span v-else style="color: red">중복체크 필요</span>
           </v-flex>
@@ -72,7 +72,7 @@
             ></v-text-field>
           </v-flex>
         </v-layout>
-        <v-btn @click="submit">Submit</v-btn>
+        <v-btn @click="submit" color="grey darken-2" class="white--text">Submit</v-btn>
       </v-container>
     </v-card>
   </v-container>
