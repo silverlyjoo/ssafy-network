@@ -125,6 +125,7 @@ export default {
         .then(data => {
           if (data) {
             this.firsts = data.children;
+            this.first = this.firsts[0];
           }
         });
     },
