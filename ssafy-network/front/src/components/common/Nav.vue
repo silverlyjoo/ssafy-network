@@ -68,12 +68,11 @@ export default {
     VueResizable
   },
   data() {
-    const ht = '100vh';
     return {
       minWidth: 320,
       maxWidth: 700,
       handlers: ["r"],
-      height: ht,
+      height: '90vh',
       window: {
         width: 0,
         height: 0
