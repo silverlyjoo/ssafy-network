@@ -139,7 +139,7 @@
                 <v-form data-vv-scope="NoteTitle">
                   <v-text-field
                     label="파일 제목"
-                    v-model="NoteTitle"
+                    v-model.trim="NoteTitle"
                     v-validate="'required|min:2'"
                     data-vv-name="NoteTitle"
                     data-vv-as="NoteTitle"
@@ -168,7 +168,7 @@
                 <v-form data-vv-scope="FolderTitle">
                   <v-text-field
                     label="폴더 제목"
-                    v-model="FolderTitle"
+                    v-model.trim="FolderTitle"
                     v-validate="'required|min:2'"
                     data-vv-name="FolderTitle"
                     data-vv-as="폴더 제목 "
@@ -197,7 +197,7 @@
                 <v-form data-vv-scope="FolderEditTitle">
                   <v-text-field
                     label="폴더 제목"
-                    v-model="FolderEditTitle"
+                    v-model.trim="FolderEditTitle"
                     v-validate="'required|min:2'"
                     data-vv-name="FolderEditTitle"
                     data-vv-as="폴더 제목 "
@@ -292,6 +292,7 @@ export default {
       this.selectItem = item;
       this.FolderEditTitle = item.name;
       this.showFolderEdit = true;
+      this.$refs.FolderEditTitle.focus();
     },
     FolderUpdate() {
       this.$validator.validateAll("FolderEditTitle").then(res => {
@@ -372,11 +373,13 @@ export default {
       this.showNote = true;
       this.NoteTitle = "";
       this.selectItem = item;
+      this.$refs.NoteTitle.focus();
     },
     addFolderOpen(item) {
       this.showFolder = true;
       this.FolderTitle = "";
       this.selectItem = item;
+      this.$refs.FolderTitle.focus();
     },
     DeleteOpen(item) {
       this.showDelete = true;
