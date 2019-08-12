@@ -61,7 +61,7 @@ export default {
   },
   methods: {
     updateNote(){
-      this.$router.push({name:"markdownupdate",params:{_id:this.data._id , title:this.title , content:this.content} })
+      this.$router.push({name:"markdownupdate",params:{data:this.data , title:this.title , content:this.content} })
     },
     close(){
        this.$router.push("/note/calendar")
