@@ -216,7 +216,7 @@
       </v-card>
     </v-dialog>
     <v-dialog v-model="showDelete" max-width="700">
-      <v-card class="pa-2">
+      <v-card class="pa-2" v-if="selectItem != ''">
         <v-card-title class="justify-center">
           <span class="headline" v-if="selectItem.file == 'folder' ">
             선택된 폴더에
@@ -302,7 +302,9 @@ export default {
           this.$refs.FolderEditTitle.focus();
           return;
         } else {
-          const parent = this.selectItem.course.slice(0, -2);
+          var course = this.selectItem.course.split(".");
+          var courSize = course[course.length - 1].length + 1;
+          var parentCourse = this.selectItem.course.slice(0, Number("-" + courSize));
           // 중복 체크
           fetch(
             this.$store.state.dbserver +
@@ -311,7 +313,7 @@ export default {
               "/" +
               this.FolderEditTitle +
               "/" +
-              parent +
+              parentCourse +
               "/" +
               this.$session.get("token"),
             {
@@ -370,16 +372,16 @@ export default {
       this.$router.push("/note/detail/" + id);
     },
     addNoteOpen(item) {
+      this.$refs.NoteTitle.focus();
       this.showNote = true;
       this.NoteTitle = "";
       this.selectItem = item;
-      this.$refs.NoteTitle.focus();
     },
     addFolderOpen(item) {
+      this.$refs.FolderTitle.focus();
       this.showFolder = true;
       this.FolderTitle = "";
       this.selectItem = item;
-      this.$refs.FolderTitle.focus();
     },
     DeleteOpen(item) {
       this.showDelete = true;
@@ -396,6 +398,7 @@ export default {
       this.showDelete = false;
       this.deleteItemFolder = 0;
       this.deleteItemTxt = 0;
+      this.closeForm();
     },
     addNoteClose() {
       this.showNote = false;
@@ -491,7 +494,7 @@ export default {
                         } else {
                           this.$router.push({
                             name: "notewrite",
-                            params: { _id: data._id, title: data.name }
+                            params: { data: data, title: data.name }
                           });
                         }
                         this.addNoteClose();
@@ -560,7 +563,7 @@ export default {
                         // 파일 추가 성공시 objectid 값 가져와서 write 폼으로 넘겨줌
                         fetch(
                           this.$store.state.dbserver +
-                            "/notes/" +
+                            "/notes/txt/" +
                             id +
                             "/" +
                             name +
@@ -584,7 +587,7 @@ export default {
                             } else {
                               this.$router.push({
                                 name: "notewrite",
-                                params: { _id: data._id, title: data.name }
+                                params: { data: data, title: data.name }
                               });
                             }
                             this.addNoteClose();
@@ -763,12 +766,12 @@ export default {
         .then(res => res.json())
         .then(data => {
           if (data.result == true) {
+            this.showDelete = false;
+            this.$router.push("/note/calendar");
+            this.deleteItemClose();
           } else {
             alert("삭제 실패...");
           }
-          this.deleteItemClose();
-          this.$router.push("/note/calendar");
-          this.closeForm();
         });
     },
     deleteTxt() {
@@ -786,12 +789,12 @@ export default {
         .then(res => res.json())
         .then(data => {
           if (data.result == true) {
+            this.showDelete = false;
+            this.$router.push("/note/calendar");
+            this.deleteItemClose();
           } else {
             alert("삭제 실패...");
           }
-          this.deleteItemClose();
-          this.$router.push("/note/calendar");
-          this.closeForm();
         });
     }
   },

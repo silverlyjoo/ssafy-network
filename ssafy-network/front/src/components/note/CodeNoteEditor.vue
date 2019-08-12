@@ -12,6 +12,7 @@
                   v-validate="'required|min:2'"
                   data-vv-name="제목"
                   :error-messages="errors.collect('제목')"
+                  ref="notetitle"
                 ></v-text-field>
               </v-flex>
               <v-flex xs12>
@@ -114,7 +115,7 @@ export default {
     validator: "new"
   },
   props: {
-    _id: { type: String },
+    data: { type: Object },
     title: { type: String }
   },
   data() {
@@ -181,35 +182,66 @@ export default {
           alert("값이 유효한지 체크해주세요.");
           return;
         }
-        fetch(this.$store.state.dbserver + "/notes/txt", {
-          method: "PUT",
-          headers: {
-            "Access-Control-Allow-Origin": "*",
-            "Content-Type": "application/json"
-          },
-          body: JSON.stringify({
-            _id: this._id,
-            token: this.$session.get("token"),
-            name: this.notetitle,
-            content: this.notecontent,
-            editor: "code",
-            language: this.notelanguage,
-            source: this.notesource
-          })
-        })
+        var course = this.data.course.split(".");
+        var courSize = course[course.length - 1].length + 1;
+        var parentCourse = this.data.course.slice(0, Number("-" + courSize));
+        // 중복 체크
+        fetch(
+          this.$store.state.dbserver +
+            "/notes/txt/" +
+            this.$session.get("id") +
+            "/" +
+            this.notetitle +
+            "/" +
+            parentCourse +
+            "/" +
+            this.$session.get("token"),
+          {
+            method: "GET",
+            headers: {
+              "Access-Control-Allow-Origin": "*",
+              "Content-Type": "application/json"
+            }
+          }
+        )
           .then(res => res.json())
           .then(data => {
-            if (data.result == true) {
-              this.$store.state.NoteCheck = true;
+            if (data.result == false || data._id == this.data._id) {
+              fetch(this.$store.state.dbserver + "/notes/txt", {
+                method: "PUT",
+                headers: {
+                  "Access-Control-Allow-Origin": "*",
+                  "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                  _id: this.data._id,
+                  token: this.$session.get("token"),
+                  name: this.notetitle,
+                  content: this.notecontent,
+                  editor: "code",
+                  language: this.notelanguage,
+                  source: this.notesource
+                })
+              })
+                .then(res => res.json())
+                .then(data => {
+                  if (data.result == true) {
+                    this.$store.state.NoteCheck = true;
+                  } else {
+                    alert("작성 실패..");
+                  }
+                  this.$router.push("/note/detail/" + this.data._id);
+                });
             } else {
-              alert("작성 실패..");
+              alert("이미 존재하는 이름입니다.");
+              this.notetitle = this.title;
+              this.$refs.notetitle.focus();
             }
-            this.$router.push("/note/detail/" + this._id);
           });
       });
     },
     close() {
-      this.$router.push("/note/detail/" + this._id);
+      this.$router.push("/note/detail/" + this.data._id);
     }
   },
   watch: {

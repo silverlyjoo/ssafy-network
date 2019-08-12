@@ -5,10 +5,11 @@
         <v-flex xs4>
           <v-responsive :aspect-ratio="16/9">
             <v-img
-              :src="'https://img.kbs.co.kr/kbs/620/nsimg.kbs.co.kr/data/news/2018/01/24/3597946_Z5L.jpg'"
+              :src="userData.photo"
               class="profileImg ma-4"
               :aspect-ratio="1"
             ></v-img>
+            <input type="file" @change="onFileChange" />
             <v-card-title class="headline">{{ userData.nickname }}</v-card-title>
           </v-responsive>
         </v-flex>
@@ -33,7 +34,8 @@ export default {
       dbserver: this.$store.state.dbserver,
       token: this.$session.get("token"),
       id: this.$session.get("id"),
-      userData: {nickname: null}
+      userData: {nickname: null},
+      image: "",
     };
   },
   methods: {
@@ -48,6 +50,38 @@ export default {
         .then(res => {
           this.userData = res.data;
         });
+    },
+
+    onFileChange(e) {
+      let files = e.target.files || e.dataTransfer.files;
+      if (!files.length) {
+        return;
+      }
+
+      const apiUrl = "https://api.imgur.com/3/image";
+      //const apiKey = "dd4e293e0b55616";
+      const apiKey = "cbf88cd772389df";
+
+      let data = new FormData();
+      let content = {
+        method: "POST",
+        headers: {
+          Authorization: "Client-ID " + apiKey,
+          Accept: "application/json"
+        },
+        body: data,
+        mimeType: "multipart/form-data"
+      };
+
+      data.append("image", files[0]);
+
+      fetch(apiUrl, content)
+        .then(response => response.json())
+        .then(success => {
+          this.image = success.data.link;
+          alert(this.image);
+        })
+        .catch();
     }
   },
   mounted() {

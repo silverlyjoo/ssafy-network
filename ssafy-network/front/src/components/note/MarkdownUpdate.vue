@@ -9,6 +9,7 @@
           v-validate="'required|min:2'"
           data-vv-name="제목"
           :error-messages="errors.collect('제목')"
+          ref="NoteName"
         ></v-text-field>
       </h1>
     </div>
@@ -279,6 +280,8 @@ export default {
                 });
             } else {
               alert("이미 존재하는 이름입니다.");
+              this.name = this.title;
+              this.$refs.NoteName.focus();
             }
           });
       });

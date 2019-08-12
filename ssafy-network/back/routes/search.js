@@ -171,7 +171,7 @@ router.get('/rooms/:method/:value/:token', function (req, res) {
             });
             break;
         case "owner":
-            Room.find({owner: { $regex: '.*' + req.params.value + '.*' } },function(err,rooms){
+            Room.find({owner: req.params.value },function(err,rooms){
                 if (err) {
                     return res.status(500).json({ result: false });
                 }
