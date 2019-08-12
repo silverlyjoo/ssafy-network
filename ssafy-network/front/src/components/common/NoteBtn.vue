@@ -60,8 +60,8 @@
         </v-btn>
       </template>
       <template slot="label" slot-scope="{ item }" open-on-click>
-        <label v-if="item.file == 'folder'">{{ item.name }}</label>
-        <label v-else @click="NoteDetail(item._id)">{{ item.name }}</label>
+        <label v-if="item.file == 'folder'" style="width:100%">{{item.name.replace(' ','&nbsp;')}}</label>
+        <label v-else @click="NoteDetail(item._id)" style="width:100%">{{item.name.replace(' ','&nbsp;')}}</label>
       </template>
       <template slot="append" slot-scope="{item}">
         <v-tooltip bottom>
