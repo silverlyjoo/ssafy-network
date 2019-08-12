@@ -1,12 +1,23 @@
 <template>
   <v-container>
-    <h1>admin page</h1>
-        <v-btn to="/admin/user">유저관리</v-btn>
-        <v-btn to="/admin/chat">채팅방관리</v-btn>
-        <v-btn to="/admin/notice">공지사항관리</v-btn>
-        <v-btn to="/admin/dep">부서관리</v-btn>
-        <router-view></router-view>
-
+    <h1>Chat 관리</h1>
+    <v-layout justify-center text-xs-center row>
+      <v-btn to="/admin/user" color="grey darken-2" class="white--text">유저관리</v-btn>
+      <v-btn to="/admin/chat" color="grey darken-2" class="white--text">채팅방관리</v-btn>
+      <v-btn to="/admin/notice" color="grey darken-2" class="white--text">공지사항관리</v-btn>
+      <v-btn to="/admin/dep" color="grey darken-2" class="white--text">부서관리</v-btn>
+      <router-view></router-view>
+      <v-flex xs3 class="pr-1 pl-2">
+        <v-select v-model="method" :items="methods"></v-select>
+      </v-flex>
+      <v-flex xs6>
+        <v-text-field v-model="keyword" @keyup.enter="searchRooms"></v-text-field>
+      </v-flex>
+      <v-flex xs3>
+        <v-btn @click="searchRooms" color="grey darken-2" class="white--text">검색</v-btn>
+      </v-flex>
+      <v-btn @click="deleteRoom" color="grey darken-2" class="white--text ml-4">삭제</v-btn>
+    </v-layout>
     <v-data-table
       v-model="selected"
       :headers="headers"
@@ -38,6 +49,10 @@ export default {
       createdAt: "",
       roomList: [],
       selected: [],
+      method:"제목",
+      methods:["제목","최대인원","방장"],
+      keyword:"",
+      option:"",
       headers: [
         {
           text: "방 제목",
@@ -45,8 +60,8 @@ export default {
           sortable: false,
           value: "title"
         },
-        { text: "최대 인원수",  align: "center", value: "max" },
-        { text: "방장",  align: "center", sortable: false, value: "owner" },
+        { text: "최대 인원수", align: "center", value: "max" },
+        { text: "방장", align: "center", sortable: false, value: "owner" },
         { text: "생성 날짜", align: "center", value: "createdAt" }
       ]
     };
@@ -77,57 +92,45 @@ export default {
         .catch(error => console.log(error))
         .finally();
     },
-    updateRoom() {
-      fetch(this.$store.state.dbserver + "/rooms", {
-        method: "PUT",
-        headers: {
-          "Access-Control-Allow-Origin": "*",
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify({
-          token: this.$session.get("token"),
-          title: "model달기 귀찮아요",
-          max: "패스워드는 확인 하나 해주세요",
-          owner: "닉네임은 중복확인 한번 해주세요"
-        })
-      })
-        .then(res => res.json())
-        .then(data => {
-          if (data.result == true) {
-            alert("수정 성공!!!");
-          } else {
-            alert("수정 실패...");
-          }
-        });
-    },
     deleteRoom() {
-      fetch(this.$store.state.dbserver + "/rooms", {
-        method: "DELETE",
-        headers: {
-          "Access-Control-Allow-Origin": "*",
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify({
-          _id: "오브젝트 아이디",
-          token: this.$session.get("token")
+      for (let index = 0; index < this.selected.length; index++) {
+        fetch(this.$store.state.dbserver + "/rooms", {
+          method: "DELETE",
+          headers: {
+            "Access-Control-Allow-Origin": "*",
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({
+            _id: this.selected[index]._id,
+            token: this.$session.get("token")
+          })
         })
-      })
-        .then(res => res.json())
-        .then(data => {
-          if (data.result == true) {
-            alert("삭제 성공!!!");
-          } else {
-            alert("성공 실패...");
-          }
-        });
+          .then(res => res.json())
+          .then(data => {
+            if (data.result == true) {
+              this.getRoomList();
+            } else {
+              alert("삭제 실패...");
+            }
+          });
+      }
     },
     searchRooms() {
+      if(this.method == "제목"){
+        this.option = "title";
+      }
+      else if(this.method == "최대인원"){
+        this.option = "max";
+      }
+      else{
+        this.option = "owner";
+      }
       fetch(
         this.$store.state.dbserver +
           "/search/rooms/" +
-          "max" +
+          this.option +
           "/" +
-          "10" +
+          this.keyword +
           "/" +
           this.$session.get("token"),
         {
