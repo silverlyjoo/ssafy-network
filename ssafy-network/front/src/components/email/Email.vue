@@ -15,65 +15,76 @@
             </v-card-title>
             <v-card-text>
               <v-container grid-list-md>
+                <v-switch v-model="switch1" label="검색방법 변경"></v-switch>
+
                 <v-layout wrap>
+                  <v-layout v-if="switch1">
+                    <v-flex xs3 class="pr-1 pl-2">
+                      <v-select v-model="searchoption" :items="searchoptions"></v-select>
+                    </v-flex>
+                    <v-flex xs6>
+                      <v-text-field v-model="keyword" @keyup.enter="searchUser"></v-text-field>
+                    </v-flex>
+                    <v-flex xs3>
+                      <v-btn @click="searchUser" color="grey darken-2" class="white--text ml-4">검색</v-btn>
+                    </v-flex>
+                  </v-layout>
 
-                  <v-flex xs3 class="pr-1 pl-2">
-                    <v-select v-model="searchoption" :items="searchoptions"></v-select>
-                  </v-flex>
-                  <v-flex xs6 class>
-                    <v-text-field v-model="keyword" @keyup.enter="searchUser"></v-text-field>
-                  </v-flex>
-                  <v-flex xs3 class>
-                    <v-btn @click="searchUser">검색</v-btn>
-                  </v-flex>
-
-                  <v-flex xs12>
-                    <v-text-field class="mr-5" v-model="parent" label="소속 부서"></v-text-field>
-                    <v-btn @click="parentCheck" class="mr-5">검색</v-btn>
-                  </v-flex>
-                  <v-flex xs4>
-                    <v-select
-                      v-model="department"
-                      label="부서"
-                      :items="departments"
-                      @change="childsearch"
-                      required
-                      style="max-width:20vh;"
-                    ></v-select>
-                  </v-flex>
-                  <v-flex xs4>
-                    <v-select
-                      v-model="position"
-                      label="기수"
-                      :items="positions"
-                      @change="search"
-                      required
-                      style="max-width:20vh;"
-                    ></v-select>
-                  </v-flex>
-                  <v-flex xs4>
-                    <v-select
-                      v-model="person"
-                      label="사람"
-                      :items="people"
-                      @change="addreceive"
-                      required
-                      style="max-width:20vh;"
-                    ></v-select>
-                  </v-flex>
+                  <v-layout v-else>
+                    <v-flex xs6>
+                      <v-text-field v-model="parent" label="소속 부서" @keyup.enter="parentCheck"></v-text-field>
+                    </v-flex>
+                    <v-flex xs6>
+                      <v-btn @click="parentCheck" color="grey darken-2" class="white--text">검색</v-btn>
+                    </v-flex>
+                    <v-flex xs4>
+                      <v-select
+                        v-model="department"
+                        label="부서"
+                        :items="departments"
+                        @change="childsearch"
+                        required
+                        style="max-width:20vh;"
+                      ></v-select>
+                    </v-flex>
+                    <v-flex xs4>
+                      <v-select
+                        v-model="position"
+                        label="기수"
+                        :items="positions"
+                        @change="search"
+                        required
+                        style="max-width:20vh;"
+                      ></v-select>
+                    </v-flex>
+                    <v-flex xs4>
+                      <v-select
+                        v-model="person"
+                        label="사람"
+                        :items="people"
+                        @change="addreceive"
+                        required
+                        style="max-width:20vh;"
+                      ></v-select>
+                    </v-flex>
+                  </v-layout>
                   <v-flex xs12>
                     <v-text-field label="수신인(닉네임)" v-model="receive" readonly="readonly" required></v-text-field>
                   </v-flex>
                   <v-flex xs12 text-xs-right>
                     <v-btn @click="remove" color="grey darken-2" class="white--text">수신인 삭제</v-btn>
-                    <v-btn @click="removereceive" color="grey darken-2" class="white--text">수신인 전부 삭제</v-btn>
+                    <v-btn
+                      @click="removereceive"
+                      color="grey darken-2"
+                      class="white--text"
+                    >수신인 전부 삭제</v-btn>
                   </v-flex>
                   <v-spacer></v-spacer>
                   <v-flex xs12>
                     <v-text-field label="제목" v-model="title"></v-text-field>
                   </v-flex>
                   <v-flex xs12>
-                    <v-text-field label="내용" v-model="content"></v-text-field>
+                    <v-textarea counter label="내용" v-model="content"></v-textarea>
                   </v-flex>
                 </v-layout>
               </v-container>
@@ -95,7 +106,6 @@
       <v-data-table :headers="headers" :items="mails" :expand="expand" item-key="_id">
         <template v-slot:items="props">
           <tr>
-            <!-- @click="props.expanded = !props.expanded" -->
             <td
               @click="props.expanded = !props.expanded"
               class="text-xs-center"
@@ -113,24 +123,16 @@
                 color="grey darken-2"
                 class="white--text py-1"
                 @click="mailDeleteForm(props.item)"
-              >
-                <!-- @click="deleteMail(props.item._id)" -->
-                메일 삭제
-              </v-btn>
+              >메일 삭제</v-btn>
             </td>
           </tr>
         </template>
 
         <template v-slot:expand="props">
           <v-card flat>
-            <!-- 박성민 작업하던 것, 기능 안 먹혀서 수정중 -->
-
             <v-layout class="py-3">
-              <v-flex xs2 text-xs-center class="py-3 display-1">
-                <strong>내용</strong>
-              </v-flex>
               <v-flex
-                xs10
+                xs12
                 text-xs-left
                 class="py-3 display-1"
               >&nbsp; &nbsp; &nbsp; {{ props.item.content }}</v-flex>
@@ -158,6 +160,7 @@
 export default {
   data() {
     return {
+      switch1: true,
       selectedItem: "",
       expand: false,
       writeMail: false,
@@ -165,8 +168,9 @@ export default {
       title: "",
       parent: "",
       keyword: "",
-      searchoption: "nickname",
-      searchoptions: ["nickname", "id"],
+      method: "",
+      searchoption: "닉네임",
+      searchoptions: ["닉네임", "아이디"],
       content: "",
       receive: [],
       department: "",
@@ -194,11 +198,16 @@ export default {
   },
   methods: {
     searchUser() {
+      if (this.searchoption == "닉네임") {
+        this.method = "nickname";
+      } else {
+        this.method = "id";
+      }
       this.person = "";
       fetch(
         this.$store.state.dbserver +
           "/search/users/" +
-          this.searchoption +
+          this.method +
           "/" +
           this.keyword +
           "/" +
@@ -215,8 +224,7 @@ export default {
         .then(data => {
           if (data.result == false) {
             alert("검색된 유저가 없습니다");
-          }
-          else{
+          } else {
             this.receive.push(data.nickname);
           }
         });
@@ -240,6 +248,7 @@ export default {
         .then(data => {
           if (data) {
             this.departments = data.children;
+            this.department = this.departments[0];
           }
         });
     },
@@ -269,12 +278,12 @@ export default {
     removereceive() {
       this.receive = [];
     },
-    remove(){
-      if(this.person != "" && this.receive.indexOf(this.person) != -1){
-        this.receive.splice(this.receive.indexOf(this.person),1);
+    remove() {
+      if (this.person != "" && this.receive.indexOf(this.person) != -1) {
+        this.receive.splice(this.receive.indexOf(this.person), 1);
       }
-      if(this.keyword != "" && this.receive.indexOf(this.keyword) != -1){
-        this.receive.splice(this.receive.indexOf(this.keyword),1);
+      if (this.keyword != "" && this.receive.indexOf(this.keyword) != -1) {
+        this.receive.splice(this.receive.indexOf(this.keyword), 1);
       }
     },
     search() {
@@ -356,12 +365,10 @@ export default {
         });
     },
 
-
     mailDeleteForm(item) {
       this.dialog = true;
       this.selectedItem = item;
     },
-
 
     close() {
       this.writeMail = false;
