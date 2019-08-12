@@ -22,7 +22,7 @@
           style="width:80%; margin-left:auto; margin-right:auto;"
         >
           <template v-slot:items="props">
-            <td @click="addHit(props.item._id)" class="text-xs-center">
+            <td @click="addHit(props.item._id)" class="text-xs-center header">
               <router-link
                 :to='{name : "CodeDetail" , params: { data : props.item } }'
                 style="text-decoration: none !important; color:black;"
