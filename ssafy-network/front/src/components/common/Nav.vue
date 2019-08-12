@@ -72,7 +72,7 @@ export default {
       minWidth: 320,
       maxWidth: 700,
       handlers: ["r"],
-      height: '90vh',
+      height: window.innerHeight,
       window: {
         width: 0,
         height: 0
@@ -101,6 +101,7 @@ export default {
         .offsetHeight.toString());
       await (document.getElementById("navcon").style.height =
         this.mainheight + "px");
+      this.height = parseInt(this.compareHeight())
       // this.$store.state.heightflag = true;
     },
     async handleScroll(e) {
@@ -129,7 +130,7 @@ export default {
   },
   watch: {
     '$route' (from, to) {
-      this.height = 0
+      this.height = window.innerHeight
       window.scrollTo(0, 0)
     }
   }
