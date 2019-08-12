@@ -110,8 +110,6 @@ export default {
         .offsetHeight.toString());
       document.getElementById("navcon").style.height = this.mainheight + "px";
       this.height = parseInt(this.compareHeight())
-      console.log('h',this.height)
-      console.log('m', this.mainheight)
       // this.$store.state.heightflag = true;
     }
   },

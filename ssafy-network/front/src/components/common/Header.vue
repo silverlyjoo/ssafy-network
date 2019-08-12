@@ -1,5 +1,5 @@
 <template>
-  <v-toolbar flat color="transparent" class="subtoolbar my-1" >
+  <v-toolbar flat color="transparent" class="subtoolbar my-1">
     <v-spacer />
     <v-toolbar-items>
       <v-tooltip bottom>
@@ -30,7 +30,6 @@
                 <div
                   v-for="(notification, idx) in notifications"
                   :key="notification.id"
-                  
                   class="pa-0"
                 >
                   <v-list-tile v-if="idx<5" @click="noticedetail(notification, idx)">
@@ -94,15 +93,15 @@
       </v-card>
     </v-dialog>
     <v-dialog v-model="logoutDialog" max-width="290">
-              <v-card>
-                <v-card-title class="headline">로그아웃 하시겠습니까?</v-card-title>
-                <v-card-actions>
-                  <v-spacer></v-spacer>
-                  <v-btn color="green darken-1" flat="flat" @click="logoutDialog = false">아니오</v-btn>
-                  <v-btn color="green darken-1" flat="flat" @click="logout()">예</v-btn>
-                </v-card-actions>
-              </v-card>
-            </v-dialog>
+      <v-card>
+        <v-card-title class="headline">로그아웃 하시겠습니까?</v-card-title>
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn color="green darken-1" flat="flat" @click="logoutDialog = false">아니오</v-btn>
+          <v-btn color="green darken-1" flat="flat" @click="logout()">예</v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
   </v-toolbar>
 </template>
 
@@ -112,7 +111,7 @@ import caxios from "@/plugins/createaxios.js";
 export default {
   data() {
     return {
-      logoutDialog:false,
+      logoutDialog: false,
       token: this.$session.get("token"),
       id: this.$session.get("id"),
       dbserver: this.$store.state.dbserver,
@@ -128,25 +127,29 @@ export default {
     };
   },
   methods: {
-    read() {
+    async read(notice) {
       let noticeUrl = this.dbserver;
-      caxios(noticeUrl).request({
+      await caxios(noticeUrl).request({
         url: `/notices`,
         method: "PUT",
         baseURL: noticeUrl,
         data: {
           token: this.token,
-          _id: this.detail._id,
+          _id: notice._id,
           id: this.id
         }
       });
     },
     async noticedetail(notice, idx) {
       let ididx = this.notifications[idx].unread.indexOf(this.id);
-      await (this.noticedialog = true);
       await (this.detail = notice);
-      await this.read();
-      await this.$store.commit(SET_NOTICES, [this.id, this.token, this.dbserver]);
+      await this.read(notice);
+      await this.$store.commit(SET_NOTICES, [
+        this.id,
+        this.token,
+        this.dbserver
+      ]);
+      await (this.noticedialog = true);
     },
     goNotice() {
       this.$router.push({ name: "notice" });
@@ -163,7 +166,7 @@ export default {
           this.selfmembership = res.data.membership;
         });
     },
-    logoutForm(){
+    logoutForm() {
       this.logoutDialog = true;
     },
     logout() {
@@ -179,9 +182,7 @@ export default {
     this.isAdmin();
   },
   watch: {
-    'notifications' (from, to) {
-
-    }
+    notifications(from, to) {}
   },
   computed: {
     notifications() {
@@ -191,7 +192,7 @@ export default {
         for (let i = 0; i < notices.length; i++) {
           // console.log(notices[i])
           if (notices[i].unread.indexOf(this.id) !== -1) {
-            this.$set(result, result.length, notices[i])
+            this.$set(result, result.length, notices[i]);
           }
         }
         return result;

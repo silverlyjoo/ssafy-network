@@ -10,12 +10,12 @@
           @click="noticedetail(notice, idx)"
         >
           <v-list-tile-content v-if="notice.read.indexOf(id) !== -1">
-            <v-list-tile-title v-html="notice.title" class="title"></v-list-tile-title>
-            <v-list-tile-title v-html="notice.content" class="body-1"></v-list-tile-title>
+            <v-list-tile-title v-html="notice.title" class="title b"></v-list-tile-title>
+            <v-list-tile-title v-html="notice.content" class="body-1 b"></v-list-tile-title>
           </v-list-tile-content>
           <v-list-tile-content v-else>
-            <v-list-tile-title v-html="notice.title" class="title font-weight-bold"></v-list-tile-title>
-            <v-list-tile-title v-html="notice.content" class="body-1 font-weight-bold"></v-list-tile-title>
+            <v-list-tile-title v-html="notice.title" class="title a"></v-list-tile-title>
+            <v-list-tile-title v-html="notice.content" class="body-1 a"></v-list-tile-title>
           </v-list-tile-content>
         </v-list-tile>
       </v-list>
@@ -75,24 +75,24 @@ export default {
     }
   },
   methods: {
-    read() {
+    async read(notice) {
       let noticeUrl = this.dbserver;
-      caxios(noticeUrl).request({
+      await caxios(noticeUrl).request({
         url: `/notices`,
         method: "PUT",
         baseURL: noticeUrl,
         data: {
           token: this.token,
-          _id: this.detail._id,
+          _id: notice._id,
           id: this.id
         }
       });
     },
     async noticedetail(notice, idx) {
-      await (this.noticedialog = true);
       await (this.detail = notice);
-      await this.read();
+      await this.read(notice);
       await this.$store.commit(SET_NOTICES, [this.id, this.token, this.dbserver]);
+      await (this.noticedialog = true);
 
     }
   },
@@ -114,4 +114,10 @@ export default {
 </script>
 
 <style>
+.a {
+  font-weight: 800;
+}
+.b {
+  color: rgb(165, 165, 165);
+}
 </style>

@@ -46,7 +46,6 @@ export default {
     this.height = window.innerHeight;
     this.changeHeight();
     this.$store.commit(SET_MAINHEIGHT, this.height);
-    console.log(this.$store.state.mainheight)
     this.$store.commit(SET_NOTICES, [this.id, this.token, this.dbserver]);
   },
   computed: {
