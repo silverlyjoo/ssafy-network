@@ -69,7 +69,7 @@
             <v-btn
               flat
               v-on="on"
-              @click="FolderEdit(item)"
+              @click="FolderEditOpen(item)"
               v-if="item.file != 'txt'"
               small
               class="ma-0 pa-0"
@@ -136,15 +136,18 @@
           <v-container>
             <v-layout wrap>
               <v-flex>
+                <v-form data-vv-scope="NoteTitle">
                 <v-text-field
                   label="파일 제목"
                   v-model="NoteTitle"
                   v-validate="'required|min:2'"
                   data-vv-name="NoteTitle"
+                  data-vv-as="NoteTitle"
                   data-vv-scope="NoteTitle"
-                  :error-messages="errors.collect('NoteTitle')"
+                  :error-messages="errors.collect('NoteTitle.NoteTitle')"
                   ref="NoteTitle"
                 ></v-text-field>
+                </v-form>
               </v-flex>
               <v-flex>
                 <v-btn color="green darken-1" flat="flat" @click="addNoteClose()">취소</v-btn>
@@ -162,15 +165,18 @@
           <v-container>
             <v-layout wrap>
               <v-flex>
+                 <v-form data-vv-scope="FolderTitle">
                 <v-text-field
                   label="폴더 제목"
                   v-model="FolderTitle"
                   v-validate="'required|min:2'"
                   data-vv-name="FolderTitle"
-                  data-vv-as="FolderTitle"
-                  :error-messages="errors.collect('FolderTitle')"
+                  data-vv-as="폴더 제목 "
+                  data-vv-scope="FolderTitle"
+                  :error-messages="errors.collect('FolderTitle.FolderTitle')"
                   ref="FolderTitle"
                 ></v-text-field>
+                 </v-form>
               </v-flex>
               <v-flex>
                 <v-btn color="green darken-1" flat="flat" @click="addFolderClose()">취소</v-btn>
@@ -188,15 +194,17 @@
           <v-container>
             <v-layout wrap>
               <v-flex>
+                <v-form data-vv-scope="FolderEditTitle">
                 <v-text-field
                   label="폴더 제목"
-                  v-model="FolderTitle"
+                  v-model="FolderEditTitle"
                   v-validate="'required|min:2'"
-                  data-vv-name="FolderEdit"
-                  data-vv-scope="FolderEdit"
-                  :error-messages="errors.collect('FolderEdit')"
-                  ref="FolderEdit"
+                  data-vv-name="FolderEditTitle"
+                  data-vv-as="폴더 제목 "
+                  :error-messages="errors.collect('FolderEditTitle.FolderEditTitle')"
+                  ref="FolderEditTitle"
                 ></v-text-field>
+                </v-form>
               </v-flex>
               <v-flex>
                 <v-btn color="green darken-1" flat="flat" @click="FolderEditClose()">취소</v-btn>
@@ -235,6 +243,9 @@
 import { mapState } from "vuex";
 
 export default {
+    $_veeValidate: {
+    validator: "new"
+  },
   data() {
     return {
       showRoot: false,
@@ -248,6 +259,7 @@ export default {
       selectItem: "",
       FolderTitle: "",
       NoteTitle: "",
+      FolderEditTitle:"",
       foldflag: this.$store.state.navFoldFlag,
       click: false,
       open: [],
@@ -266,20 +278,26 @@ export default {
     };
   },
   methods: {
-    FolderEdit(item) {
+    FolderEditOpen(item) {
       this.selectItem = item;
-      this.FolderTitle = item.name;
+      this.FolderEditTitle = item.name;
       this.showFolderEdit = true;
     },
     FolderUpdate() {
-      const parent = this.selectItem.course.slice(0, -2);
-
-      fetch(
+      this.$validator.validateAll("FolderEditTitle").then(res => {
+        if (!res) {
+          alert("값이 유효한지 확인해 주세요.");
+          this.FolderEditTitle = this.selectItem.name;
+          this.$refs.FolderEditTitle.focus();
+          return;
+        } else {
+          const parent = this.selectItem.course.slice(0, -2);
+          fetch(
         this.$store.state.dbserver +
           "/notes/" +
           this.$session.get("id") +
           "/" +
-          this.FolderTitle +
+          this.FolderEditTitle +
           "/" +
           parent +
           "/" +
@@ -305,7 +323,7 @@ export default {
               body: JSON.stringify({
                 _id: this.selectItem._id,
                 token: this.$session.get("token"),
-                name: this.FolderTitle
+                name: this.FolderEditTitle
               })
             })
               .then(res => res.json())
@@ -323,15 +341,17 @@ export default {
               this.FolderEditClose();
             } else {
               alert("중복되는 이름이 있습니다.");
-              this.FolderTitle = this.selectItem.name;
-              this.$refs.FolderEdit.focus();
+              this.FolderEditTitle = this.selectItem.name;
+              this.$refs.FolderEditTitle.focus();
             }
           }
         });
+        }});
+      
     },
     FolderEditClose() {
       this.showFolderEdit = false;
-      this.FolderTitle = "";
+      this.FolderEditTitle = "";
       this.closeForm();
     },
     NoteDetail(id) {
@@ -388,6 +408,7 @@ export default {
       this.$validator.validateAll("NoteTitle").then(res => {
         if (!res) {
           alert("값이 유효한지 확인해 주세요.");
+          return;
         } else {
           // 같은 폴더내에 이름이 같은 파일이 존재하는지 체크
           var course = this.selectItem.course;
@@ -556,7 +577,7 @@ export default {
       });
     },
     addFolder() {
-      this.$validator.validate("FolderTitle").then(res => {
+      this.$validator.validateAll("FolderTitle").then(res => {
         if (!res) {
           alert("값이 유효한지 확인해 주세요.");
           this.FolderTitle = "";
