@@ -128,9 +128,9 @@ export default {
   justify-content: flex-end;
 }
 .chats {
-  height: 65vh;
+  height: 70vh;
   overflow-y: auto;
-  overflow-x: scroll;
+  /* overflow-x: scroll; */
   overflow-anchor: none;
 }
 .chat {
