@@ -56,6 +56,7 @@
                       v-model="person"
                       label="사람"
                       :items="people"
+                      @change="addreceive"
                       required
                       style="max-width:20vh;"
                     ></v-select>
@@ -64,8 +65,8 @@
                     <v-text-field label="수신인(닉네임)" v-model="receive" readonly="readonly" required></v-text-field>
                   </v-flex>
                   <v-flex xs12 text-xs-right>
-                    <v-btn @click="addreceive" color="grey darken-2" class="white--text">수신인 등록</v-btn>
-                    <v-btn @click="removereceive" color="grey darken-2" class="white--text">수신인 삭제</v-btn>
+                    <v-btn @click="remove" color="grey darken-2" class="white--text">수신인 삭제</v-btn>
+                    <v-btn @click="removereceive" color="grey darken-2" class="white--text">수신인 전부 삭제</v-btn>
                   </v-flex>
                   <v-spacer></v-spacer>
                   <v-flex xs12>
@@ -133,17 +134,7 @@
                 text-xs-left
                 class="py-3 display-1"
               >&nbsp; &nbsp; &nbsp; {{ props.item.content }}</v-flex>
-              <!-- <v-flex xs3 text-xs-left>
-                <v-btn
-                  @click="deleteMail(props.item._id)"
-                  color="grey darken-2"
-                  class="white--text"
-                  justify-right
-                >메일 삭제</v-btn>
-              </v-flex>-->
             </v-layout>
-
-            <!--  -->
           </v-card>
         </template>
       </v-data-table>
@@ -203,6 +194,7 @@ export default {
   },
   methods: {
     searchUser() {
+      this.person = "";
       fetch(
         this.$store.state.dbserver +
           "/search/users/" +
@@ -230,10 +222,13 @@ export default {
         });
     },
     parentCheck() {
+      this.keyword = "";
       this.department = "";
       this.departments = [];
       this.position = "";
       this.positions = [];
+      this.person = "";
+      this.people = [];
       fetch(this.$store.state.dbserver + "/company/join/" + this.parent, {
         method: "GET",
         headers: {
@@ -251,6 +246,8 @@ export default {
     childsearch() {
       this.position = "";
       this.positions = [];
+      this.person = "";
+      this.people = [];
       fetch(this.$store.state.dbserver + "/company/join/" + this.department, {
         method: "GET",
         headers: {
@@ -266,13 +263,24 @@ export default {
         });
     },
     addreceive() {
+      this.keyword = "";
       this.receive.push(this.person);
     },
     removereceive() {
       this.receive = [];
     },
+    remove(){
+      if(this.person != "" && this.receive.indexOf(this.person) != -1){
+        this.receive.splice(this.receive.indexOf(this.person),1);
+      }
+      if(this.keyword != "" && this.receive.indexOf(this.keyword) != -1){
+        this.receive.splice(this.receive.indexOf(this.keyword),1);
+      }
+    },
     search() {
       if (this.department != "" && this.position != "") {
+        this.person = "";
+        this.people = [];
         fetch(
           this.$store.state.dbserver +
             "/users/department/" +
@@ -348,14 +356,12 @@ export default {
         });
     },
 
-    //
 
     mailDeleteForm(item) {
       this.dialog = true;
       this.selectedItem = item;
     },
 
-    //
 
     close() {
       this.writeMail = false;
@@ -369,6 +375,7 @@ export default {
       this.positions = [];
       this.person = "";
       this.people = [];
+      this.keyword = "";
     },
     deleteMail() {
       fetch(this.$store.state.dbserver + "/mails/", {
