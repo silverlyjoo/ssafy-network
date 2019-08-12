@@ -342,7 +342,7 @@ export default {
       this.$validator.reset();
       this.showComment = false;
       this.comment = "";
-      this.getComments();
+      // this.getComments();
     },
     createComment() {
       // fetch 로 데이터 전송후 closeForm 호출해야함
