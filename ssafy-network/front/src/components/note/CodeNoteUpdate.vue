@@ -12,6 +12,7 @@
                   v-validate="'required|min:2'"
                   data-vv-name="제목"
                   :error-messages="errors.collect('제목')"
+                  ref="notetitle"
                 ></v-text-field>
               </v-flex>
               <v-flex xs12>
@@ -192,6 +193,8 @@ export default {
                 });
             } else {
               alert("이미 존재하는 이름입니다.");
+              this.notetitle = this.data.name;
+              this.$refs.notetitle.focus();
             }
           });
       });
