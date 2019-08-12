@@ -105,7 +105,7 @@ router.get('/:id/:token', function (req, res) {
 
 /**
  * @swagger
- *  /notes/{id}/{name}/{course}/{token}:
+ *  /notes/txt/{id}/{name}/{course}/{token}:
  *    get:
  *      tags:
  *      - Note
@@ -135,12 +135,69 @@ router.get('/:id/:token', function (req, res) {
  *       200:
  *        description: 텍스트 파일 정보 반환
  */
-router.get('/:id/:name/:course/:token', function (req, res) {
+router.get('/txt/:id/:name/:course/:token', function (req, res) {
     var info = decode(req.params.token);
     if (!info) {
         return res.json({ result: false });
     }
-    Note.find({id: req.params.id, name: req.params.name },function(err,notes){
+    Note.find({id: req.params.id, name: req.params.name, file: "txt"},function(err,notes){
+        if(err){
+            res.json({result: false});
+            return;
+        }
+        for (let i = 0; i < notes.length; i++) {
+            var road = notes[i].course.split(".");
+            if(
+                road.length - 1 == req.params.course.split(".").length && 
+                notes[i].course.slice(0, notes[i].course.length - road[road.length-1].length - 1) == req.params.course
+            ){
+                res.json(notes[i]);
+                return;
+            }
+        }
+        res.json({result: false});
+    });
+    
+});
+
+/**
+ * @swagger
+ *  /notes/folder/{id}/{name}/{course}/{token}:
+ *    get:
+ *      tags:
+ *      - Note
+ *      description: 폴더 반환
+ *      parameters:
+ *      - name: id
+ *        in: path
+ *        description: "아이디"
+ *        required: true
+ *        type: string
+ *      - name: name
+ *        in: path
+ *        description: "파일명"
+ *        required: true
+ *        type: string
+ *      - name: course
+ *        in: path
+ *        description: "경로"
+ *        required: true
+ *        type: string
+ *      - name: token
+ *        in: path
+ *        description: "토큰"
+ *        required: true
+ *        type: string
+ *      responses:
+ *       200:
+ *        description: 폴더 정보 반환
+ */
+router.get('/folder/:id/:name/:course/:token', function (req, res) {
+    var info = decode(req.params.token);
+    if (!info) {
+        return res.json({ result: false });
+    }
+    Note.find({id: req.params.id, name: req.params.name, file: "folder"},function(err,notes){
         if(err){
             res.json({result: false});
             return;
