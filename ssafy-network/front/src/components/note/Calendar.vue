@@ -199,7 +199,6 @@ export default {
   methods: {
     updateForm(){
       this.updateDialog = true;
-
     },
     dateClick(arg) {
       alert(arg.date);

@@ -9,10 +9,24 @@
           <v-select
             v-model="unread"
             :items="userlist"
+            item-text="nickname"
+            item-value="id"
             :menu-props="{ maxHeight: '700' }"
             label="Userlist"
             multiple
-          ></v-select>
+          >
+            <template v-slot:prepend-item>
+              <v-list-tile ripple @click="toggle">
+                <v-list-tile-action>
+                  <v-icon :color="unread.length > 0 ? 'indigo darken-4' : ''">{{ icon }}</v-icon>
+                </v-list-tile-action>
+                <v-list-tile-content>
+                  <v-list-tile-title>Select All</v-list-tile-title>
+                </v-list-tile-content>
+              </v-list-tile>
+              <v-divider class="mt-2"></v-divider>
+            </template>
+          </v-select>
         </v-flex>
         <v-flex xs12>
           <v-textarea auto-grow label="content" v-model="content"></v-textarea>
@@ -33,11 +47,9 @@ export default {
       token: this.$session.get("token"),
       nickname: this.$session.get("nickname"),
       userlist: [],
-      userlistid: [],
       title: null,
       content: null,
       unread: []
-      // notice: null
     };
   },
   computed: {
@@ -50,10 +62,28 @@ export default {
         unread: this.unread
       };
 
-      return object
+      return object;
+    },
+    icon() {
+      if (this.userlist.length === this.unread.length) return "mdi-close-box";
+      if (
+        this.unread.length > 0 &&
+        !(this.userlist.length === this.unread.length)
+      )
+        return "mdi-minus-box";
+      return "mdi-checkbox-blank-outline";
     }
   },
   methods: {
+    toggle() {
+      this.$nextTick(() => {
+        if (this.userlist.length === this.unread.length) {
+          this.unread = [];
+        } else {
+          this.unread = this.userlist.slice();
+        }
+      });
+    },
     getUsers() {
       let userUrl = this.dbserver;
       caxios(userUrl)
@@ -64,20 +94,20 @@ export default {
         })
         .then(res => {
           for (let i = 0; i < res.data.length; i++) {
-            let object = {}
-            this.userlist.push(res.data[i].id);
+            let object = {};
+            this.userlist.push(res.data[i]);
           }
         });
     },
     newNotice() {
-        let noticeUrl = this.dbserver;
-        caxios(noticeUrl).request({
-          url: `/notices`,
-          method: "POST",
-          baseURL: noticeUrl,
-          data: this.notice
-        });
-        this.$router.push({path:'/admin/notice'})
+      let noticeUrl = this.dbserver;
+      caxios(noticeUrl).request({
+        url: `/notices`,
+        method: "POST",
+        baseURL: noticeUrl,
+        data: this.notice
+      });
+      this.$router.push({ path: "/admin/notice" });
     }
   },
   mounted() {
