@@ -5,8 +5,8 @@
       <v-btn primary :disabled="!choiceEditor" @click="choiceEditor = !choiceEditor">마크다운형식</v-btn>
     </v-flex>
     <v-flex>
-      <MarkdownEditor v-if="!choiceEditor" :_id="_id" :title="title"></MarkdownEditor>
-      <CodeNoteEditor v-if="choiceEditor" :_id="_id" :title="title"></CodeNoteEditor>
+      <MarkdownEditor v-if="!choiceEditor" :data="data" :title="title"></MarkdownEditor>
+      <CodeNoteEditor v-if="choiceEditor" :data="data" :title="title"></CodeNoteEditor>
     </v-flex>
   </v-layout>
 </template>
@@ -22,7 +22,7 @@ export default {
     MarkdownEditor
   },
   props: {
-    _id: { type: String },
+    data: { type: Object },
     title: { type: String }
   },
   data() {
