@@ -52,7 +52,7 @@
           style="width:80%; margin-left:auto; margin-right:auto;"
         >
           <template v-slot:items="props">
-            <td @click="addHit(props.item._id)" class="text-xs-center">
+            <td @click="addHit(props.item._id)" class="text-xs-center header">
               <router-link
                 :to='{name : "CodeDetail" , params: { data : props.item } }'
                 style="text-decoration: none !important; color:black;">
@@ -143,7 +143,7 @@ export default {
           text: "제목",
           align: "center",
           sortable: false,
-          value: "title"
+          value: "title",
         },
         {
           text: "작성자",
@@ -279,6 +279,13 @@ export default {
 .write-btn {
   float: right;
   /* padding-right: 100px; */
+}
+.header{
+  overflow: hidden; 
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  max-width: 10vw;
+  max-height: 10vh;
 }
 .code-detail {
   text-decoration: none !important;
