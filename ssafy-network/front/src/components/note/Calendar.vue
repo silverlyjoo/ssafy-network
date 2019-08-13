@@ -27,15 +27,15 @@
             </v-card-text>
             <v-card-actions>
             <v-spacer></v-spacer>
-            <v-btn color="blue darken-1" flat @click="detailDialog = false">취소</v-btn>
+            <v-btn color="blue darken-1" flat @click="closeForm()">취소</v-btn>
             <v-btn color="blue darken-1" flat @click="updateForm()">수정</v-btn>
-            <v-btn color="blue darken-1" flat @click="deleteDialog = true">삭제</v-btn>
+            <v-btn color="blue darken-1" flat @click="openDeleteForm()">삭제</v-btn>
             <v-dialog v-model="deleteDialog" max-width="290">
               <v-card>
                 <v-card-title class="headline">삭제 하시겠습니까?</v-card-title>
                 <v-card-actions>
                   <v-spacer></v-spacer>
-                  <v-btn color="green darken-1" flat="flat" @click="deleteDialog = false">아니오</v-btn>
+                  <v-btn color="green darken-1" flat="flat" @click="closeForm()">아니오</v-btn>
                   <v-btn color="green darken-1" flat="flat" @click="deleteCalendar()">예</v-btn>
                 </v-card-actions>
               </v-card>
@@ -140,7 +140,7 @@
           </v-card-text>
           <v-card-actions>
             <v-spacer></v-spacer>
-            <v-btn color="blue darken-1" flat @click="updateDialog = false">취소</v-btn>
+            <v-btn color="blue darken-1" flat @click="closeForm()">취소</v-btn>
             <v-btn color="blue darken-1" flat @click="updateCalendar()">수정</v-btn>
           </v-card-actions>
         </v-card>
@@ -199,6 +199,12 @@ export default {
     }
   },
   methods: {
+    closeForm(){
+      this.deleteDialog = false;
+      this.updateDialog = false;
+      this.detailDialog = false;
+      this.changeFlag = !this.changeFlag;
+    },
     updateForm(){
       this.updateDialog = true;
     },
@@ -210,6 +216,9 @@ export default {
       this.event.startDate = event.start;
       this.event.cssClass = event.cssClass;
       this.event.endDate = event.end;
+    },
+    openDeleteForm(){
+      this.deleteDialog = true;
     },
     deleteCalendar() {
       fetch(this.$store.state.dbserver + "/calendars", {
@@ -238,7 +247,8 @@ export default {
           this.event.endDate = "";
           this.deleteDialog = false;
           this.detailDialog = false;
-          this.changeFlag = !this.changeFlag;
+          this.closeForm();
+          
         });
     },
     updateCalendar() {
@@ -271,10 +281,8 @@ export default {
               } else {
                 alert("수정 실패...");
               }
-              this.updateDialog = false;
-              this.detailDialog = false;
+              this.closeForm();
               this.$validator.reset();
-              this.changeFlag = !this.changeFlag;
             });
         }
       });
