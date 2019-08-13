@@ -209,7 +209,7 @@ export default {
           return;
         } else {
           this.editUserData();
-          this.$session.set("nickname", userDataModel.nickname);
+          this.$session.set("nickname", this.userDataModel.nickname);
           this.$router.push({ path: "/user" });
         }
       });
