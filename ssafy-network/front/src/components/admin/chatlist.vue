@@ -49,8 +49,8 @@ export default {
       createdAt: "",
       roomList: [],
       selected: [],
-      method:"제목",
-      methods:["제목","최대인원","방장"],
+      method:"방제목",
+      methods:["방제목","최대인원","방장"],
       keyword:"",
       option:"",
       headers: [
@@ -116,19 +116,10 @@ export default {
       }
     },
     searchRooms() {
-      if(this.method == "제목"){
-        this.option = "title";
-      }
-      else if(this.method == "최대인원"){
-        this.option = "max";
-      }
-      else{
-        this.option = "owner";
-      }
       fetch(
         this.$store.state.dbserver +
           "/search/rooms/" +
-          this.option +
+          this.method +
           "/" +
           this.keyword +
           "/" +
