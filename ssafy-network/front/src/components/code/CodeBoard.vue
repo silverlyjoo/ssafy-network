@@ -83,16 +83,7 @@
 
     <br><br>
 
-    <!-- <v-toolbar flat color="grey lighten-5" style="width:80%; margin-left:auto; margin-right:auto;">
-      <v-toolbar-title class="grey--text" style="font-size:16px;">※ createdAt은 작성일 순, hit은 조회수 순입니다.※</v-toolbar-title>
-    </v-toolbar> -->
-
     <v-layout justify-space-around align-center style="width:80%; margin-left:auto; margin-right:auto;">
-
-      <!-- <v-flex xs2 text-xs-center class="px-5">
-        <v-select v-model="searchOption1" :items="searchOptions1"></v-select>
-      </v-flex> -->
-
       <v-flex xs2 text-xs-center class="px-5">
         <v-select v-model="searchOption2" :items="searchOptions2"></v-select>
       </v-flex>
@@ -122,8 +113,6 @@ export default {
       searchedArticles: [],
       searchedFlag: false,
       articleSearchKeyword: "",
-      // searchOption1: "createdAt",
-      // searchOptions1: ["createdAt", "hit"],
       searchOption2: "title",
       searchOptions2: ["language", "writer", "title", "source", "content"],
       loading: true,
@@ -278,7 +267,6 @@ export default {
 }
 .write-btn {
   float: right;
-  /* padding-right: 100px; */
 }
 .header{
   overflow: hidden; 

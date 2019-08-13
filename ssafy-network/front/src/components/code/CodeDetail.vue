@@ -19,8 +19,9 @@
         @click="codeDeleteForm()"
       >삭제</v-btn>
     </v-toolbar>
-    <!-- <v-layout> -->
-    <br />
+    
+    <br>
+
     <v-card grid-list-md style="width:80%; margin-left:auto; margin-right:auto;">
       <v-card-text>
         <v-container>
@@ -30,36 +31,24 @@
                 <span class="grey--text" style="py-5">제목</span><br>
                 <span style="font-size: 18px;">{{data.title}}</span>
               </div><br>
-              <!-- <v-text-field label="제목" readonly v-model="data.title"></v-text-field> -->
             </v-flex>
             <v-flex xs12>
               <div style="font-family: 'Nanum Gothic', sans-serif;">
                 <span class="grey--text" style="py-5">선택 언어</span><br>
                 <span style="font-size: 18px;">{{data.language}}</span>
               </div><br>
-              <!-- <v-select
-                :items="languages"
-                label="선택 언어"
-                single-line
-                readonly
-                v-model="data.language"
-              ></v-select> -->
             </v-flex>
             <v-flex xs12>
               <codemirror :options="cmOption" v-model="data.source"></codemirror>
             </v-flex>
             <br />
             <v-flex xs12>
-              <!-- <v-text-field label="내용" readonly v-model="data.content"></v-text-field> -->
               <div style="font-family: 'Nanum Gothic', sans-serif;">
                 <span class="grey--text" style="py-5">내용</span><br>
                 <span style="white-space:pre; font-size: 18px;">{{data.content}}</span>
               </div><br>
             </v-flex><br><br><br>
             <v-layout>
-              <!-- <v-flex xs1 text-xs-left class="py-3">
-                <v-icon text-xs-left class="py-3">subdirectory_arrow_right</v-icon> &nbsp; &nbsp; &nbsp;
-              </v-flex> -->
               <v-flex xs2 text-xs-center class="py-3">
                 <div class="py-5">
                   <h3 class="py-2"><strong>{{$session.get("nickname")}}</strong></h3> &nbsp;&nbsp;&nbsp;
@@ -96,11 +85,8 @@
           </v-layout>
         </v-container>
       </v-card-text>
-
-
     </v-card>
 
-    <!-- </v-layout> -->
     <v-dialog v-model="dialog" persistent max-width="290">
       <v-card>
         <v-card-title class="headline">경고</v-card-title>
@@ -111,36 +97,7 @@
           <v-btn class="white--text" color="grey darken-2" text @click="deleteArticle()">삭제</v-btn>
         </v-card-actions>
       </v-card>
-    </v-dialog>
-    <br />
-
-
-    <!-- <v-toolbar flat color="grey lighten-5" style="width:80%; margin-left:auto; margin-right:auto;">
-      <v-toolbar-title>댓글</v-toolbar-title>
-      <v-spacer></v-spacer>
-      <v-btn class="white--text" color="grey darken-2" @click="CommentForm()">댓글쓰기</v-btn>
-    </v-toolbar> -->
-    
-
-    <!-- <v-dialog v-model="showComment" persistent max-width="400">
-      <v-card>
-        <v-card-title class="headline">댓글 작성</v-card-title>
-        <v-card-text>
-          <v-text-field
-            label="내용"
-            v-model="comment"
-            v-validate="'required|min:2'"
-            data-vv-name="comment"
-            :error-messages="errors.collect('comment')"
-          ></v-text-field>
-        </v-card-text>
-        <v-card-actions>
-          <v-spacer></v-spacer>
-          <v-btn class="white--text" color="grey darken-2" text @click="closeCommentForm()">취소</v-btn>
-          <v-btn class="white--text" color="grey darken-2" text @click="createComment()">등록</v-btn>
-        </v-card-actions>
-      </v-card>
-    </v-dialog> -->
+    </v-dialog><br>
   </div>
 </template>
 
@@ -160,8 +117,6 @@ import "codemirror/addon/edit/matchbrackets.js";
 // import 'codemirror/mode/c/c.js'
 // import 'codemirror/mode/c++/c++.js'
 import "codemirror/mode/django/django.js";
-// import 'codemirror/mode/html/html.js'
-// import 'codemirror/mode/java.js'
 import "codemirror/mode/javascript/javascript.js";
 import "codemirror/mode/python/python.js";
 import "codemirror/mode/vue/vue.js";
@@ -302,7 +257,6 @@ export default {
           }
         }
       },
-      // languages: [{ text: "JavaScript" }, { text: "Python" }, { text: "Vue" }]
     };
   },
   methods: {
@@ -327,7 +281,6 @@ export default {
         .then(res => res.json())
         .then(data => {
           if (data.result == true) {
-            alert("게시글을 삭제하였습니다.");
             this.$router.push("/code/board");
           } else {
             alert("게시글을 삭제할 수 없습니다.");
@@ -342,7 +295,6 @@ export default {
       this.$validator.reset();
       this.showComment = false;
       this.comment = "";
-      // this.getComments();
     },
     createComment() {
       // fetch 로 데이터 전송후 closeForm 호출해야함
@@ -367,7 +319,6 @@ export default {
             .then(res => res.json())
             .then(data => {
               if (data.result == true) {
-                alert("댓글이 등록되었습니다.");
                 this.$store.state.commentflag = true;
               } else {
                 alert("댓글을 등록할 수 없습니다.");
@@ -395,11 +346,11 @@ export default {
   },
   mounted() {
     this.isAdmin();
-    if (this.data.language == "JavaScript") {
+    if (this.data.language == "javascript") {
       this.cmOption = this.cmOptionJs;
-    } else if (this.data.language == "Python") {
+    } else if (this.data.language == "python") {
       this.cmOption = this.cmOptionPy;
-    } else if (this.data.language == "Vue") {
+    } else if (this.data.language == "vue") {
       this.cmOption = this.cmOptionVue;
     }
   }
@@ -420,6 +371,5 @@ export default {
 }
 .write-btn {
   float: right;
-  /* padding-right: 100px; */
 }
 </style>
