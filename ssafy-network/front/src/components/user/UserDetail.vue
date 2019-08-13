@@ -9,7 +9,6 @@
               class="profileImg ma-4"
               :aspect-ratio="1"
             ></v-img>
-            
             <v-card-title class="headline">{{ userData.nickname }}</v-card-title>
           </v-responsive>
         </v-flex>
@@ -18,9 +17,10 @@
             <p v-for="(dt, key) in userData" :key="key">{{ key }} : {{ dt }}</p>
           </v-container>
         </v-flex>
+        <v-btn to="/user/update" color="grey darken-2" class="white--text">회원정보 수정</v-btn>
       </v-layout>
     </v-card>
-    <v-btn to="/user/update" color="grey darken-2" class="white--text">회원정보 수정</v-btn>
+    
   </v-container>
 </template>
 
@@ -51,38 +51,6 @@ export default {
           this.userData = res.data;
         });
     },
-
-    onFileChange(e) {
-      let files = e.target.files || e.dataTransfer.files;
-      if (!files.length) {
-        return;
-      }
-
-      const apiUrl = "https://api.imgur.com/3/image";
-      //const apiKey = "dd4e293e0b55616";
-      const apiKey = "cbf88cd772389df";
-
-      let data = new FormData();
-      let content = {
-        method: "POST",
-        headers: {
-          Authorization: "Client-ID " + apiKey,
-          Accept: "application/json"
-        },
-        body: data,
-        mimeType: "multipart/form-data"
-      };
-
-      data.append("image", files[0]);
-
-      fetch(apiUrl, content)
-        .then(response => response.json())
-        .then(success => {
-          this.image = success.data.link;
-          alert(this.image);
-        })
-        .catch();
-    }
   },
   mounted() {
     this.getUserInfo();
