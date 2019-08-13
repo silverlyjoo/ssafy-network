@@ -55,7 +55,7 @@ export default {
             this.pwd = "";
             this.$refs.id.focus();
           } else if (data.result == '비회원'){
-            alert("회원 가입 승인을 기다리세요");
+            alert("인증되지 않은 아이디입니다.");
             this.$router.push("/");
           }else {
             this.$store.state.login = true;
