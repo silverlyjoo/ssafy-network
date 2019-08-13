@@ -38,7 +38,7 @@
               <v-flex xs2>
                 <v-btn @click="nicknameCheck" color="grey darken-2" class="white--text">중복체크</v-btn>
               </v-flex>
-              <v-flex xs4 class="px-3">
+              <v-flex xs4 class="text-xs-center">
                 <span v-if="nicknamecheckflag">중복체크 완료</span>
                 <span v-else style="color: red">중복체크 필요</span>
               </v-flex>
