@@ -72,6 +72,7 @@ export default {
           .then(res => res.json())
           .then(data => {
             if (data.result) {
+              console.log(this.title)
               alert("방이 생성 되었습니다.");
             } else {
               alert("에러");
