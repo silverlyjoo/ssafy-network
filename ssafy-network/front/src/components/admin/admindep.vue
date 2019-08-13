@@ -47,8 +47,9 @@
         </v-card>
       </v-dialog>
     </v-layout>
+    <br><br>
     <div>
-      <v-toolbar flat color="white">
+      <v-toolbar flat color="white" style="margin-left:auto; margin-right:auto;">
         <v-toolbar-title>Expandable Table</v-toolbar-title>
         <v-spacer></v-spacer>
         <v-btn
@@ -57,14 +58,22 @@
           @click="expand = !expand"
         >{{ expand ? '단일' : '다중' }} 열기</v-btn>
       </v-toolbar>
-      <v-data-table :headers="headers" :items="desserts" :expand="expand" item-key="_id">
+      <v-data-table
+        :headers="headers"
+        :items="desserts"
+        :expand="expand"
+        item-key="_id"
+        style="margin-left:auto; margin-right:auto;"
+      >
         <template v-slot:items="props">
           <tr @click="props.expanded = !props.expanded">
-            <td>{{ props.item.parent }}</td>
-            <td class="text-xs-left">{{ props.item.department }}</td>
-            <td class="text-xs-left">
-              <v-btn @click="updateDep(props.item._id)" color="grey darken-2" class="white--text">수정</v-btn>
-              <v-btn @click="deleteDep(props.item._id)" color="grey darken-2" class="white--text">삭제</v-btn>
+            <td class="text-xs-center">{{ props.item.parent }}</td>
+            <td class="text-xs-center">{{ props.item.department }}</td>
+            <td class="text-xs-center">
+              <!-- <v-btn @click="updateDep(props.item._id)" color="grey darken-2" class="white--text">수정</v-btn> -->
+              <!-- <v-btn @click="deleteDep(props.item._id)" color="grey darken-2" class="white--text">삭제</v-btn> -->
+              <v-icon @click="updateDep(props.item._id)">edit</v-icon>
+              <v-icon @click="deleteDep(props.item._id)">delete</v-icon>
             </td>
           </tr>
         </template>
@@ -94,12 +103,12 @@ export default {
       headers: [
         {
           text: "상위부서",
-          align: "left",
+          align: "center",
           sortable: false,
           value: "parent"
         },
-        { text: "부서명", value: "department", sortable: false },
-        { text: "수정/삭제", sortable: false }
+        { text: "부서명", align: "center", sortable: false, value: "department" },
+        { text: "수정/삭제", align: "center", sortable: false }
       ],
       desserts: []
     };

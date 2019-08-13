@@ -80,7 +80,10 @@ export default {
         if (this.userlist.length === this.unread.length) {
           this.unread = [];
         } else {
-          this.unread = this.userlist.slice();
+          this.unread = [];
+          for (let i = 0; i < this.userlist.length; i++) {
+            this.unread.push(this.userlist[i].id);
+          }
         }
       });
     },

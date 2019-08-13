@@ -16,7 +16,7 @@
               <v-text-field prepend-icon="person" name="Username" label="Username" v-model ="id" ref="id"></v-text-field>
               <v-text-field prepend-icon="lock" name="Password" label="Password" type="password" v-model="pwd" @keyup.enter="login"></v-text-field>
               <v-card-actions>
-                <v-btn primary large block @click="login">Login</v-btn>
+                <v-btn primary large block @click="login" color="grey darken-2" class="white--text">Login</v-btn>
               </v-card-actions>
             </v-form>
           </v-card>

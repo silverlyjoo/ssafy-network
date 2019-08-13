@@ -19,7 +19,7 @@
                   required
                   class="mr-5"
                 ></v-text-field>
-                <v-btn @click="useridCheck" ref="IDCheckBtn" class="mr-5">중복체크</v-btn>
+                <v-btn @click="useridCheck" ref="IDCheckBtn" color="grey darken-2" class="white--text mr-5">중복체크</v-btn>
                 <span v-if="IDCheck" style="color:blue;">중복체크 완료</span>
               </v-flex>
               <v-text-field
@@ -61,7 +61,7 @@
                   :error-messages="errors.collect('NickName')"
                   required
                 ></v-text-field>
-                <v-btn @click="userNickNameCheck" ref="NickNameCheckBtn" class="mr-5">중복체크</v-btn>
+                <v-btn @click="userNickNameCheck" ref="NickNameCheckBtn" color="grey darken-2" class="white--text mr-5" >중복체크</v-btn>
                 <span v-if="NickNameCheck" style="color:blue;">중복체크 완료</span>
               </v-flex>
               
@@ -71,7 +71,7 @@
                   v-model="parent"
                   label="소속 부서"
                 ></v-text-field>
-                <v-btn @click="parentCheck" class="mr-5">검색</v-btn>
+                <v-btn @click="parentCheck" color="grey darken-2" class="white--text mr-5">검색</v-btn>
               </v-flex>
               
               <v-select
@@ -98,8 +98,8 @@
             </v-card-text>
           </v-form>
           <v-flex text-xs-right>
-            <v-btn @click="submit">submit</v-btn>
-            <v-btn @click="clear">clear</v-btn>
+            <v-btn @click="submit" color="grey darken-2" class="white--text">submit</v-btn>
+            <v-btn @click="clear" color="grey darken-2" class="white--text">clear</v-btn>
           </v-flex>
         </v-card>
       </v-flex>
