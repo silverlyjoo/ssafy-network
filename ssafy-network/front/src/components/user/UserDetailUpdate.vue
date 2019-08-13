@@ -169,7 +169,6 @@ export default {
         .then(success => {
           this.image = success.data.link;
           this.userDataModel.photo = this.image;
-          alert(this.image);
         })
         .catch();
     },

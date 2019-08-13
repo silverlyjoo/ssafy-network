@@ -54,7 +54,10 @@ export default {
             this.id = "";
             this.pwd = "";
             this.$refs.id.focus();
-          } else {
+          } else if (data.result == '비회원'){
+            alert("인증되지 않은 아이디입니다.");
+            this.$router.push("/");
+          }else {
             this.$store.state.login = true;
             this.$session.set("token" , data.token);
             this.$session.set("id" , this.id);

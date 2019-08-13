@@ -1,7 +1,7 @@
 <template>
   <v-container>
     <h1>Notice 관리</h1>
-    <v-layout justify-center text-xs-center row>
+    <v-layout justify-center text-xs-center row class="mb-5">
       <v-btn to="/admin/user" color="grey darken-2" class="white--text">유저관리</v-btn>
       <v-btn to="/admin/chat" color="grey darken-2" class="white--text">채팅방관리</v-btn>
       <v-btn to="/admin/notice" color="grey darken-2" class="white--text">공지사항관리</v-btn>

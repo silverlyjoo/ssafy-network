@@ -1,23 +1,27 @@
 <template>
   <v-container>
     <h1>Chat 관리</h1>
-    <v-layout justify-center text-xs-center row>
+    <v-layout justify-start text-xs-center row class="mb-5">
       <v-btn to="/admin/user" color="grey darken-2" class="white--text">유저관리</v-btn>
       <v-btn to="/admin/chat" color="grey darken-2" class="white--text">채팅방관리</v-btn>
       <v-btn to="/admin/notice" color="grey darken-2" class="white--text">공지사항관리</v-btn>
       <v-btn to="/admin/dep" color="grey darken-2" class="white--text">부서관리</v-btn>
       <router-view></router-view>
-      <v-flex xs3 class="pr-1 pl-2">
-        <v-select v-model="method" :items="methods"></v-select>
-      </v-flex>
-      <v-flex xs6>
-        <v-text-field v-model="keyword" @keyup.enter="searchRooms"></v-text-field>
-      </v-flex>
-      <v-flex xs3>
-        <v-btn @click="searchRooms" color="grey darken-2" class="white--text">검색</v-btn>
-      </v-flex>
-      <v-btn @click="deleteRoom" color="grey darken-2" class="white--text ml-4">삭제</v-btn>
     </v-layout>
+    <v-card>
+      <div class="getchatlist">
+        <v-flex xs3 class="pr-3 pl-2">
+          <v-select v-model="method" :items="methods"></v-select>
+        </v-flex>
+        <v-flex xs6>
+          <v-text-field v-model="keyword" @keyup.enter="searchRooms"></v-text-field>
+        </v-flex>
+        <v-flex xs3 class="mx-3">
+          <v-btn @click="searchRooms" color="grey darken-2" class="white--text">검색</v-btn>
+        </v-flex>
+        <v-btn @click="deleteRoom" color="grey darken-2" class="white--text ml-4">삭제</v-btn>
+      </div>
+    </v-card>
     <v-data-table
       v-model="selected"
       :headers="headers"
@@ -49,10 +53,10 @@ export default {
       createdAt: "",
       roomList: [],
       selected: [],
-      method:"방제목",
-      methods:["방제목","최대인원","방장"],
-      keyword:"",
-      option:"",
+      method: "방제목",
+      methods: ["방제목", "최대인원", "방장"],
+      keyword: "",
+      option: "",
       headers: [
         {
           text: "방 제목",
@@ -148,4 +152,11 @@ export default {
 </script>
 
 <style>
+.getchatlist {
+  display: flex;
+  align-items: center;
+  padding: 0px 1.5rem;
+  justify-content: space-around;
+  margin-bottom: 1.5rem;
+}
 </style>

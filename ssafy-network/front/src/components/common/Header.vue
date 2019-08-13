@@ -82,8 +82,8 @@
       <v-card>
         <v-card-title class="headline">{{ detail.title }}</v-card-title>
         <v-card-title class="subtitle-1">작성자 : {{ detail.writer }}</v-card-title>
+        <v-card-text style="white-space: pre;">{{ detail.content}}</v-card-text>
 
-        <v-card-text>{{ detail.content}}</v-card-text>
 
         <v-card-actions>
           <v-spacer></v-spacer>

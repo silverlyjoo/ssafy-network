@@ -24,7 +24,7 @@
           <router-link to="/code/board" style="text-decoration: none !important" >
             <v-layout align-center class="pa-2">
               <v-flex xs7 text-xs-center>
-                <span class="navtext navtcolor">CODE</span>
+                <span class="navtext navtcolor">BOARD</span>
               </v-flex>
             </v-layout>
           </router-link>
@@ -43,7 +43,7 @@
           <router-link to="/email" style="text-decoration: none !important">
             <v-layout align-center class="pa-2">
               <v-flex xs7 text-xs-center>
-                <span class="navtext navtcolor">E-MAIL</span>
+                <span class="navtext navtcolor">MESSAGE</span>
               </v-flex>
             </v-layout>
           </router-link>
