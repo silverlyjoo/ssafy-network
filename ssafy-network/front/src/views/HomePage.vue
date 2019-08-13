@@ -5,8 +5,11 @@
       <v-flex v-for="(item, i) in items" :key="i" xs12 flat min-height="400">
         <v-card class="mx-auto" min-height="400">
           <v-img :src="item.src" min-height="400" height="600px" wdith="100%">
-            <div style="width: 100%; height: 100%;" :class="item.cssType">
-              <div>{{ item.title }}</div>
+            <div style="width: 100%; height: 100%;">
+              <div class="contents">
+                <div>{{ item.title }}</div>
+                <div>{{ item.content }}</div>
+              </div>
             </div>
             <!-- <v-container fluid pa-2>
               <v-layout>
@@ -16,7 +19,7 @@
                   <span class="title white--text" v-text="item.content"></span>
                 </v-flex>
               </v-layout>
-            </v-container> -->
+            </v-container>-->
           </v-img>
         </v-card>
       </v-flex>
@@ -75,12 +78,29 @@ export default {
   margin-left: 10%;
   text-align: left;
 }
-.contents > div:nth-child(odd) {
+.contents {
   position: absolute;
-  right: 5rem;
-  top: 12rem;
-  width: 30rem;
+  left: 10rem;
+  top: 8rem;
+  max-width: 50rem;
   height: 15rem;
-  background: black;
+  background: rgba(54, 54, 54, 0.459);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  /* align-items: center; */
+  padding: 0px 80px;
+}
+
+.contents > div:nth-child(1) {
+  font-size: 200%;
+  font-weight: 600;
+  color:white;
+  margin-bottom: 20px;
+}
+.contents > div:nth-child(2) {
+  font-size: 180%;
+  font-weight: 300;
+  color:white;
 }
 </style>
