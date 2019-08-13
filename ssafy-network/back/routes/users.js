@@ -341,7 +341,7 @@ router.post('/login', function (req, res) {
  */
 router.post('/', function (req, res) {
   var user = new User();
-  user.photo = "http://blogfiles.naver.net/MjAxODAzMTJfMjk0/MDAxNTIwODE4MTQ2NTM0.-Fl4_zTtS4lHJUhBk43Wiy6JRbYmSZP0hvnpPsueG0wg.KFwoXF9z-42SwrRjBrjUnlrkZBftEcHqcXpVQaoTH8wg.PNG.dolkongjjh/%B0%B3%C0%CE.png"
+  user.photo = "https://i.imgur.com/s5faoD6.png"
   user.name = req.body.name;
   user.id = req.body.id;
   user.pwd = req.body.pwd;
@@ -394,14 +394,6 @@ router.post('/', function (req, res) {
  *            nickname:
  *              type: string
  *              required: true
- *            department:
- *              type: string
- *              required: true
- *            position:
- *              type: string
- *              required: true
- *            membership:
- *              type: string
  *      responses:
  *       200:
  *        description: "result = true 일 경우 정상적으로 작동"

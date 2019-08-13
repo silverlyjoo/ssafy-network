@@ -9,7 +9,13 @@
           </div>
 
           <div>
-            <v-img class="profileImg" :aspect-ratio="1"></v-img>
+            <v-img :src="userDataModel.photo" class="profileImg" :aspect-ratio="1"></v-img>
+            <div class="image-upload">
+              <label for="file-input">
+                <img src="./camera.png" />
+              </label>
+              <input id="file-input" type="file" @change="onFileChange"/>
+            </div>
           </div>
 
           <div>
@@ -21,18 +27,15 @@
                 <p>ID는 수정할 수 없습니다</p>
               </v-flex>
             </v-layout>
+
             <v-layout align-center>
               <v-flex xs7 class="px-3">
-                <v-select
-                  v-model="userDataModel.department"
-                  label="부서"
-                  :items="departments"
-                  required
-                ></v-select>
+                <v-text-field v-model="userDataModel.name" label="name"></v-text-field>
               </v-flex>
             </v-layout>
+            
             <v-layout align-center>
-              <v-flex xs6 class="px-3">
+              <v-flex xs5 class="px-3">
                 <v-text-field v-model="userDataModel.nickname" label="nickname"></v-text-field>
               </v-flex>
               <v-flex xs2>
@@ -106,18 +109,15 @@ export default {
       postPassword: null,
       newPassword: null,
       passwordConfirm: null,
-      departments: ["인사", "영업", "개발", "기획"],
       nicknamecheckflag: false,
       postNickname: null,
       userDataModel: {
         token: "",
+        photo: "",
         name: "",
         id: "",
         pwd: "",
         nickname: "",
-        department: "",
-        position: "",
-        membership: ""
       }
     };
   },
@@ -140,6 +140,38 @@ export default {
             this.nicknamecheckflag = !res.data.result;
           });
       }
+    },
+    onFileChange(e) {
+      let files = e.target.files || e.dataTransfer.files;
+      if (!files.length) {
+        return;
+      }
+
+      const apiUrl = "https://api.imgur.com/3/image";
+      //const apiKey = "dd4e293e0b55616";
+      const apiKey = "cbf88cd772389df";
+
+      let data = new FormData();
+      let content = {
+        method: "POST",
+        headers: {
+          Authorization: "Client-ID " + apiKey,
+          Accept: "application/json"
+        },
+        body: data,
+        mimeType: "multipart/form-data"
+      };
+
+      data.append("image", files[0]);
+
+      fetch(apiUrl, content)
+        .then(response => response.json())
+        .then(success => {
+          this.image = success.data.link;
+          this.userDataModel.photo = this.image;
+          alert(this.image);
+        })
+        .catch();
     },
     getUserData() {
       let url = this.dbserver;
@@ -226,5 +258,12 @@ export default {
 .profileImg {
   overflow: hidden;
   border-radius: 100%;
+}
+.image-upload > input {
+  display: none;
+}
+.image-upload img {
+  width: 80px;
+  cursor: pointer;
 }
 </style>
