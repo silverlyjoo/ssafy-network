@@ -214,6 +214,7 @@ export default {
         })
         .then(res => {
           this.items = res.data;
+          console.log(res.data)
           this.items.sort(function(a, b) {
             if (new Date(a.createdAt) < new Date(b.createdAt)) {
               return 1;

@@ -9,7 +9,7 @@
               class="profileImg ma-4"
               :aspect-ratio="1"
             ></v-img>
-            <input type="file" @change="onFileChange" />
+            
             <v-card-title class="headline">{{ userData.nickname }}</v-card-title>
           </v-responsive>
         </v-flex>
