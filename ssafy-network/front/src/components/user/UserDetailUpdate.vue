@@ -2,7 +2,6 @@
   <v-container>
     <v-card>
       <v-container>
-
         <div class="userDetailCon">
           <div class="userDetailTitle">
             <h1>User Data Edit</h1>
@@ -14,7 +13,7 @@
               <label for="file-input">
                 <img src="./camera.png" />
               </label>
-              <input id="file-input" type="file" @change="onFileChange"/>
+              <input id="file-input" type="file" @change="onFileChange" />
             </div>
           </div>
 
@@ -33,7 +32,7 @@
                 <v-text-field v-model="userDataModel.name" label="name"></v-text-field>
               </v-flex>
             </v-layout>
-            
+
             <v-layout align-center>
               <v-flex xs5 class="px-3">
                 <v-text-field v-model="userDataModel.nickname" label="nickname"></v-text-field>
@@ -91,7 +90,6 @@
             <v-btn @click="submit" color="grey darken-2" class="white--text">Submit</v-btn>
           </div>
         </div>
-        
       </v-container>
     </v-card>
   </v-container>
@@ -211,6 +209,7 @@ export default {
           return;
         } else {
           this.editUserData();
+          this.$session.set("nickname", userDataModel.nickname);
           this.$router.push({ path: "/user" });
         }
       });
@@ -230,7 +229,7 @@ export default {
     });
   },
   watch: {
-    userDataModel: {
+    'userDataModel.nickname': {
       handler: function(val, old) {
         this.nicknamecheckflag = false;
       },

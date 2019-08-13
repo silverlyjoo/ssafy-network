@@ -19,9 +19,19 @@
         </div>
 
         <v-divider class="mb-3" style="border-color: rgb(218, 234, 248); width: 90%;"></v-divider>
+        <div class="navBtn mb-3" @click="goNotice">
+          <router-link to="/code/board" style="text-decoration: none !important">
+            <v-layout align-center class="pa-2">
+              <v-flex xs7 text-xs-center>
+                <span class="navtext navtcolor">NOTICE</span>
+              </v-flex>
+            </v-layout>
+          </router-link>
+        </div>
         <NoteBtn></NoteBtn>
-        <div class="navBtn mb-3" @click="foldnote" >
-          <router-link to="/code/board" style="text-decoration: none !important" >
+
+        <div class="navBtn mb-3" @click="foldnote">
+          <router-link to="/code/board" style="text-decoration: none !important">
             <v-layout align-center class="pa-2">
               <v-flex xs7 text-xs-center>
                 <span class="navtext navtcolor">BOARD</span>
@@ -56,7 +66,7 @@
 <script>
 import VueResizable from "vue-resizable";
 import NoteBtn from "@/components/common/NoteBtn";
-import { mapState } from 'vuex';
+import { mapState } from "vuex";
 
 export default {
   $_veeValidate: {
@@ -81,11 +91,15 @@ export default {
     };
   },
   methods: {
+    goNotice() {
+      this.$router.push({ name: "notice" });
+      this.$store.state.notetreefoldflag = false;
+    },
     compareHeight() {
       if (this.height > this.mainheight) {
-        return this.height
+        return this.height;
       } else {
-        return this.mainheight
+        return this.mainheight;
       }
     },
     foldnote() {
@@ -93,7 +107,8 @@ export default {
     },
     async handleResize() {
       await (this.height = window.innerHeight);
-      await (document.getElementById("navcon").style.height = this.compareHeight()+'px');
+      await (document.getElementById("navcon").style.height =
+        this.compareHeight() + "px");
     },
     async changeHeight() {
       await (this.mainheight = document
@@ -101,7 +116,7 @@ export default {
         .offsetHeight.toString());
       await (document.getElementById("navcon").style.height =
         this.mainheight + "px");
-      this.height = parseInt(this.compareHeight())
+      this.height = parseInt(this.compareHeight());
       // this.$store.state.heightflag = true;
     },
     async handleScroll(e) {
@@ -109,7 +124,7 @@ export default {
         .getElementById("mainlayoutId")
         .offsetHeight.toString());
       document.getElementById("navcon").style.height = this.mainheight + "px";
-      this.height = parseInt(this.compareHeight())
+      this.height = parseInt(this.compareHeight());
       // this.$store.state.heightflag = true;
     }
   },
@@ -126,12 +141,11 @@ export default {
     window.removeEventListener("resize", this.handleResize);
     window.removeEventListener("scroll", this.handleScroll);
   },
-  computed: {
-  },
+  computed: {},
   watch: {
-    '$route' (from, to) {
-      this.height = window.innerHeight
-      window.scrollTo(0, 0)
+    $route(from, to) {
+      this.height = window.innerHeight;
+      window.scrollTo(0, 0);
     }
   }
 };
