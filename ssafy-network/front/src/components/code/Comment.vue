@@ -90,7 +90,6 @@ export default {
       this.getComments();
     },
 
-    // 왜 오류가 나는걸까
     updateComment() {
       // fetch 로 데이터 전송후 closeForm 호출해야함
       this.$validator.validateAll().then(res => {

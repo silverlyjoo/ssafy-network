@@ -6,51 +6,51 @@
         <v-btn class="white--text" color="grey darken-2" @click="addArticle()">등록</v-btn>
         <router-link to="/code/board" style="text-decoration: none !important"><v-btn class="white--text" color="grey darken-2">취소</v-btn></router-link>
     </v-toolbar>
-    <!-- <v-layout> -->
+    
     <br>
-      <v-card grid-list-md style="width:80%; margin-left:auto; margin-right:auto;">
-        <v-card-text>
-          <v-container>
-            <v-layout wrap column>
-              <v-flex xs12>
-                <v-text-field
-                  label="제목"
-                  v-model="article.title"
-                  v-validate="'required|min:6'"
-                  :error-messages="errors.collect('title')"
-                  data-vv-name="title"
-                ></v-text-field>
-              </v-flex>
-              <v-flex xs12>
-                <v-select
-                  :items="languages"
-                  v-model="article.selectedLanguage"
-                  label="선택 언어"
-                  single-line
-                ></v-select>
-              </v-flex>
-              <v-flex xs12>
-                <codemirror
-                  v-model="article.source"
-                  :options="customOption">
-                </codemirror>
-              </v-flex>
-              <br>
-             <v-flex xs12>
-               <v-textarea
-                 label="내용"
-                 v-model="article.content"
-                 v-validate="'required'"
-                 :error-messages="errors.collect('content')"
-                 data-vv-name="content"
-                >
-                </v-textarea>
-              </v-flex>
-              </v-layout>
-            </v-container>
-          </v-card-text>
-        </v-card>
-    <!-- </v-layout> -->
+
+    <v-card grid-list-md style="width:80%; margin-left:auto; margin-right:auto;">
+      <v-card-text>
+        <v-container>
+          <v-layout wrap column>
+            <v-flex xs12>
+              <v-text-field
+                label="제목"
+                v-model="article.title"
+                v-validate="'required|min:6'"
+                :error-messages="errors.collect('title')"
+                data-vv-name="title"
+              ></v-text-field>
+            </v-flex>
+            <v-flex xs12>
+              <v-select
+                :items="languages"
+                v-model="article.selectedLanguage"
+                label="선택 언어"
+                single-line
+              ></v-select>
+            </v-flex>
+            <v-flex xs12>
+              <codemirror
+                v-model="article.source"
+                :options="customOption">
+              </codemirror>
+            </v-flex>
+            <br>
+            <v-flex xs12>
+              <v-textarea
+                label="내용"
+                v-model="article.content"
+                v-validate="'required'"
+                :error-messages="errors.collect('content')"
+                data-vv-name="content"
+              >
+              </v-textarea>
+            </v-flex>
+          </v-layout>
+        </v-container>
+      </v-card-text>
+    </v-card>
   </div>
 </template>
 
@@ -223,7 +223,6 @@ export default {
             }else{
             alert("게시글을 등록할 수 없습니다...");
             }
-            // this.goBoard();
           });
         }
       })

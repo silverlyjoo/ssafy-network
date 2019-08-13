@@ -141,10 +141,10 @@ export default {
         mode: "text/javascript",
         // hint.js options
         hintOptions: {
-          // 当匹配只有一项的时候是否自动补全
+        // 매칭이 하나만 있을 때 자동으로 완전하게 보정되는지 여부
           completeSingle: false
         },
-        //快捷键 可提供三种模式 sublime、emacs、vim
+        //세가지 모드를 제공할 수 있는 단축 키다. sublime、emacs、vim
         keyMap: "sublime",
         matchBrackets: true,
         showCursorWhenSelecting: true,
