@@ -8,7 +8,8 @@
     <editor-content class="editor__content" :editor="editor"/>
   </div>
   <v-flex text-xs-right>
-  <v-btn @click="updateNote()">수정</v-btn>
+  <v-btn color="grey darken-2"
+                    class="white--text" @click="updateNote()">수정</v-btn>
   </v-flex>
   </v-container>
 </template>

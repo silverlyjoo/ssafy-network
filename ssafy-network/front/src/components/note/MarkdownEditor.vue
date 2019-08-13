@@ -126,8 +126,10 @@
       <editor-content class="editor__content" :editor="editor" />
     </div>
     <v-flex text-xs-right>
-      <v-btn @click="close()">취소</v-btn>
-      <v-btn @click="writeNote()">작성</v-btn>
+      <v-btn color="grey darken-2"
+                    class="white--text" @click="close()">취소</v-btn>
+      <v-btn color="grey darken-2"
+                    class="white--text" @click="writeNote()">작성</v-btn>
     </v-flex>
   </v-container>
 </template>
