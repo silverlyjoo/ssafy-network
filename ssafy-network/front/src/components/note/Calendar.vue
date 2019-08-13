@@ -1,6 +1,6 @@
 <template>
   <div>
-    <full-calendar :events="events" @eventClick="eventClick" @dateClick="dateClick" locale="ko"></full-calendar>
+    <full-calendar :events="events" :changeFlag="changeFlag" @eventClick="eventClick" locale="ko"></full-calendar>
     <v-layout row justify-end class="mr-3 mb-3">
       <v-dialog v-model="detailDialog" persistent max-width="600px">
         <v-card>
@@ -162,6 +162,7 @@ export default {
   },
   data() {
     return {
+      changeFlag:false,
       deleteDialog: false,
       updateDialog: false,
       detailDialog:false,
@@ -177,10 +178,11 @@ export default {
       },
       colors: [
         { text: "red" },
-        { text: "yellow" },
+        { text: "skyblue" },
         { text: "blue" },
         { text: "orange" },
-        { text: "pink" }
+        { text: "pink" },
+        { text: "green" }
       ]
     };
   },mounted(){
@@ -199,9 +201,6 @@ export default {
   methods: {
     updateForm(){
       this.updateDialog = true;
-    },
-    dateClick(arg) {
-      alert(arg.date);
     },
     eventClick(event, jsEvent, pos) {
       this.detailDialog = true;
@@ -239,6 +238,7 @@ export default {
           this.event.endDate = "";
           this.deleteDialog = false;
           this.detailDialog = false;
+          this.changeFlag = !this.changeFlag;
         });
     },
     updateCalendar() {
@@ -274,6 +274,7 @@ export default {
               this.updateDialog = false;
               this.detailDialog = false;
               this.$validator.reset();
+              this.changeFlag = !this.changeFlag;
             });
         }
       });
@@ -292,16 +293,26 @@ export default {
 }
 .orange {
   background: orange !important;
-  color: white !important;
+  color: whitesmoke !important;
 }
 .green {
   background: rgb(49, 155, 49) !important;
-  color: white !important;
+  color: whitesmoke !important;
+}
+.skyblue{
+  background: skyblue!important;
+  color: whitesmoke !important;
+}
+.pink{
+  background: rgb(238, 65, 151) !important;
+  color: whitesmoke !important;
 }
 .blue,
 .orange,
 .red,
-.green {
+.green,
+.pink,
+.skyblue {
   font-size: 13px;
   font-weight: 500;
   text-transform: capitalize;
