@@ -15,7 +15,8 @@
               v-on="on"
               @click="addNoteOpen('root')"
               small
-              class="ma-0 pa-0"
+              color="grey darken-2"
+              class="white--text ma-0 pa-0"
               style="min-width:10px!important;"
             >
               <v-icon small>note_add</v-icon>
@@ -30,7 +31,8 @@
               flat
               @click="addFolderOpen('root')"
               small
-              class="ma-0 pa-0"
+              color="grey darken-2"
+              class="white--text ma-0 pa-0"
               style="min-width:10px!important;"
             >
               <v-icon small>add_box</v-icon>
@@ -51,7 +53,8 @@
       class="treecss"
     >
       <template v-slot:prepend="{item, open,selected}">
-        <v-btn flat class="ma-0 pa-0" style="min-width:30px!important;" open-on-click>
+        <v-btn flat color="grey darken-2"
+              class="white--text ma-0 pa-0" style="min-width:30px!important;" open-on-click>
           <v-icon
             class="iconn"
             v-if="item.file == 'folder'"
@@ -61,7 +64,11 @@
       </template>
       <template slot="label" slot-scope="{ item }" open-on-click>
         <label v-if="item.file == 'folder'" style="width:100%">{{item.name.replace(/ /gi,'&nbsp;')}}</label>
-        <label v-else @click="NoteDetail(item._id)" style="width:100%">{{item.name.replace(/ /gi,'&nbsp;')}}</label>
+        <label
+          v-else
+          @click="NoteDetail(item._id)"
+          style="width:100%"
+        >{{item.name.replace(/ /gi,'&nbsp;')}}</label>
       </template>
       <template slot="append" slot-scope="{item}">
         <v-tooltip bottom>
@@ -72,7 +79,8 @@
               @click="FolderEditOpen(item)"
               v-if="item.file != 'txt'"
               small
-              class="ma-0 pa-0"
+              color="grey darken-2"
+              class="white--text ma-0 pa-0"
               style="min-width:10px!important;"
             >
               <v-icon small>edit</v-icon>
@@ -88,7 +96,8 @@
               @click="addNoteOpen(item)"
               v-if="item.file != 'txt'"
               small
-              class="ma-0 pa-0"
+              color="grey darken-2"
+              class="white--text ma-0 pa-0"
               style="min-width:10px!important;"
             >
               <v-icon small>note_add</v-icon>
@@ -104,7 +113,8 @@
               @click="addFolderOpen(item)"
               v-if="item.file != 'txt'"
               small
-              class="ma-0 pa-0"
+              color="grey darken-2"
+              class="white--text ma-0 pa-0"
               style="min-width:10px!important;"
             >
               <v-icon small>add_box</v-icon>
@@ -119,7 +129,8 @@
               v-on="on"
               @click="DeleteOpen(item)"
               small
-              class="ma-0 pa-0"
+              color="grey darken-2"
+              class="white--text ma-0 pa-0"
               style="min-width:10px!important;"
             >
               <v-icon small>delete</v-icon>
@@ -150,8 +161,10 @@
                 </v-form>
               </v-flex>
               <v-flex>
-                <v-btn color="green darken-1" flat="flat" @click="addNoteClose()">취소</v-btn>
-                <v-btn color="green darken-1" flat="flat" @click="addNote()">추가</v-btn>
+                <v-btn color="grey darken-2"
+              class="white--text" flat="flat" @click="addNoteClose()">취소</v-btn>
+                <v-btn color="grey darken-2"
+              class="white--text" flat="flat" @click="addNote()">추가</v-btn>
               </v-flex>
             </v-layout>
           </v-container>
@@ -179,8 +192,10 @@
                 </v-form>
               </v-flex>
               <v-flex>
-                <v-btn color="green darken-1" flat="flat" @click="addFolderClose()">취소</v-btn>
-                <v-btn color="green darken-1" flat="flat" @click="addFolder()">추가</v-btn>
+                <v-btn color="grey darken-2"
+              class="white--text" flat="flat" @click="addFolderClose()">취소</v-btn>
+                <v-btn color="grey darken-2"
+              class="white--text" flat="flat" @click="addFolder()">추가</v-btn>
               </v-flex>
             </v-layout>
           </v-container>
@@ -207,8 +222,10 @@
                 </v-form>
               </v-flex>
               <v-flex>
-                <v-btn color="green darken-1" flat="flat" @click="FolderEditClose()">취소</v-btn>
-                <v-btn color="green darken-1" flat="flat" @click="FolderUpdate()">수정</v-btn>
+                <v-btn color="grey darken-2"
+              class="white--text" flat="flat" @click="FolderEditClose()">취소</v-btn>
+                <v-btn color="grey darken-2"
+              class="white--text" flat="flat" @click="FolderUpdate()">수정</v-btn>
               </v-flex>
             </v-layout>
           </v-container>
@@ -230,16 +247,19 @@
         </v-card-title>
         <v-card-actions class="text-xs-center">
           <v-spacer></v-spacer>
-          <v-btn color="green darken-1" flat="flat" @click="deleteItemClose()">아니오</v-btn>
+          <v-btn color="grey darken-2"
+              class="white--text" flat="flat" @click="deleteItemClose()">아니오</v-btn>
           <v-btn
             v-if="selectItem.file == 'folder' "
-            color="green darken-1"
+            color="grey darken-2"
+              class="white--text"
             flat="flat"
             @click="deleteFolder()"
           >예</v-btn>
           <v-btn
             v-if="selectItem.file == 'txt' "
-            color="green darken-1"
+            color="grey darken-2"
+              class="white--text"
             flat="flat"
             @click="deleteTxt()"
           >예</v-btn>
@@ -304,7 +324,10 @@ export default {
         } else {
           var course = this.selectItem.course.split(".");
           var courSize = course[course.length - 1].length + 1;
-          var parentCourse = this.selectItem.course.slice(0, Number("-" + courSize));
+          var parentCourse = this.selectItem.course.slice(
+            0,
+            Number("-" + courSize)
+          );
           // 중복 체크
           fetch(
             this.$store.state.dbserver +
