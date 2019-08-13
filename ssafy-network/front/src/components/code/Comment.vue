@@ -7,7 +7,8 @@
             <v-flex xs1 justify-left text-xs-left>
               <strong>{{com.writer}}</strong> &nbsp;&nbsp;&nbsp;
             </v-flex>
-            <v-flex xs8 justify-left>&nbsp;&nbsp;&nbsp;{{com.comment}}</v-flex>
+            <v-flex v-if="updateflag" xs8 justify-left>&nbsp;&nbsp;&nbsp; {{com.comment}} &nbsp;&nbsp;&nbsp; (수정됨)</v-flex>
+            <v-flex v-else xs8 justify-left>&nbsp;&nbsp;&nbsp;{{com.comment}}</v-flex>
             <v-flex xs2 justify-center text-xs-center>{{com.createdAt}}</v-flex>
             <v-flex xs1 justify-center text-xs-center>
               <v-icon v-if="com.writer == $session.get('nickname')" @click="updateForm(com)">edit</v-icon>
@@ -64,7 +65,7 @@ export default {
       showDelete: false,
       selectedItem: "",
       comments: {},
-      changecomment: ""
+      changecomment: "",
     };
   },
   computed: mapState(["commentflag"]),
@@ -89,7 +90,6 @@ export default {
       this.getComments();
     },
 
-    // 왜 오류가 나는걸까
     updateComment() {
       // fetch 로 데이터 전송후 closeForm 호출해야함
       this.$validator.validateAll().then(res => {
@@ -112,7 +112,6 @@ export default {
             .then(res => res.json())
             .then(data => {
               if (data.result == true) {
-                alert("댓글이 수정되었습니다.");
                 this.$validator.reset();
               } else {
                 alert("댓글을 수정할 수 없습니다.");
@@ -138,7 +137,6 @@ export default {
         .then(res => res.json())
         .then(data => {
           if (data.result == true) {
-            alert("게시글을 삭제하였습니다.");
           } else {
             alert("게시글을 삭제할 수 없습니다.");
           }

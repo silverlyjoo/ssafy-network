@@ -8,7 +8,6 @@
         <v-btn class="white--text" color="grey darken-2" @click="backDetail()">취소</v-btn>
       </router-link>
     </v-toolbar>
-    <!-- <v-layout> -->
     <br />
     <v-card grid-list-md style="width:80%; margin-left:auto; margin-right:auto;">
       <v-card-text>
@@ -43,7 +42,6 @@
         </v-container>
       </v-card-text>
     </v-card>
-    <!-- </v-layout> -->
   </div>
 </template>
 
@@ -59,8 +57,6 @@ import "codemirror/addon/edit/matchbrackets.js";
 // import 'codemirror/mode/c/c.js'
 // import 'codemirror/mode/c++/c++.js'
 import "codemirror/mode/django/django.js";
-// import 'codemirror/mode/html/html.js'
-// import 'codemirror/mode/java.js'
 import "codemirror/mode/javascript/javascript.js";
 import "codemirror/mode/python/python.js";
 import "codemirror/mode/vue/vue.js";
@@ -129,7 +125,7 @@ export default {
   },
   data() {
     return {
-      languages: [{ text: "JavaScript" }, { text: "Python" }, { text: "Vue" }],
+      languages: [{ text: "javascript" }, { text: "python" }, { text: "vue" }],
       customOption: {},
       articleData: {},
       selectLanguage: "",
@@ -145,10 +141,10 @@ export default {
         mode: "text/javascript",
         // hint.js options
         hintOptions: {
-          // 当匹配只有一项的时候是否自动补全
+        // 매칭이 하나만 있을 때 자동으로 완전하게 보정되는지 여부
           completeSingle: false
         },
-        //快捷键 可提供三种模式 sublime、emacs、vim
+        //세가지 모드를 제공할 수 있는 단축 키다. sublime、emacs、vim
         keyMap: "sublime",
         matchBrackets: true,
         showCursorWhenSelecting: true,
@@ -213,7 +209,6 @@ export default {
             .then(res => res.json())
             .then(data => {
               if (data.result == true) {
-                alert("글이 수정되었습니다.");
                 this.$router.push("/code/board");
               } else {
                 alert("글을 수정할 수 없습니다.");
@@ -229,25 +224,25 @@ export default {
   },
   watch: {
     selectLanguage(to, from) {
-      if (to == "JavaScript") {
+      if (to == "javascript") {
         this.customOption = this.cmOptionJs;
-      } else if (to == "Python") {
+      } else if (to == "python") {
         this.customOption = this.cmOptionPy;
-      } else if (to == "Vue") {
+      } else if (to == "vue") {
         this.customOption = this.cmOptionVue;
       }
     }
   },
   mounted() {
     this.articleData = this.article;
-    if (this.articleData.language == "JavaScript") {
-      this.selectLanguage = "JavaScript";
+    if (this.articleData.language == "javascript") {
+      this.selectLanguage = "javascript";
       this.customOption = this.cmOptionJs;
-    } else if (this.articleData.language == "Python") {
-      this.selectLanguage = "Python";
+    } else if (this.articleData.language == "python") {
+      this.selectLanguage = "python";
       this.customOption = this.cmOptionPy;
-    } else if (this.articleData.language == "Vue") {
-      this.selectLanguage = "Vue";
+    } else if (this.articleData.language == "vue") {
+      this.selectLanguage = "vue";
       this.customOption = this.cmOptionVue;
     }
   }

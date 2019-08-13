@@ -1,34 +1,44 @@
 <template>
   <div>
     <v-content>
-      <h1>Chatroom</h1>
-      <v-card class="chatwindow">
-        <v-container id="scrolldown" class="chats">
-          <div v-for="chat in chatdata" :key="chat.id" class="chat">
-            <div v-if="chat.name == nickname" class="me">
-              <span class="title">{{ chat.msg }}</span>
-              <!-- <span class="body-3">{{ chat.createdAt }}</span> -->
-            </div>
-            <div v-else class="chat">
-              <span class="title">{{ chat.name }} :</span>
-              <span class="subheading">{{ chat.msg }}</span>
-              <!-- <span class="body-3">{{ chat.createdAt }}</span> -->
-            </div>
-          </div>
-        </v-container>
-      </v-card>
+      <!-- <h1>Chatroom</h1> -->
 
-      <v-card class="userwindow">
-        <v-container class="chats">
-          <div v-for="user in userlist" :key="user.id">
-            <span class="subheading">{{ user }}</span>
-          </div>
-        </v-container>
-      </v-card>
+      <div class="chatcontainer">
+        <v-card class="chatwindow" id="scrolldown">
+          <v-container class="chats">
+            <div v-for="chat in chatdata" :key="chat.id">
+              <div v-if="chat.name == nickname" class="chatcon me">
+                <span class="chatmsg">{{ chat.msg }}</span>
+                <span class="chattime">{{ chat.createdAt }}</span>
+              </div>
+
+              <div v-else-if="chat.name =='System'" class="systemchat">{{ chat.msg}}</div>
+
+              <div v-else class="chatcon you">
+                <span class="chatname">{{ chat.name }}</span>
+                <span class="chatmsg">{{ chat.msg }}</span>
+                <span class="chattime">{{ chat.createdAt }}</span>
+              </div>
+            </div>
+          </v-container>
+        </v-card>
+
+        <v-card class="userwindow">
+          <v-container class="chats">
+            <div v-for="user in userlist" :key="user.id">
+              <span class="subheading">{{ user }}</span>
+            </div>
+          </v-container>
+        </v-card>
+      </div>
 
       <v-card class="chatInput">
-          <div><v-text-field ref="txt" v-model="chatText" @keypress.enter.prevent="SendMsg" required></v-text-field></div>
-          <div><v-btn @click="SendMsg" color="grey darken-2" class="white--text">Submit</v-btn></div>
+        <div>
+          <v-text-field ref="txt" v-model="chatText" @keypress.enter.prevent="SendMsg" required></v-text-field>
+        </div>
+        <div>
+          <v-btn @click="SendMsg" color="grey darken-2" class="white--text">Submit</v-btn>
+        </div>
       </v-card>
     </v-content>
   </div>
@@ -62,8 +72,8 @@ export default {
     this.scrollset();
   },
   methods: {
-    setBodyheight (){
-      document.getElementsByTagName('body')
+    setBodyheight() {
+      document.getElementsByTagName("body");
     },
     scrollset() {
       document.getElementById("scrolldown").scrollTop = document.getElementById(
@@ -104,37 +114,84 @@ export default {
 </script>
 
 <style>
-.chatInput {
-  height: 100px;
-  bottom: 0px;
+.chatcontainer {
+  height: 80vh;
   display: flex;
-  justify-content: space-between;
-  /* width: 500px; */
 }
 .chatwindow {
-  width: 80%;
-  height: 68vh;
+  flex: 0 0 85%;
+  overflow: auto;
 }
 .userwindow {
-  width: 20%;
-  height: 68vh;
-  position: absolute;
-  left: 80%;
-  top: 42px;
+  flex: 0 0 15%;
+  overflow: auto;
+}
+
+
+.chats {
+  overflow: auto;
+  width: 100%;
+  background: rgb(238, 247, 255);
+
+}
+.chatcon {
+  max-width: 80%;
+  border: solid 1px rgb(231, 231, 231);
+  box-shadow: 2px 2px 2px rgb(121, 121, 121);
+  border-radius: 15px;
+  padding: 10px;
+  word-break: break-all;
+  white-space: normal;
+  background: rgb(255, 254, 227);
 }
 .me {
-  color: blue;
+  color: rgb(133, 133, 133);
   display: flex;
-  justify-content: flex-end;
+  /* flex: 0 0 80%; */
+  flex-wrap: wrap;
+  text-align: end;
+  margin: 0 0 15px auto;
 }
-.chats {
-  height: 70vh;
-  overflow-y: auto;
-  /* overflow-x: scroll; */
-  overflow-anchor: none;
+.you {
+  color: rgb(133, 133, 133);
+  display: flex;
+  /* flex: 0 0 80%; */
+  flex-wrap: wrap;
+  margin: 0 auto 15px 0;
 }
-.chat {
-  overflow-anchor: auto;
-  height: 100px;
+
+.chatname {
+  flex: 0 0 100%;
+  font-size: 115%;
+}
+.chatmsg {
+  font-size: 105%;
+  color: black;
+  font-weight: 500;
+  flex: 0 0 100%;
+}
+.chattime {
+  font-size: 80%;
+  flex: 0 0 100%;
+  text-align: end;
+}
+.systemchat {
+  font-size: 90%;
+  margin-bottom: 14px;
+  margin-top: 14px;
+  text-align: center;
+  color: rgb(233, 87, 87);
+}
+
+
+.chatInput {
+  height: 12vh;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  /* width: 500px; */
+}
+.chatInput > div:nth-child(1) {
+  flex: 0 0 80%;
 }
 </style>
