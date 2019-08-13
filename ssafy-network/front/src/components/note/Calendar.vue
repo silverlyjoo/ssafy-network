@@ -27,16 +27,21 @@
             </v-card-text>
             <v-card-actions>
             <v-spacer></v-spacer>
-            <v-btn color="blue darken-1" flat @click="closeForm()">취소</v-btn>
-            <v-btn color="blue darken-1" flat @click="updateForm()">수정</v-btn>
-            <v-btn color="blue darken-1" flat @click="openDeleteForm()">삭제</v-btn>
+            <v-btn color="grey darken-2"
+                    class="white--text" flat @click="closeForm()">취소</v-btn>
+            <v-btn color="grey darken-2"
+                    class="white--text" flat @click="updateForm()">수정</v-btn>
+            <v-btn color="grey darken-2"
+                    class="white--text" flat @click="openDeleteForm()">삭제</v-btn>
             <v-dialog v-model="deleteDialog" max-width="290">
               <v-card>
                 <v-card-title class="headline">삭제 하시겠습니까?</v-card-title>
                 <v-card-actions>
                   <v-spacer></v-spacer>
-                  <v-btn color="green darken-1" flat="flat" @click="closeForm()">아니오</v-btn>
-                  <v-btn color="green darken-1" flat="flat" @click="deleteCalendar()">예</v-btn>
+                  <v-btn color="grey darken-2"
+                    class="white--text" flat="flat" @click="closeForm()">아니오</v-btn>
+                  <v-btn color="grey darken-2"
+                    class="white--text" flat="flat" @click="deleteCalendar()">예</v-btn>
                 </v-card-actions>
               </v-card>
             </v-dialog>
@@ -140,8 +145,10 @@
           </v-card-text>
           <v-card-actions>
             <v-spacer></v-spacer>
-            <v-btn color="blue darken-1" flat @click="closeForm()">취소</v-btn>
-            <v-btn color="blue darken-1" flat @click="updateCalendar()">수정</v-btn>
+            <v-btn color="grey darken-2"
+                    class="white--text" flat @click="closeForm()">취소</v-btn>
+            <v-btn color="grey darken-2"
+                    class="white--text" flat @click="updateCalendar()">수정</v-btn>
           </v-card-actions>
         </v-card>
       </v-dialog>

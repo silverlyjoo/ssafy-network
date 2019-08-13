@@ -33,7 +33,8 @@
       </v-card>
     </v-flex>
     <v-flex class="text-xs-right ma-5">
-      <v-btn @click="updateCodeNote()">수정</v-btn>
+      <v-btn color="grey darken-2"
+                    class="white--text" @click="updateCodeNote()">수정</v-btn>
     </v-flex>
   </v-layout>
 </template>

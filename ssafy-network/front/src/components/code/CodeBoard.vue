@@ -84,15 +84,20 @@
     <br><br>
 
     <v-layout justify-space-around align-center style="width:80%; margin-left:auto; margin-right:auto;">
-      <v-flex xs2 text-xs-center class="px-5">
+      <v-flex xs3 text-xs-center class="px-5">
         <v-select v-model="searchOption2" :items="searchOptions2"></v-select>
       </v-flex>
-      <v-flex xs9 class>
+      <v-flex xs7 class>
         <v-text-field v-model="articleSearchKeyword" @keyup.enter="searchArticles" @keyup.esc="getArticles"></v-text-field>
       </v-flex>
       <v-flex xs1 class="px-5">
         <v-icon @click="searchArticles" large>
           search
+        </v-icon>
+      </v-flex>
+      <v-flex xs1 class="px-3">
+        <v-icon @click="getArticles" large>
+          cached
         </v-icon>
       </v-flex>
     </v-layout>

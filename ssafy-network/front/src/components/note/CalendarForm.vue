@@ -2,7 +2,8 @@
   <v-layout row justify-end class="mr-3 mb-3">
     <v-tooltip bottom>
       <template v-slot:activator="{ on }">
-        <v-btn fab text small class="primary" v-on="on" @click="dialog=true">
+        <v-btn fab text small color="grey darken-2"
+                    class="white--text" v-on="on" @click="dialog=true">
           <v-icon small>edit</v-icon>
         </v-btn>
       </template>
@@ -103,8 +104,10 @@
         </v-card-text>
         <v-card-actions>
           <v-spacer></v-spacer>
-          <v-btn color="blue darken-1" flat @click="close()">취소</v-btn>
-          <v-btn color="blue darken-1" flat @click="addCalendar()">추가</v-btn>
+          <v-btn color="grey darken-2"
+                    class="white--text" flat @click="close()">취소</v-btn>
+          <v-btn color="grey darken-2"
+                    class="white--text" flat @click="addCalendar()">추가</v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>

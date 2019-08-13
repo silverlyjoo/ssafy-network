@@ -117,6 +117,7 @@ export default {
 .chatcontainer {
   height: 80vh;
   display: flex;
+  
 }
 .chatwindow {
   flex: 0 0 85%;

@@ -88,7 +88,8 @@
         <v-card-actions>
           <v-spacer></v-spacer>
 
-          <v-btn text @click="noticedialog = false">ok</v-btn>
+          <v-btn text @click="noticedialog = false" color="grey darken-2"
+                    class="white--text">ok</v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>
@@ -97,8 +98,10 @@
         <v-card-title class="headline">로그아웃 하시겠습니까?</v-card-title>
         <v-card-actions>
           <v-spacer></v-spacer>
-          <v-btn color="green darken-1" flat="flat" @click="logoutDialog = false">아니오</v-btn>
-          <v-btn color="green darken-1" flat="flat" @click="logout()">예</v-btn>
+          <v-btn color="grey darken-2"
+                    class="white--text" flat="flat" @click="logoutDialog = false">아니오</v-btn>
+          <v-btn color="grey darken-2"
+                    class="white--text" flat="flat" @click="logout()">예</v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>
