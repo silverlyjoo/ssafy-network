@@ -299,10 +299,16 @@ router.post('/login', function (req, res) {
     }
     var token = encode(user);
     console.log(user, token);
-    res.json({
-      token: token,
-      nickname: user.nickname
-    });
+    if(user.membership == "비회원"){
+      res.json({result : "비회원"});
+    }
+    else{
+      res.json({
+        token: token,
+        nickname: user.nickname
+      });
+    }
+    
   });
 });
 
