@@ -54,7 +54,10 @@ export default {
             this.id = "";
             this.pwd = "";
             this.$refs.id.focus();
-          } else {
+          } else if (data.result == '비회원'){
+            alert("회원 가입 승인을 기다리세요");
+            this.$router.push("/");
+          }else {
             this.$store.state.login = true;
             this.$session.set("token" , data.token);
             this.$session.set("id" , this.id);
