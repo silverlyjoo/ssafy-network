@@ -139,9 +139,9 @@ export default {
         selectedLanguage: "",
       },
       languages: [
-        { text: "JavaScript" },
-        { text: "Python" },
-        { text: "Vue" },
+        { text: "javascript" },
+        { text: "python" },
+        { text: "vue" },
       ],
       customOption:{},
       cmOptionJs: {
@@ -231,17 +231,17 @@ export default {
   },
   watch:{
     'article.selectedLanguage'(to, from){
-      if (to == "JavaScript") {
+      if (to == "javascript") {
       this.customOption = this.cmOptionJs;
-    } else if (to == "Python") {
+    } else if (to == "python") {
       this.customOption = this.cmOptionPy;
-    } else if (to == "Vue") {
+    } else if (to == "vue") {
       this.customOption = this.cmOptionVue;
     }
     }
   },
   mounted(){
-    this.article.selectedLanguage ="JavaScript";
+    this.article.selectedLanguage ="javascript";
     this.customOption = this.cmOptionJs;
   }
 }

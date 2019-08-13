@@ -390,11 +390,11 @@ export default {
   },
   mounted() {
     this.isAdmin();
-    if (this.data.language == "JavaScript") {
+    if (this.data.language == "javascript") {
       this.cmOption = this.cmOptionJs;
-    } else if (this.data.language == "Python") {
+    } else if (this.data.language == "python") {
       this.cmOption = this.cmOptionPy;
-    } else if (this.data.language == "Vue") {
+    } else if (this.data.language == "vue") {
       this.cmOption = this.cmOptionVue;
     }
   }

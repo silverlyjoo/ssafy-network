@@ -125,7 +125,7 @@ export default {
   },
   data() {
     return {
-      languages: [{ text: "JavaScript" }, { text: "Python" }, { text: "Vue" }],
+      languages: [{ text: "javascript" }, { text: "python" }, { text: "vue" }],
       customOption: {},
       articleData: {},
       selectLanguage: "",
@@ -224,25 +224,25 @@ export default {
   },
   watch: {
     selectLanguage(to, from) {
-      if (to == "JavaScript") {
+      if (to == "javascript") {
         this.customOption = this.cmOptionJs;
-      } else if (to == "Python") {
+      } else if (to == "python") {
         this.customOption = this.cmOptionPy;
-      } else if (to == "Vue") {
+      } else if (to == "vue") {
         this.customOption = this.cmOptionVue;
       }
     }
   },
   mounted() {
     this.articleData = this.article;
-    if (this.articleData.language == "JavaScript") {
-      this.selectLanguage = "JavaScript";
+    if (this.articleData.language == "javascript") {
+      this.selectLanguage = "javascript";
       this.customOption = this.cmOptionJs;
-    } else if (this.articleData.language == "Python") {
-      this.selectLanguage = "Python";
+    } else if (this.articleData.language == "python") {
+      this.selectLanguage = "python";
       this.customOption = this.cmOptionPy;
-    } else if (this.articleData.language == "Vue") {
-      this.selectLanguage = "Vue";
+    } else if (this.articleData.language == "vue") {
+      this.selectLanguage = "vue";
       this.customOption = this.cmOptionVue;
     }
   }
