@@ -146,7 +146,7 @@ router.get('/rooms/:method/:value/:token', function (req, res) {
       return res.json({ result: false });
     }
     switch(req.params.method){
-        case "title":
+        case "방제목":
             Room.find({title: { $regex: '.*' + req.params.value + '.*' } },function(err,rooms){
                 if (err) {
                     return res.status(500).json({ result: false });
@@ -158,7 +158,7 @@ router.get('/rooms/:method/:value/:token', function (req, res) {
                 res.json(rooms);
             });
             break;
-        case "max":
+        case "최대인원":
             Room.find({max: { $gt:req.params.value } },function(err,rooms){
                 if (err) {
                     return res.status(500).json({ result: false });
@@ -170,8 +170,8 @@ router.get('/rooms/:method/:value/:token', function (req, res) {
                 res.json(rooms);
             });
             break;
-        case "owner":
-            Room.find({owner: req.params.value },function(err,rooms){
+        case "방장":
+            Room.find({owner: { $regex: '.*' + req.params.value + '.*' } },function(err,rooms){
                 if (err) {
                     return res.status(500).json({ result: false });
                 }
@@ -218,7 +218,7 @@ router.get('/boards/:method/:value/:token', function (req, res) {
       return res.json({ result: false });
     }
     switch(req.params.method){
-        case "title":
+        case "제목":
             Board.find({title: { $regex: '.*' + req.params.value + '.*' } },function(err,boards){
                 if (err) {
                     return res.status(500).json({ result: false });
@@ -230,7 +230,7 @@ router.get('/boards/:method/:value/:token', function (req, res) {
                 res.json(boards);
             });
             break;
-        case "writer":
+        case "작성자":
             Board.find({writer: { $regex: '.*' + req.params.value + '.*' } },function(err,boards){
                 if (err) {
                     return res.status(500).json({ result: false });
@@ -242,7 +242,7 @@ router.get('/boards/:method/:value/:token', function (req, res) {
                 res.json(boards);
             });
             break;
-        case "content":
+        case "내용":
             Board.find({content: { $regex: '.*' + req.params.value + '.*' } },function(err,boards){
                 if (err) {
                     return res.status(500).json({ result: false });
@@ -254,8 +254,8 @@ router.get('/boards/:method/:value/:token', function (req, res) {
                 res.json(boards);
             });
             break;
-        case "language":
-            Board.find({language: req.params.value },function(err,boards){
+        case "언어":
+            Board.find({language: { $regex: '.*' + req.params.value + '.*' } },function(err,boards){
                 if (err) {
                     return res.status(500).json({ result: false });
                 }
@@ -266,7 +266,7 @@ router.get('/boards/:method/:value/:token', function (req, res) {
                 res.json(boards);
             });
             break;
-        case "source":
+        case "코드":
             Board.find({source: {$regex: '.*' + req.params.value + '.*' } },function(err,boards){
                 if (err) {
                     return res.status(500).json({ result: false });

@@ -7,7 +7,7 @@
         <v-card class="chatwindow" id="scrolldown">
           <v-container class="chats">
             <div v-for="chat in chatdata" :key="chat.id">
-              <div v-if="chat.name == nickname" class="chatcon me">
+              <div v-if="chat.name == nickname" class="chatcon me" >
                 <span class="chatmsg">{{ chat.msg }}</span>
                 <span class="chattime">{{ chat.createdAt }}</span>
               </div>
@@ -92,7 +92,6 @@ export default {
       this.socket.on("broadcast", data => {
         this.chatdata.push(data);
         this.scrollset();
-        // console.log('chatdata', data)
       });
       this.socket.on("userlist", data => {
         this.userlist = data;
@@ -135,7 +134,7 @@ export default {
 
 }
 .chatcon {
-  max-width: 80%;
+  max-width: 70%;
   border: solid 1px rgb(231, 231, 231);
   box-shadow: 2px 2px 2px rgb(121, 121, 121);
   border-radius: 15px;
@@ -153,6 +152,7 @@ export default {
   margin: 0 0 15px auto;
 }
 .you {
+  background: rgb(255, 255, 255);
   color: rgb(133, 133, 133);
   display: flex;
   /* flex: 0 0 80%; */
