@@ -1,7 +1,7 @@
 <template>
   <div>
     <v-content>
-      <h1>Chatroom</h1>
+      <!-- <h1>Chatroom</h1> -->
 
       <div class="chatcontainer">
         <v-card class="chatwindow" id="scrolldown">
@@ -115,7 +115,7 @@ export default {
 
 <style>
 .chatcontainer {
-  height: 75vh;
+  height: 80vh;
   display: flex;
 }
 .chatwindow {
