@@ -15,8 +15,7 @@
               v-on="on"
               @click="addNoteOpen('root')"
               small
-              color="grey darken-2"
-              class="white--text ma-0 pa-0"
+              class="ma-0 pa-0"
               style="min-width:10px!important;"
             >
               <v-icon small>note_add</v-icon>
@@ -31,8 +30,7 @@
               flat
               @click="addFolderOpen('root')"
               small
-              color="grey darken-2"
-              class="white--text ma-0 pa-0"
+              class="ma-0 pa-0"
               style="min-width:10px!important;"
             >
               <v-icon small>add_box</v-icon>
@@ -79,8 +77,7 @@
               @click="FolderEditOpen(item)"
               v-if="item.file != 'txt'"
               small
-              color="grey darken-2"
-              class="white--text ma-0 pa-0"
+              class="ma-0 pa-0"
               style="min-width:10px!important;"
             >
               <v-icon small>edit</v-icon>
@@ -96,8 +93,7 @@
               @click="addNoteOpen(item)"
               v-if="item.file != 'txt'"
               small
-              color="grey darken-2"
-              class="white--text ma-0 pa-0"
+              class="ma-0 pa-0"
               style="min-width:10px!important;"
             >
               <v-icon small>note_add</v-icon>
@@ -113,8 +109,7 @@
               @click="addFolderOpen(item)"
               v-if="item.file != 'txt'"
               small
-              color="grey darken-2"
-              class="white--text ma-0 pa-0"
+              class="ma-0 pa-0"
               style="min-width:10px!important;"
             >
               <v-icon small>add_box</v-icon>
@@ -129,8 +124,7 @@
               v-on="on"
               @click="DeleteOpen(item)"
               small
-              color="grey darken-2"
-              class="white--text ma-0 pa-0"
+              class="ma-0 pa-0"
               style="min-width:10px!important;"
             >
               <v-icon small>delete</v-icon>
