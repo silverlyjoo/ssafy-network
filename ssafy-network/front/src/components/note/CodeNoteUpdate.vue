@@ -9,7 +9,7 @@
                 <v-text-field
                   label="제목"
                   v-model="notetitle"
-                  v-validate="'required|min:2'"
+                  v-validate="'required|min:2|max:10'"
                   data-vv-name="제목"
                   :error-messages="errors.collect('제목')"
                   ref="notetitle"

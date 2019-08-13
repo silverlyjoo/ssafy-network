@@ -135,10 +135,11 @@ export default {
       },
       colors: [
         { text: "red" },
-        { text: "yellow" },
+        { text: "skyblue" },
         { text: "blue" },
         { text: "orange" },
-        { text: "pink" }
+        { text: "pink" },
+        { text: "green" }
       ]
     };
   },
