@@ -26,7 +26,8 @@
         <v-card class="userwindow">
           <v-container class="chats">
             <div v-for="user in userlist" :key="user.id">
-              <span class="subheading">{{ user }}</span>
+              <span class="subheading" v-if="user === nickname" style="color:rgb(233, 87, 87);">{{ user }} (나)</span>
+              <span class="subheading" v-else>{{ user }}</span>
             </div>
           </v-container>
         </v-card>
