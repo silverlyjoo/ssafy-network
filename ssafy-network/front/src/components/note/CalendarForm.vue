@@ -199,7 +199,6 @@ export default {
           }).then(res => res.json())
         .then(data => {
           if(data.result == true){
-            alert("추가 성공!!!");
             this.$store.state.CalendarCheck = true;
           }else{
             alert("추가 실패...");
