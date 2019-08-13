@@ -1,21 +1,23 @@
 <template>
   <v-container>
     <h1>User 관리</h1>
-    <v-layout justify-center text-xs-center row>
+    <v-layout justify-center text-xs-center row class="mb-5">
       <v-btn to="/admin/user" color="grey darken-2" class="white--text">유저관리</v-btn>
       <v-btn to="/admin/chat" color="grey darken-2" class="white--text">채팅방관리</v-btn>
       <v-btn to="/admin/notice" color="grey darken-2" class="white--text">공지사항관리</v-btn>
       <v-btn to="/admin/dep" color="grey darken-2" class="white--text">부서관리</v-btn>
       <v-spacer></v-spacer>
-      <v-select
-        v-model="membership"
-        label="등급"
-        :items="memberships"
-        required
-        style="max-width:20vh;"
-      ></v-select>
-      <v-btn @click="updateUserMembership" color="grey darken-2" class="white--text">등급 변경</v-btn>
     </v-layout>
+
+    <v-card class="mb-2">
+      <div class="searchdep">
+        <v-text-field v-model="superdepartment" class="mx-2"></v-text-field>
+        <v-btn @click="getDepartmentList" color="grey darken-2" class="white--text mx-2">부서 검색</v-btn>
+        <v-select v-model="first" label="부서찾기" :items="firsts" @change="getChildList" class="mx-2"></v-select>
+        <v-select v-if="showbtn" v-model="second" label="부서찾기" :items="seconds" @change="pull" class="mx-2"></v-select>
+        <v-btn v-if="!showbtn" @click="updateDePo" class="mx-2">직급 변경</v-btn>
+      </div>
+    </v-card>
     <router-view></router-view>
 
     <v-data-table
@@ -24,7 +26,7 @@
       :items="desserts"
       item-key="_id"
       select-all
-      class="elevation-1"
+      class="elevation-1 mb-3"
     >
       <template v-slot:items="props">
         <td>
@@ -38,24 +40,12 @@
         <td class="text-xs-left">{{ props.item.membership }}</td>
       </template>
     </v-data-table>
-    <v-layout justify-center text-xs-center row>
-      <v-text-field v-model="superdepartment"></v-text-field>
-      <v-btn @click="getDepartmentList" color="grey darken-2" class="white--text">부서 검색</v-btn>
-      <v-select
-        v-model="first"
-        label="부서찾기"
-        :items="firsts"
-        @change="getChildList"
-      ></v-select>
-      <v-select
-        v-if="showbtn"
-        v-model="second"
-        label="부서찾기"
-        :items="seconds"
-        @change="pull"
-      ></v-select>
-      <v-btn v-if="!showbtn" @click="updateDePo">직급 변경</v-btn>
-    </v-layout>
+    <v-card>
+      <div class="getmembership">
+        <v-select v-model="membership" label="등급" :items="memberships" required></v-select>
+        <v-btn @click="updateUserMembership" color="grey darken-2" class="white--text">등급 변경</v-btn>
+      </div>
+    </v-card>
   </v-container>
 </template>
 
@@ -75,7 +65,7 @@ export default {
       pagination: {
         sortBy: "name"
       },
-      
+
       membership: "회원",
       memberships: ["비회원", "회원", "관리자"],
       selected: [],
@@ -98,7 +88,7 @@ export default {
     this.getUserList();
   },
   methods: {
-    updateDePo(){
+    updateDePo() {
       this.updateUserDepartment();
       this.updateUserPosition();
     },
@@ -110,9 +100,7 @@ export default {
     },
     getDepartmentList() {
       fetch(
-        this.$store.state.dbserver +
-          "/company/join/" +
-          this.superdepartment,
+        this.$store.state.dbserver + "/company/join/" + this.superdepartment,
         {
           method: "GET",
           headers: {
@@ -130,18 +118,13 @@ export default {
         });
     },
     getChildList() {
-      fetch(
-        this.$store.state.dbserver +
-          "/company/join/" +
-          this.first,
-        {
-          method: "GET",
-          headers: {
-            "Access-Control-Allow-Origin": "*",
-            "Content-Type": "application/json"
-          }
+      fetch(this.$store.state.dbserver + "/company/join/" + this.first, {
+        method: "GET",
+        headers: {
+          "Access-Control-Allow-Origin": "*",
+          "Content-Type": "application/json"
         }
-      )
+      })
         .then(res => res.json())
         .then(data => {
           if (data.result == false) {
@@ -208,7 +191,7 @@ export default {
           body: JSON.stringify({
             token: this.$session.get("token"),
             _id: this.selected[index]._id,
-            position: this.first,
+            position: this.first
           })
         })
           .then(res => res.json())
@@ -299,4 +282,14 @@ export default {
 </script>
 
 <style>
+.getmembership {
+  display: flex;
+  align-items: center;
+  padding: 10px 1.5rem;
+}
+.searchdep {
+  display: flex;
+  align-items: center;
+  padding: 0px 1.5rem;
+}
 </style>
