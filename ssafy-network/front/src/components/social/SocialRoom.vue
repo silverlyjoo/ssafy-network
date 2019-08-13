@@ -135,7 +135,7 @@ export default {
 
 }
 .chatcon {
-  width: 85%;
+  max-width: 80%;
   border: solid 1px rgb(231, 231, 231);
   box-shadow: 2px 2px 2px rgb(121, 121, 121);
   border-radius: 15px;
@@ -147,16 +147,17 @@ export default {
 .me {
   color: rgb(133, 133, 133);
   display: flex;
-  flex: 0 0 80%;
+  /* flex: 0 0 80%; */
   flex-wrap: wrap;
   text-align: end;
-  margin: 0 0 10px auto;
+  margin: 0 0 15px auto;
 }
 .you {
   color: rgb(133, 133, 133);
   display: flex;
-  flex: 0 0 80%;
+  /* flex: 0 0 80%; */
   flex-wrap: wrap;
+  margin: 0 auto 15px 0;
 }
 
 .chatname {
