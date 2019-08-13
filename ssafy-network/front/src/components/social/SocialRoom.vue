@@ -121,10 +121,14 @@ export default {
 .chatwindow {
   flex: 0 0 85%;
   overflow: auto;
+  background: rgb(238, 247, 255);
+
 }
 .userwindow {
   flex: 0 0 15%;
   overflow: auto;
+  background: rgb(238, 247, 255);
+
 }
 
 
