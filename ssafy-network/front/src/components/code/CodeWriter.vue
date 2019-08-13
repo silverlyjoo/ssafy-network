@@ -67,8 +67,6 @@ import "codemirror/addon/edit/matchbrackets.js";
 // import 'codemirror/mode/c/c.js'
 // import 'codemirror/mode/c++/c++.js'
 import "codemirror/mode/django/django.js";
-// import 'codemirror/mode/html/html.js'
-// import 'codemirror/mode/java.js'
 import "codemirror/mode/javascript/javascript.js";
 import "codemirror/mode/python/python.js";
 import "codemirror/mode/vue/vue.js";
@@ -221,7 +219,6 @@ export default {
             }).then(res => res.json())
           .then(data => {
             if(data.result == true){
-              alert("게시글이 등록되었습니다.");
               this.$router.push("/code/board");
             }else{
             alert("게시글을 등록할 수 없습니다...");

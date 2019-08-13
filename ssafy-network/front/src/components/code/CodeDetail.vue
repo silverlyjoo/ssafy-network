@@ -161,7 +161,6 @@ import "codemirror/addon/edit/matchbrackets.js";
 // import 'codemirror/mode/c++/c++.js'
 import "codemirror/mode/django/django.js";
 // import 'codemirror/mode/html/html.js'
-// import 'codemirror/mode/java.js'
 import "codemirror/mode/javascript/javascript.js";
 import "codemirror/mode/python/python.js";
 import "codemirror/mode/vue/vue.js";
@@ -302,7 +301,6 @@ export default {
           }
         }
       },
-      // languages: [{ text: "JavaScript" }, { text: "Python" }, { text: "Vue" }]
     };
   },
   methods: {
@@ -327,7 +325,6 @@ export default {
         .then(res => res.json())
         .then(data => {
           if (data.result == true) {
-            alert("게시글을 삭제하였습니다.");
             this.$router.push("/code/board");
           } else {
             alert("게시글을 삭제할 수 없습니다.");
@@ -342,7 +339,6 @@ export default {
       this.$validator.reset();
       this.showComment = false;
       this.comment = "";
-      // this.getComments();
     },
     createComment() {
       // fetch 로 데이터 전송후 closeForm 호출해야함
@@ -367,7 +363,6 @@ export default {
             .then(res => res.json())
             .then(data => {
               if (data.result == true) {
-                alert("댓글이 등록되었습니다.");
                 this.$store.state.commentflag = true;
               } else {
                 alert("댓글을 등록할 수 없습니다.");

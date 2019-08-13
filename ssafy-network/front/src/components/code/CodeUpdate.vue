@@ -8,7 +8,6 @@
         <v-btn class="white--text" color="grey darken-2" @click="backDetail()">취소</v-btn>
       </router-link>
     </v-toolbar>
-    <!-- <v-layout> -->
     <br />
     <v-card grid-list-md style="width:80%; margin-left:auto; margin-right:auto;">
       <v-card-text>
@@ -43,7 +42,6 @@
         </v-container>
       </v-card-text>
     </v-card>
-    <!-- </v-layout> -->
   </div>
 </template>
 
@@ -59,8 +57,6 @@ import "codemirror/addon/edit/matchbrackets.js";
 // import 'codemirror/mode/c/c.js'
 // import 'codemirror/mode/c++/c++.js'
 import "codemirror/mode/django/django.js";
-// import 'codemirror/mode/html/html.js'
-// import 'codemirror/mode/java.js'
 import "codemirror/mode/javascript/javascript.js";
 import "codemirror/mode/python/python.js";
 import "codemirror/mode/vue/vue.js";
@@ -213,7 +209,6 @@ export default {
             .then(res => res.json())
             .then(data => {
               if (data.result == true) {
-                alert("글이 수정되었습니다.");
                 this.$router.push("/code/board");
               } else {
                 alert("글을 수정할 수 없습니다.");
