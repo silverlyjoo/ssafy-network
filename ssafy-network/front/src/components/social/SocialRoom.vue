@@ -7,7 +7,7 @@
         <v-card class="chatwindow" id="scrolldown">
           <v-container class="chats">
             <div v-for="chat in chatdata" :key="chat.id">
-              <div v-if="chat.name == nickname" class="chatcon me" >
+              <div v-if="chat.name == nickname" class="chatcon me">
                 <span class="chatmsg">{{ chat.msg }}</span>
                 <span class="chattime">{{ chat.createdAt }}</span>
               </div>
@@ -121,18 +121,18 @@ export default {
 .chatwindow {
   flex: 0 0 85%;
   overflow: auto;
+  background: rgb(238, 247, 255) !important;
 }
 .userwindow {
   flex: 0 0 15%;
   overflow: auto;
+  background: rgb(238, 247, 255) !important;
 }
-
 
 .chats {
   overflow: auto;
   width: 100%;
   background: rgb(238, 247, 255);
-
 }
 .chatcon {
   max-width: 70%;
@@ -183,7 +183,6 @@ export default {
   text-align: center;
   color: rgb(233, 87, 87);
 }
-
 
 .chatInput {
   height: 12vh;
