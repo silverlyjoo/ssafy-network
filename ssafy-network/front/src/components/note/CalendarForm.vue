@@ -135,10 +135,11 @@ export default {
       },
       colors: [
         { text: "red" },
-        { text: "yellow" },
+        { text: "skyblue" },
         { text: "blue" },
         { text: "orange" },
-        { text: "pink" }
+        { text: "pink" },
+        { text: "green" }
       ]
     };
   },
@@ -198,7 +199,6 @@ export default {
           }).then(res => res.json())
         .then(data => {
           if(data.result == true){
-            alert("추가 성공!!!");
             this.$store.state.CalendarCheck = true;
           }else{
             alert("추가 실패...");

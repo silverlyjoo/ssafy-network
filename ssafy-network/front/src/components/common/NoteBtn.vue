@@ -140,7 +140,7 @@
                   <v-text-field
                     label="파일 제목"
                     v-model.trim="NoteTitle"
-                    v-validate="'required|min:2'"
+                    v-validate="'required|min:2|max:10'"
                     data-vv-name="NoteTitle"
                     data-vv-as="NoteTitle"
                     data-vv-scope="NoteTitle"
@@ -169,7 +169,7 @@
                   <v-text-field
                     label="폴더 제목"
                     v-model.trim="FolderTitle"
-                    v-validate="'required|min:2'"
+                    v-validate="'required|min:2|max:10'"
                     data-vv-name="FolderTitle"
                     data-vv-as="폴더 제목 "
                     data-vv-scope="FolderTitle"
@@ -198,7 +198,7 @@
                   <v-text-field
                     label="폴더 제목"
                     v-model.trim="FolderEditTitle"
-                    v-validate="'required|min:2'"
+                    v-validate="'required|min:2|max:10'"
                     data-vv-name="FolderEditTitle"
                     data-vv-as="폴더 제목 "
                     :error-messages="errors.collect('FolderEditTitle.FolderEditTitle')"

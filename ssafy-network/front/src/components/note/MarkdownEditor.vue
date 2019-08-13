@@ -5,7 +5,7 @@
       <h1>
         <v-text-field
           v-model="name"
-          v-validate="'required|min:2'"
+          v-validate="'required|min:2|max:10'"
           data-vv-name="제목"
           :error-messages="errors.collect('제목')"
           ref="NoteName"
