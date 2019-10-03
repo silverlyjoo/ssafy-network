@@ -10,8 +10,8 @@ export default new Vuex.Store({
   state: {
     login: false,
     navFoldFlag: true,
-    dbserver: 'http://192.168.31.55:3000',
-    chatserver: 'http://192.168.31.55:3000',
+    dbserver: 'http://localhost:3000',
+    chatserver: 'http://localhost:3000',
     CalendarCheck: false,
     NoteCheck: false,
     chatmsg: [],

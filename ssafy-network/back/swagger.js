@@ -12,7 +12,7 @@ const options = {
             version: '3.0.0',
             description: 'SSAFY Network API with express',
         },
-        host: '192.168.31.55:3000',
+        host: 'localhost:3000',
         basePath: '/'
     },
 //swagger api가 존재하는 곳 입니다.

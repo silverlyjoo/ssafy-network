@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 
 module.exports = () => {
   function connect() {
-    mongoose.connect("mongodb://ssafy:network@localhost:27017", {
+    mongoose.connect("mongodb://localhost:27017", {
         dbName: 'ssafy_network'
       },
       function(error) {
